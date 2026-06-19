@@ -1,5 +1,7 @@
 # Arrow con Mango — Backend
 
+[![CI](https://github.com/a-granadillo/ArrowConMango_Backend/actions/workflows/ci.yml/badge.svg)](https://github.com/a-granadillo/ArrowConMango_Backend/actions/workflows/ci.yml)
+
 API REST para el clon de *Arrow Maze – Escape Puzzle*. Implementa autenticación JWT, sincronización de progreso, tabla de clasificación global y definición remota de niveles (RF-B-01 a RF-B-07).
 
 **Stack:** NestJS 10 · TypeORM 0.3 · SQLite / PostgreSQL · bcrypt · jsonwebtoken · Swagger · Jest
@@ -110,7 +112,12 @@ npm run start:dev
 # 5. Ejecutar todas las pruebas (86 tests)
 npm test
 
-# 6. Build de producción
+# 6. Calidad de código (lo mismo que valida el CI)
+npm run lint           # ESLint
+npm run format:check   # Prettier (verificación)
+# Autocorrección: npm run lint:fix · npm run format
+
+# 7. Build de producción
 npm run build      # nest build → dist/
 npm run start:prod # node dist/main
 ```
@@ -165,6 +172,23 @@ test/
 ```
 
 Todos los tests usan la convención `should_[resultado]_when_[condición]` y siguen el patrón AAA.
+
+---
+
+## CI / Flujo de trabajo
+
+La Integración Continua corre en **GitHub Actions** ([`.github/workflows/ci.yml`](.github/workflows/ci.yml))
+en cada `push` a `master` y en cada Pull Request. El pipeline ejecuta, sobre `ubuntu-latest`:
+
+```
+npm ci --legacy-peer-deps → format:check → lint → build → test:coverage
+```
+
+No necesita secretos ni base de datos externa: las pruebas de integración y e2e usan
+SQLite `:memory:`. El reporte de cobertura se publica como artefacto del workflow.
+
+El flujo de colaboración (ramas `feat/…`, `fix/…`, Pull Requests, `master` protegido y
+Conventional Commits) está documentado en [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ---
 

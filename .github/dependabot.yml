@@ -1,0 +1,25 @@
+version: 2
+updates:
+  # Dependencias npm del backend
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: chore
+      include: scope
+    # Agrupa actualizaciones menores/parche en un solo PR para reducir ruido.
+    groups:
+      minor-and-patch:
+        update-types:
+          - minor
+          - patch
+
+  # Versiones de las propias GitHub Actions usadas en los workflows
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: chore
