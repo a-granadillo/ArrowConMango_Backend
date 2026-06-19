@@ -1,4 +1,10 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpStatus, Logger } from '@nestjs/common';
+import {
+  ArgumentsHost,
+  Catch,
+  ExceptionFilter,
+  HttpStatus,
+  Logger,
+} from '@nestjs/common';
 import { Response } from 'express';
 import {
   DomainError,
@@ -37,17 +43,29 @@ export class HttpExceptionFilter implements ExceptionFilter {
     response.status(statusCode).json(body);
   }
 
-  private resolve(exception: unknown): { statusCode: number; body: ErrorResponse } {
+  private resolve(exception: unknown): {
+    statusCode: number;
+    body: ErrorResponse;
+  } {
     if (exception instanceof EmailAlreadyInUseError) {
       return this.build(HttpStatus.CONFLICT, exception);
     }
-    if (exception instanceof InvalidCredentialsError || exception instanceof UnauthorizedError) {
+    if (
+      exception instanceof InvalidCredentialsError ||
+      exception instanceof UnauthorizedError
+    ) {
       return this.build(HttpStatus.UNAUTHORIZED, exception);
     }
-    if (exception instanceof InvalidEmailError || exception instanceof LevelValidationError) {
+    if (
+      exception instanceof InvalidEmailError ||
+      exception instanceof LevelValidationError
+    ) {
       return this.build(HttpStatus.UNPROCESSABLE_ENTITY, exception);
     }
-    if (exception instanceof UserNotFoundError || exception instanceof LevelNotFoundError) {
+    if (
+      exception instanceof UserNotFoundError ||
+      exception instanceof LevelNotFoundError
+    ) {
       return this.build(HttpStatus.NOT_FOUND, exception);
     }
     if (exception instanceof DomainError) {
@@ -59,19 +77,34 @@ export class HttpExceptionFilter implements ExceptionFilter {
       const status = httpEx.getStatus();
       return {
         statusCode: status,
-        body: { statusCode: status, error: 'HttpException', message: httpEx.message ?? '' },
+        body: {
+          statusCode: status,
+          error: 'HttpException',
+          message: httpEx.message ?? '',
+        },
       };
     }
     return {
       statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-      body: { statusCode: 500, error: 'InternalServerError', message: 'An unexpected error occurred' },
+      body: {
+        statusCode: 500,
+        error: 'InternalServerError',
+        message: 'An unexpected error occurred',
+      },
     };
   }
 
-  private build(status: number, err: Error): { statusCode: number; body: ErrorResponse } {
+  private build(
+    status: number,
+    err: Error,
+  ): { statusCode: number; body: ErrorResponse } {
     return {
       statusCode: status,
-      body: { statusCode: status, error: err.constructor.name, message: err.message },
+      body: {
+        statusCode: status,
+        error: err.constructor.name,
+        message: err.message,
+      },
     };
   }
 }

@@ -1,4 +1,10 @@
-import { CallHandler, ExecutionContext, Injectable, Logger, NestInterceptor } from '@nestjs/common';
+import {
+  CallHandler,
+  ExecutionContext,
+  Injectable,
+  Logger,
+  NestInterceptor,
+} from '@nestjs/common';
 import { Observable, of, tap } from 'rxjs';
 
 /**
@@ -11,7 +17,10 @@ import { Observable, of, tap } from 'rxjs';
 @Injectable()
 export class CacheInterceptor implements NestInterceptor {
   private readonly logger = new Logger('Cache');
-  private readonly store = new Map<string, { data: unknown; expiresAt: number }>();
+  private readonly store = new Map<
+    string,
+    { data: unknown; expiresAt: number }
+  >();
   private readonly ttlMs: number;
 
   constructor(ttlSeconds = 30) {
@@ -19,7 +28,9 @@ export class CacheInterceptor implements NestInterceptor {
   }
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
-    const req = context.switchToHttp().getRequest<{ method: string; url: string }>();
+    const req = context
+      .switchToHttp()
+      .getRequest<{ method: string; url: string }>();
     if (req.method !== 'GET') return next.handle();
 
     const key = req.url;

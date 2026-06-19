@@ -1,5 +1,21 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Query, UseGuards, UseInterceptors } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Query,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { GetLeaderboardUseCase } from '../../application/use-cases/get-leaderboard.use-case';
 import { SubmitScoreUseCase } from '../../application/use-cases/submit-score.use-case';
 import { AuthGuard } from '../../infrastructure/aop/auth.guard';
@@ -19,7 +35,11 @@ export class LeaderboardController {
   @UseInterceptors(new CacheInterceptor(30))
   @ApiOperation({ summary: 'Get top scores for a level' })
   @ApiQuery({ name: 'level', required: true, description: 'Level ID' })
-  @ApiQuery({ name: 'top', required: false, description: 'Number of entries (default 10)' })
+  @ApiQuery({
+    name: 'top',
+    required: false,
+    description: 'Number of entries (default 10)',
+  })
   @ApiResponse({ status: 200, type: [ScoreEntryResponseDto] })
   async get(
     @Query('level') levelId: string,

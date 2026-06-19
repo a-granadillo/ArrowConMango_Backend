@@ -27,7 +27,10 @@ export class PlayerProgress {
     best: Record<string, { moves: number; timeMs: number }>,
   ): PlayerProgress {
     const bestMap = new Map<string, Score>(
-      Object.entries(best).map(([k, v]) => [k, Score.create(v.moves, v.timeMs)]),
+      Object.entries(best).map(([k, v]) => [
+        k,
+        Score.create(v.moves, v.timeMs),
+      ]),
     );
     return new PlayerProgress(userId, new Set(completed), bestMap);
   }

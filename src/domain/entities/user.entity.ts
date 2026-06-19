@@ -37,7 +37,10 @@ export class User {
     return new User(id, email, pass, username);
   }
 
-  async verify(plainPassword: string, hasher: IPasswordHasher): Promise<boolean> {
+  async verify(
+    plainPassword: string,
+    hasher: IPasswordHasher,
+  ): Promise<boolean> {
     return hasher.compare(plainPassword, this._pass);
   }
 

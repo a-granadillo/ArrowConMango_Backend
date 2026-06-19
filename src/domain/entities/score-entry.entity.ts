@@ -20,7 +20,12 @@ export class ScoreEntry {
   }
 
   /** Rehidrata desde persistencia preservando el timestamp original. */
-  static reconstitute(userId: UserId, levelId: LevelId, score: Score, at: Date): ScoreEntry {
+  static reconstitute(
+    userId: UserId,
+    levelId: LevelId,
+    score: Score,
+    at: Date,
+  ): ScoreEntry {
     return new ScoreEntry(userId, levelId, score, at);
   }
 

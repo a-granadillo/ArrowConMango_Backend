@@ -1,4 +1,8 @@
-import { LevelDefinition, NodeDefinition, LevelRules } from '../../domain/entities/level-definition.entity';
+import {
+  LevelDefinition,
+  NodeDefinition,
+  LevelRules,
+} from '../../domain/entities/level-definition.entity';
 import { LevelId } from '../../domain/value-objects/level-id.vo';
 import { LevelDefinitionOrmEntity } from '../../infrastructure/orm/level.orm-entity';
 

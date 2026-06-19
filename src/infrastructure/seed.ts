@@ -8,7 +8,12 @@ import { ScoreEntryOrmEntity } from './orm/score-entry.orm-entity';
 const ds = new DataSource({
   type: 'sqlite',
   database: process.env['DB_PATH'] ?? 'arrow.sqlite',
-  entities: [UserOrmEntity, PlayerProgressOrmEntity, LevelDefinitionOrmEntity, ScoreEntryOrmEntity],
+  entities: [
+    UserOrmEntity,
+    PlayerProgressOrmEntity,
+    LevelDefinitionOrmEntity,
+    ScoreEntryOrmEntity,
+  ],
   synchronize: true,
 });
 
@@ -20,7 +25,10 @@ const LEVELS = [
       { id: 'n2', position: [1, 0], type: 'arrow', direction: 'DOWN' },
       { id: 'n3', position: [1, 1], type: 'exit' },
     ],
-    edges: [['n1', 'n2'], ['n2', 'n3']],
+    edges: [
+      ['n1', 'n2'],
+      ['n2', 'n3'],
+    ],
     rules: { timeLimitSeconds: 60 },
     version: 1,
   },
@@ -32,7 +40,11 @@ const LEVELS = [
       { id: 'a3', position: [1, 1], type: 'arrow', direction: 'UP' },
       { id: 'a4', position: [1, 0], type: 'exit' },
     ],
-    edges: [['a1', 'a2'], ['a2', 'a3'], ['a3', 'a4']],
+    edges: [
+      ['a1', 'a2'],
+      ['a2', 'a3'],
+      ['a3', 'a4'],
+    ],
     rules: { timeLimitSeconds: 90, allowRotation: true },
     version: 1,
   },

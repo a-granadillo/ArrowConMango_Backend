@@ -1,11 +1,13 @@
 import { RegisterUserUseCase } from '../../../src/application/use-cases/register-user.use-case';
-import { EmailAlreadyInUseError, InvalidEmailError } from '../../../src/domain/errors/domain-error';
+import {
+  EmailAlreadyInUseError,
+  InvalidEmailError,
+} from '../../../src/domain/errors/domain-error';
 import { IPasswordHasher } from '../../../src/domain/ports/password-hasher';
 import { IUserRepository } from '../../../src/domain/ports/user.repository';
 import { Email } from '../../../src/domain/value-objects/email.vo';
 import { PasswordHash } from '../../../src/domain/value-objects/password-hash.vo';
 import { User } from '../../../src/domain/entities/user.entity';
-import { UserId } from '../../../src/domain/value-objects/user-id.vo';
 
 // ─── Mocks (stubs de puertos — DIP en las pruebas) ───────────────────────────
 const makeUserRepo = (existingUser: User | null = null): IUserRepository => ({
@@ -52,7 +54,11 @@ describe('RegisterUserUseCase', () => {
     const useCase = new RegisterUserUseCase(repo, hasher);
     // Act & Assert
     await expect(
-      useCase.execute({ email: 'taken@test.com', password: 'pw', username: 'dup' }),
+      useCase.execute({
+        email: 'taken@test.com',
+        password: 'pw',
+        username: 'dup',
+      }),
     ).rejects.toThrow(EmailAlreadyInUseError);
     expect(repo.save).not.toHaveBeenCalled();
   });

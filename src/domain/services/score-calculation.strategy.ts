@@ -20,7 +20,8 @@ export class MovesBasedScore implements IScoreCalculationStrategy {
   private static readonly MOVE_PENALTY = 50;
 
   compute(score: Score): number {
-    const result = MovesBasedScore.BASE - score.moves * MovesBasedScore.MOVE_PENALTY;
+    const result =
+      MovesBasedScore.BASE - score.moves * MovesBasedScore.MOVE_PENALTY;
     return Math.max(0, result);
   }
 }
@@ -34,7 +35,8 @@ export class TimeBasedScore implements IScoreCalculationStrategy {
   private static readonly MS_PENALTY = 0.5;
 
   compute(score: Score): number {
-    const result = TimeBasedScore.BASE - score.timeMs * TimeBasedScore.MS_PENALTY;
+    const result =
+      TimeBasedScore.BASE - score.timeMs * TimeBasedScore.MS_PENALTY;
     return Math.max(0, result);
   }
 }

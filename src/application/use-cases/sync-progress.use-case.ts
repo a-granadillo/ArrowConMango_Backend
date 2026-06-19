@@ -1,6 +1,5 @@
 import { PlayerProgress } from '../../domain/entities/player-progress.entity';
 import { IProgressRepository } from '../../domain/ports/progress.repository';
-import { Score } from '../../domain/value-objects/score.vo';
 import { UserId } from '../../domain/value-objects/user-id.vo';
 import { ProgressOutput, SyncProgressInput } from '../dtos/progress.dto';
 import { UseCase } from '../shared/use-case';
@@ -26,14 +25,25 @@ export class SyncProgressUseCase implements UseCase<SyncInput, ProgressOutput> {
     const serverProgress =
       (await this.progressRepo.byUser(uid)) ?? PlayerProgress.create(uid);
 
-    const incoming = PlayerProgress.reconstitute(uid, input.data.completed, input.data.best);
+    const incoming = PlayerProgress.reconstitute(
+      uid,
+      input.data.completed,
+      input.data.best,
+    );
     serverProgress.merge(incoming);
 
     await this.progressRepo.save(serverProgress);
 
-    const best: Record<string, { moves: number; timeMs: number; value: number }> = {};
+    const best: Record<
+      string,
+      { moves: number; timeMs: number; value: number }
+    > = {};
     for (const [levelId, score] of serverProgress.best) {
-      best[levelId] = { moves: score.moves, timeMs: score.timeMs, value: score.value() };
+      best[levelId] = {
+        moves: score.moves,
+        timeMs: score.timeMs,
+        value: score.value(),
+      };
     }
 
     return {

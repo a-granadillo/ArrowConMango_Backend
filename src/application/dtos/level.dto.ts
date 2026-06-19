@@ -1,4 +1,7 @@
-import { LevelRules, NodeDefinition } from '../../domain/entities/level-definition.entity';
+import {
+  LevelRules,
+  NodeDefinition,
+} from '../../domain/entities/level-definition.entity';
 
 export interface UpsertLevelInput {
   id?: string;

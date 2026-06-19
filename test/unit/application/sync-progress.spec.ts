@@ -35,7 +35,10 @@ describe('SyncProgressUseCase', () => {
     const useCase = new SyncProgressUseCase(repo);
     const result = await useCase.execute({
       userId,
-      data: { completed: ['level-1'], best: { 'level-1': { moves: 3, timeMs: 10_000 } } },
+      data: {
+        completed: ['level-1'],
+        best: { 'level-1': { moves: 3, timeMs: 10_000 } },
+      },
     });
     expect(result.completed).toContain('level-1');
     expect(repo.save).toHaveBeenCalledTimes(1);
@@ -45,7 +48,9 @@ describe('SyncProgressUseCase', () => {
     // Arrange — start empty
     let savedProgress: PlayerProgress | null = null;
     const repo: IProgressRepository = {
-      byUser: jest.fn().mockImplementation(() => Promise.resolve(savedProgress)),
+      byUser: jest
+        .fn()
+        .mockImplementation(() => Promise.resolve(savedProgress)),
       save: jest.fn().mockImplementation((p: PlayerProgress) => {
         savedProgress = p;
         return Promise.resolve();
@@ -55,7 +60,10 @@ describe('SyncProgressUseCase', () => {
 
     const input = {
       userId,
-      data: { completed: ['level-1'], best: { 'level-1': { moves: 5, timeMs: 20_000 } } },
+      data: {
+        completed: ['level-1'],
+        best: { 'level-1': { moves: 5, timeMs: 20_000 } },
+      },
     };
 
     // Act — send same data twice

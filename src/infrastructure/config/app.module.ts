@@ -30,10 +30,6 @@ import {
   USER_REPOSITORY,
 } from './tokens';
 
-import { LevelDefinitionOrmEntity } from '../orm/level.orm-entity';
-import { PlayerProgressOrmEntity } from '../orm/progress.orm-entity';
-import { ScoreEntryOrmEntity } from '../orm/score-entry.orm-entity';
-import { UserOrmEntity } from '../orm/user.orm-entity';
 import { AuthGuard } from '../aop/auth.guard';
 
 /**
@@ -78,12 +74,14 @@ import { AuthGuard } from '../aop/auth.guard';
     // ── Use-case factory providers (D1: use-cases stay framework-agnostic) ──
     {
       provide: RegisterUserUseCase,
-      useFactory: (repo: any, hasher: any) => new RegisterUserUseCase(repo, hasher),
+      useFactory: (repo: any, hasher: any) =>
+        new RegisterUserUseCase(repo, hasher),
       inject: [USER_REPOSITORY, PASSWORD_HASHER],
     },
     {
       provide: LoginUseCase,
-      useFactory: (repo: any, hasher: any, token: any) => new LoginUseCase(repo, hasher, token),
+      useFactory: (repo: any, hasher: any, token: any) =>
+        new LoginUseCase(repo, hasher, token),
       inject: [USER_REPOSITORY, PASSWORD_HASHER, TOKEN_SERVICE],
     },
     {

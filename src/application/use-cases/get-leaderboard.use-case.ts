@@ -15,7 +15,10 @@ interface GetLeaderboardInput {
  * In the NestJS layer this use-case will be wrapped by CacheInterceptor
  * (AOP pattern) to avoid hitting the database on every request.
  */
-export class GetLeaderboardUseCase implements UseCase<GetLeaderboardInput, ScoreEntryOutput[]> {
+export class GetLeaderboardUseCase implements UseCase<
+  GetLeaderboardInput,
+  ScoreEntryOutput[]
+> {
   constructor(private readonly leaderboardRepo: ILeaderboardRepository) {}
 
   async execute(input: GetLeaderboardInput): Promise<ScoreEntryOutput[]> {

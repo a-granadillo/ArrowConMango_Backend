@@ -1,8 +1,10 @@
 import 'reflect-metadata';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const request = require('supertest') as (app: unknown) => import('supertest').SuperTest<import('supertest').Test>;
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const request = require('supertest') as (
+  app: unknown,
+) => import('supertest').SuperTest<import('supertest').Test>;
 import { DataSource } from 'typeorm';
 import { getDataSourceToken } from '@nestjs/typeorm';
 
@@ -24,7 +26,6 @@ process.env['JWT_EXPIRES_IN'] = '1h';
 
 let app: INestApplication;
 let bearerToken: string;
-let userId: string;
 
 const LEVEL_ID = 'e2e-level-001';
 
@@ -67,18 +68,25 @@ describe('POST /api/v1/auth/register', () => {
   it('should_return_201_when_valid_data', async () => {
     const res = await request(app.getHttpServer())
       .post('/api/v1/auth/register')
-      .send({ email: 'e2e@test.com', password: 'password123', username: 'E2EUser' });
+      .send({
+        email: 'e2e@test.com',
+        password: 'password123',
+        username: 'E2EUser',
+      });
     expect(res.status).toBe(201);
     expect(res.body.email).toBe('e2e@test.com');
     expect(res.body.username).toBe('E2EUser');
     expect(res.body.id).toBeDefined();
-    userId = res.body.id;
   });
 
   it('should_return_409_when_email_already_registered', async () => {
     const res = await request(app.getHttpServer())
       .post('/api/v1/auth/register')
-      .send({ email: 'e2e@test.com', password: 'password123', username: 'E2EUser2' });
+      .send({
+        email: 'e2e@test.com',
+        password: 'password123',
+        username: 'E2EUser2',
+      });
     expect(res.status).toBe(409);
     expect(res.body.error).toBe('EmailAlreadyInUseError');
   });
@@ -158,7 +166,9 @@ describe('GET /api/v1/levels', () => {
     const res = await request(app.getHttpServer()).get('/api/v1/levels');
     expect(res.status).toBe(200);
     expect(Array.isArray(res.body)).toBe(true);
-    const found = (res.body as Array<{ id: string }>).find((l) => l.id === LEVEL_ID);
+    const found = (res.body as Array<{ id: string }>).find(
+      (l) => l.id === LEVEL_ID,
+    );
     expect(found).toBeDefined();
   });
 });
@@ -168,7 +178,9 @@ describe('PUT /api/v1/levels/:id', () => {
     const res = await request(app.getHttpServer())
       .put('/api/v1/levels/any-level')
       .send({
-        nodes: [{ id: 'n1', position: [0, 0], type: 'arrow', direction: 'RIGHT' }],
+        nodes: [
+          { id: 'n1', position: [0, 0], type: 'arrow', direction: 'RIGHT' },
+        ],
         edges: [],
         rules: {},
       });
@@ -228,8 +240,9 @@ describe('POST /api/v1/leaderboard', () => {
 
 describe('GET /api/v1/leaderboard', () => {
   it('should_return_scores_ordered_by_best', async () => {
-    const res = await request(app.getHttpServer())
-      .get(`/api/v1/leaderboard?level=${LEVEL_ID}`);
+    const res = await request(app.getHttpServer()).get(
+      `/api/v1/leaderboard?level=${LEVEL_ID}`,
+    );
     expect(res.status).toBe(200);
     expect(Array.isArray(res.body)).toBe(true);
     expect((res.body as unknown[]).length).toBeGreaterThan(0);

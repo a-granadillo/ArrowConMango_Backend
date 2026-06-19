@@ -43,7 +43,13 @@ export class LevelDefinition {
     id?: LevelId,
     version = 1,
   ): LevelDefinition {
-    return new LevelDefinition(id ?? LevelId.create(), nodes, edges, rules, version);
+    return new LevelDefinition(
+      id ?? LevelId.create(),
+      nodes,
+      edges,
+      rules,
+      version,
+    );
   }
 
   static reconstitute(
