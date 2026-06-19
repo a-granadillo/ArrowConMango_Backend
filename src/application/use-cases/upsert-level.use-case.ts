@@ -11,7 +11,10 @@ import { UseCase } from '../shared/use-case';
  * before persisting to ensure graph integrity (no broken edges, has exit + arrows).
  * This allows administrators to publish new levels without recompiling the app.
  */
-export class UpsertLevelUseCase implements UseCase<UpsertLevelInput, LevelOutput> {
+export class UpsertLevelUseCase implements UseCase<
+  UpsertLevelInput,
+  LevelOutput
+> {
   constructor(private readonly levelRepo: ILevelRepository) {}
 
   async execute(input: UpsertLevelInput): Promise<LevelOutput> {

@@ -1,6 +1,9 @@
 import { GetLevelsUseCase } from '../../../src/application/use-cases/get-levels.use-case';
 import { UpsertLevelUseCase } from '../../../src/application/use-cases/upsert-level.use-case';
-import { LevelDefinition, NodeDefinition } from '../../../src/domain/entities/level-definition.entity';
+import {
+  LevelDefinition,
+  NodeDefinition,
+} from '../../../src/domain/entities/level-definition.entity';
 import { LevelValidationError } from '../../../src/domain/errors/domain-error';
 import { ILevelRepository } from '../../../src/domain/ports/level.repository';
 import { LevelId } from '../../../src/domain/value-objects/level-id.vo';
@@ -20,7 +23,12 @@ const makeLevelRepo = (levels: LevelDefinition[]): ILevelRepository => ({
 describe('GetLevelsUseCase', () => {
   it('should_return_all_levels', async () => {
     // Arrange
-    const level = LevelDefinition.create(validNodes, validEdges, {}, LevelId.create('l1'));
+    const level = LevelDefinition.create(
+      validNodes,
+      validEdges,
+      {},
+      LevelId.create('l1'),
+    );
     const repo = makeLevelRepo([level]);
     const useCase = new GetLevelsUseCase(repo);
     // Act
@@ -43,7 +51,11 @@ describe('UpsertLevelUseCase', () => {
   it('should_persist_level_when_graph_is_valid', async () => {
     const repo = makeLevelRepo([]);
     const useCase = new UpsertLevelUseCase(repo);
-    const result = await useCase.execute({ nodes: validNodes, edges: validEdges, rules: {} });
+    const result = await useCase.execute({
+      nodes: validNodes,
+      edges: validEdges,
+      rules: {},
+    });
     expect(repo.upsert).toHaveBeenCalledTimes(1);
     expect(result.nodes).toHaveLength(2);
   });
@@ -62,7 +74,11 @@ describe('UpsertLevelUseCase', () => {
     const repo = makeLevelRepo([]);
     const useCase = new UpsertLevelUseCase(repo);
     await expect(
-      useCase.execute({ nodes: validNodes, edges: [['n1', 'GHOST']], rules: {} }),
+      useCase.execute({
+        nodes: validNodes,
+        edges: [['n1', 'GHOST']],
+        rules: {},
+      }),
     ).rejects.toThrow(LevelValidationError);
   });
 

@@ -17,7 +17,10 @@ interface SubmitInput {
  * Records a completed-level score to the leaderboard.
  * The AuthGuard (AOP, NestJS layer) ensures only authenticated users reach this.
  */
-export class SubmitScoreUseCase implements UseCase<SubmitInput, ScoreEntryOutput> {
+export class SubmitScoreUseCase implements UseCase<
+  SubmitInput,
+  ScoreEntryOutput
+> {
   constructor(private readonly leaderboardRepo: ILeaderboardRepository) {}
 
   async execute(input: SubmitInput): Promise<ScoreEntryOutput> {

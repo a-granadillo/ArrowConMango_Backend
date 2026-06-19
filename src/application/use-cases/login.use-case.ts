@@ -1,4 +1,4 @@
-import { InvalidCredentialsError, UserNotFoundError } from '../../domain/errors/domain-error';
+import { InvalidCredentialsError } from '../../domain/errors/domain-error';
 import { IPasswordHasher } from '../../domain/ports/password-hasher';
 import { ITokenService } from '../../domain/ports/token.service';
 import { IUserRepository } from '../../domain/ports/user.repository';

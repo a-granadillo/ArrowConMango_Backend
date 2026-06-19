@@ -13,7 +13,11 @@ import { UserId } from '../../../src/domain/value-objects/user-id.vo';
 
 // ─── Shared helpers ──────────────────────────────────────────────────────────
 const makeUser = () =>
-  User.create(Email.create('alice@test.com'), PasswordHash.fromHash('$hash'), 'alice');
+  User.create(
+    Email.create('alice@test.com'),
+    PasswordHash.fromHash('$hash'),
+    'alice',
+  );
 
 const makeHasher = (result: boolean): IPasswordHasher => ({
   hash: async (plain) => PasswordHash.fromHash('$hashed:' + plain),
@@ -102,7 +106,12 @@ describe('PlayerProgress', () => {
 // ─── LevelDefinition ──────────────────────────────────────────────────────────
 describe('LevelDefinition', () => {
   const validNodes = [
-    { id: 'n1', position: [0, 0] as [number, number], type: 'arrow' as const, direction: 'UP' as const },
+    {
+      id: 'n1',
+      position: [0, 0] as [number, number],
+      type: 'arrow' as const,
+      direction: 'UP' as const,
+    },
     { id: 'n2', position: [0, 1] as [number, number], type: 'exit' as const },
   ];
   const validEdges: [string, string][] = [['n1', 'n2']];
@@ -124,7 +133,9 @@ describe('LevelDefinition', () => {
   });
 
   it('should_throw_when_no_arrow_node', () => {
-    const noArrow = [{ id: 'e1', position: [0, 0] as [number, number], type: 'exit' as const }];
+    const noArrow = [
+      { id: 'e1', position: [0, 0] as [number, number], type: 'exit' as const },
+    ];
     const level = LevelDefinition.create(noArrow, [], {});
     expect(() => level.validate()).toThrow(LevelValidationError);
   });
@@ -151,7 +162,9 @@ describe('Leaderboard', () => {
   it('should_return_at_most_n_entries', () => {
     const board = Leaderboard.create(levelId);
     for (let i = 0; i < 15; i++) {
-      board.submit(ScoreEntry.create(userId1, levelId, Score.create(i, i * 1000)));
+      board.submit(
+        ScoreEntry.create(userId1, levelId, Score.create(i, i * 1000)),
+      );
     }
     expect(board.top(5)).toHaveLength(5);
   });
@@ -185,8 +198,10 @@ describe('ScoreCalculationStrategy', () => {
 
   it('should_never_return_negative_in_any_strategy', () => {
     const badScore = Score.create(999, 999_999);
-    [new MovesBasedScore(), new TimeBasedScore(), new MixedScore()].forEach((s) => {
-      expect(s.compute(badScore)).toBeGreaterThanOrEqual(0);
-    });
+    [new MovesBasedScore(), new TimeBasedScore(), new MixedScore()].forEach(
+      (s) => {
+        expect(s.compute(badScore)).toBeGreaterThanOrEqual(0);
+      },
+    );
   });
 });

@@ -19,7 +19,9 @@ export class SyncProgressDto {
   @IsString({ each: true })
   completed!: string[];
 
-  @ApiPropertyOptional({ description: 'Best scores per level (levelId → {moves, timeMs})' })
+  @ApiPropertyOptional({
+    description: 'Best scores per level (levelId → {moves, timeMs})',
+  })
   @IsObject()
   best!: Record<string, { moves: number; timeMs: number }>;
 }

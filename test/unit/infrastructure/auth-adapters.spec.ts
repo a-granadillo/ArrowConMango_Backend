@@ -3,6 +3,9 @@ import { BcryptHasher } from '../../../src/infrastructure/auth/bcrypt-hasher';
 import { JwtTokenService } from '../../../src/infrastructure/auth/jwt-token.service';
 import { UnauthorizedError } from '../../../src/domain/errors/domain-error';
 import { UserId } from '../../../src/domain/value-objects/user-id.vo';
+import { ScoreEntry } from '../../../src/domain/entities/score-entry.entity';
+import { LevelId } from '../../../src/domain/value-objects/level-id.vo';
+import { Score } from '../../../src/domain/value-objects/score.vo';
 
 const makeConfig = (overrides: Record<string, string> = {}): ConfigService => {
   const values: Record<string, string> = {
@@ -10,7 +13,9 @@ const makeConfig = (overrides: Record<string, string> = {}): ConfigService => {
     JWT_EXPIRES_IN: '1h',
     ...overrides,
   };
-  return { get: (key: string, def?: string) => values[key] ?? def } as unknown as ConfigService;
+  return {
+    get: (key: string, def?: string) => values[key] ?? def,
+  } as unknown as ConfigService;
 };
 
 // ─── JwtTokenService ───────────────────────────────────────────────────────
@@ -37,7 +42,9 @@ describe('JwtTokenService', () => {
   it('should_throw_UnauthorizedError_when_token_signed_with_different_secret', () => {
     // Arrange
     const signer = new JwtTokenService(makeConfig({ JWT_SECRET: 'secret-a' }));
-    const verifier = new JwtTokenService(makeConfig({ JWT_SECRET: 'secret-b' }));
+    const verifier = new JwtTokenService(
+      makeConfig({ JWT_SECRET: 'secret-b' }),
+    );
     const token = signer.sign(UserId.create());
     // Act & Assert
     expect(() => verifier.verify(token)).toThrow(UnauthorizedError);
@@ -84,10 +91,6 @@ describe('BcryptHasher', () => {
 describe('ScoreEntry.reconstitute', () => {
   it('should_preserve_original_timestamp_when_reconstituting', () => {
     // Arrange
-    const { ScoreEntry } = require('../../../src/domain/entities/score-entry.entity');
-    const { UserId } = require('../../../src/domain/value-objects/user-id.vo');
-    const { LevelId } = require('../../../src/domain/value-objects/level-id.vo');
-    const { Score } = require('../../../src/domain/value-objects/score.vo');
     const userId = UserId.create('u1');
     const levelId = LevelId.create('l1');
     const score = Score.create(5, 20_000);

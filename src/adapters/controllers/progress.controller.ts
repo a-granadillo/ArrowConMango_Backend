@@ -1,5 +1,10 @@
 import { Body, Controller, Get, Put, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { GetProgressUseCase } from '../../application/use-cases/get-progress.use-case';
 import { SyncProgressUseCase } from '../../application/use-cases/sync-progress.use-case';
 import { AuthGuard } from '../../infrastructure/aop/auth.guard';

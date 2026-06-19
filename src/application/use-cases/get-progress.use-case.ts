@@ -29,7 +29,10 @@ export class GetProgressUseCase implements UseCase<string, ProgressOutput> {
   }
 
   private toOutput(progress: PlayerProgress): ProgressOutput {
-    const best: Record<string, { moves: number; timeMs: number; value: number }> = {};
+    const best: Record<
+      string,
+      { moves: number; timeMs: number; value: number }
+    > = {};
     for (const [levelId, score] of progress.best) {
       best[levelId] = {
         moves: score.moves,

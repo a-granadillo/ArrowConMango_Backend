@@ -13,7 +13,10 @@ import { UseCase } from '../shared/use-case';
  * Depends only on IUserRepository and IPasswordHasher interfaces (DIP).
  * Never imports TypeORM, bcrypt, or HTTP concerns.
  */
-export class RegisterUserUseCase implements UseCase<RegisterInput, RegisterOutput> {
+export class RegisterUserUseCase implements UseCase<
+  RegisterInput,
+  RegisterOutput
+> {
   constructor(
     private readonly userRepo: IUserRepository,
     private readonly hasher: IPasswordHasher,

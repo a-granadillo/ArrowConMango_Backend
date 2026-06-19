@@ -1,4 +1,9 @@
-import { CanActivate, ExecutionContext, Inject, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { ITokenService } from '../../domain/ports/token.service';
 import { UnauthorizedError } from '../../domain/errors/domain-error';
 import { TOKEN_SERVICE } from '../config/tokens';

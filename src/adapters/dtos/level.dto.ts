@@ -1,8 +1,17 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsArray, IsNumber, IsObject, IsOptional, IsString, Min } from 'class-validator';
+import {
+  IsArray,
+  IsNumber,
+  IsObject,
+  IsOptional,
+  IsString,
+  Min,
+} from 'class-validator';
 
 export class UpsertLevelDto {
-  @ApiPropertyOptional({ description: 'Level ID (UUID). Generated if omitted.' })
+  @ApiPropertyOptional({
+    description: 'Level ID (UUID). Generated if omitted.',
+  })
   @IsOptional()
   @IsString()
   id?: string;
@@ -15,7 +24,9 @@ export class UpsertLevelDto {
   @IsArray()
   edges!: [string, string][];
 
-  @ApiPropertyOptional({ description: 'Level rules (timeLimitSeconds, allowRotation, etc.)' })
+  @ApiPropertyOptional({
+    description: 'Level rules (timeLimitSeconds, allowRotation, etc.)',
+  })
   @IsObject()
   @IsOptional()
   rules?: Record<string, unknown>;

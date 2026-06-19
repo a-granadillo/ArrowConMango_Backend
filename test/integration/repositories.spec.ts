@@ -23,7 +23,12 @@ beforeAll(async () => {
   ds = new DataSource({
     type: 'sqlite',
     database: ':memory:',
-    entities: [UserOrmEntity, PlayerProgressOrmEntity, LevelDefinitionOrmEntity, ScoreEntryOrmEntity],
+    entities: [
+      UserOrmEntity,
+      PlayerProgressOrmEntity,
+      LevelDefinitionOrmEntity,
+      ScoreEntryOrmEntity,
+    ],
     synchronize: true,
   });
   await ds.initialize();
@@ -43,7 +48,12 @@ const makeLeaderboardRepo = () =>
   new TypeOrmLeaderboardRepository(ds.getRepository(ScoreEntryOrmEntity));
 
 const VALID_NODES = [
-  { id: 'n1', position: [0, 0] as [number, number], type: 'arrow' as const, direction: 'UP' as const },
+  {
+    id: 'n1',
+    position: [0, 0] as [number, number],
+    type: 'arrow' as const,
+    direction: 'UP' as const,
+  },
   { id: 'n2', position: [1, 0] as [number, number], type: 'exit' as const },
 ];
 
@@ -141,7 +151,12 @@ describe('TypeOrmLevelRepository', () => {
   it('should_upsert_and_retrieve_all_levels', async () => {
     // Arrange
     const repo = makeLevelRepo();
-    const level = LevelDefinition.create(VALID_NODES, [['n1', 'n2']], {}, LevelId.create('test-level-1'));
+    const level = LevelDefinition.create(
+      VALID_NODES,
+      [['n1', 'n2']],
+      {},
+      LevelId.create('test-level-1'),
+    );
     // Act
     await repo.upsert(level);
     const all = await repo.getAll();

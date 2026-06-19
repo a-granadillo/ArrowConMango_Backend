@@ -1,4 +1,10 @@
-import { CallHandler, ExecutionContext, Injectable, Logger, NestInterceptor } from '@nestjs/common';
+import {
+  CallHandler,
+  ExecutionContext,
+  Injectable,
+  Logger,
+  NestInterceptor,
+} from '@nestjs/common';
 import { Observable, tap } from 'rxjs';
 
 const SLOW_THRESHOLD_MS = 200;
@@ -21,7 +27,9 @@ export class MetricsInterceptor implements NestInterceptor {
       tap(() => {
         const ms = Date.now() - start;
         if (ms > SLOW_THRESHOLD_MS) {
-          this.logger.warn(`SLOW [${handlerName}] ${ms}ms (threshold: ${SLOW_THRESHOLD_MS}ms)`);
+          this.logger.warn(
+            `SLOW [${handlerName}] ${ms}ms (threshold: ${SLOW_THRESHOLD_MS}ms)`,
+          );
         } else {
           this.logger.debug(`[${handlerName}] ${ms}ms`);
         }
