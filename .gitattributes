@@ -1,0 +1,11 @@
+# Normaliza los finales de línea a LF en el repositorio para que el check de
+# Prettier (endOfLine: lf por defecto) sea consistente entre Windows y el CI (Linux).
+* text=auto eol=lf
+
+# Archivos binarios: sin conversión de finales de línea.
+*.sqlite binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
