@@ -165,6 +165,21 @@
 
 ---
 
+### Entrada #10 — Guest login + CORS (Issue #41)
+
+- **Fecha / autor:** 2026-07-12 / Equipo backend
+- **Herramienta:** Claude Opus 4.8
+- **Rol en el flujo:** Análisis de issue cross-repo + implementación
+- **Tarea/problema:** El Issue #41 fue creado en el repositorio del frontend (`ArrowConMango_Front`) pero describe trabajo de backend: habilitar CORS y soportar sesiones de invitado (Guest-First) sin registro, para que el frontend Flutter pueda sincronizar progreso con un JWT obtenido a partir de un UUID local.
+- **Prompt (paráfrasis fiel):**
+  > "Analiza el Issue #41 del repositorio del frontend (feat(backend): implement guest authentication and enable CORS) e impleméntalo en el backend, siguiendo la arquitectura Clean/Hexagonal existente."
+- **Resultado obtenido:** `app.enableCors()` en `src/main.ts`; nuevo `GuestLoginUseCase` (find-or-create idempotente por `Email.create('guest-<uuid>@guest.local')`) cableado en `app.module.ts` con el mismo patrón `useFactory` que `LoginUseCase`; `GuestLoginDto` (`@IsUUID()`) y endpoint `POST /auth/guest` en `AuthController`; tests unitarios (`guest-login.spec.ts`) y 3 casos E2E nuevos.
+- **Modificaciones del equipo:** Se confirmaron dos decisiones de alcance con el equipo antes de implementar: (1) contrato mínimo `{ uuid } → { token }` (sin `displayName`, sin enriquecer la respuesta) y (2) CORS abierto sin restricción de origen. Se corrigió el código HTTP esperado en el test E2E de UUID inválido: el `ValidationPipe` global devuelve `400` (no `422`, que está reservado a `DomainError`s vía `HttpExceptionFilter`).
+- **Verificación:** `npm run format:check && npm run lint && npm run build && npm run test:coverage`.
+- **Lecciones / limitaciones:** Un issue de producto puede describir trabajo de otra capa/repositorio del mismo proyecto; verificar primero de qué repo/servicio se trata antes de implementar evita descartar la petición o implementarla en el lugar equivocado.
+
+---
+
 ## Evaluación crítica
 
 ### Porcentaje aproximado de código asistido por IA

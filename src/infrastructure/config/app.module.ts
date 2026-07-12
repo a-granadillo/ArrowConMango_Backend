@@ -13,6 +13,7 @@ import { TypeOrmUserRepository } from '../../adapters/repositories/typeorm-user.
 import { GetLeaderboardUseCase } from '../../application/use-cases/get-leaderboard.use-case';
 import { GetLevelsUseCase } from '../../application/use-cases/get-levels.use-case';
 import { GetProgressUseCase } from '../../application/use-cases/get-progress.use-case';
+import { GuestLoginUseCase } from '../../application/use-cases/guest-login.use-case';
 import { LoginUseCase } from '../../application/use-cases/login.use-case';
 import { RegisterUserUseCase } from '../../application/use-cases/register-user.use-case';
 import { SubmitScoreUseCase } from '../../application/use-cases/submit-score.use-case';
@@ -82,6 +83,12 @@ import { AuthGuard } from '../aop/auth.guard';
       provide: LoginUseCase,
       useFactory: (repo: any, hasher: any, token: any) =>
         new LoginUseCase(repo, hasher, token),
+      inject: [USER_REPOSITORY, PASSWORD_HASHER, TOKEN_SERVICE],
+    },
+    {
+      provide: GuestLoginUseCase,
+      useFactory: (repo: any, hasher: any, token: any) =>
+        new GuestLoginUseCase(repo, hasher, token),
       inject: [USER_REPOSITORY, PASSWORD_HASHER, TOKEN_SERVICE],
     },
     {

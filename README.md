@@ -147,6 +147,7 @@ Prefijo global: `/api/v1`
 |---|---|---|---|---|
 | `POST` | `/auth/register` | — | RF-B-01 | Registrar nuevo usuario (201) |
 | `POST` | `/auth/login` | — | RF-B-01 | Autenticar y obtener JWT (200) |
+| `POST` | `/auth/guest` | — | RF-B-01 | Login de invitado: UUID → JWT (200) |
 | `GET` | `/progress` | Bearer | RF-B-02 | Obtener progreso del usuario |
 | `PUT` | `/progress` | Bearer | RF-B-02 | Sincronizar progreso (merge idempotente) |
 | `GET` | `/levels` | — | RF-B-04 | Listar todas las definiciones de niveles |

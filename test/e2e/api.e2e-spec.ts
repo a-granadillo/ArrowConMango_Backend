@@ -110,6 +110,38 @@ describe('POST /api/v1/auth/login', () => {
   });
 });
 
+describe('POST /api/v1/auth/guest', () => {
+  const guestUuid = 'a1b2c3d4-e5f6-4789-a123-b456c789d012';
+
+  it('should_return_200_and_jwt_when_uuid_is_valid', async () => {
+    const res = await request(app.getHttpServer())
+      .post('/api/v1/auth/guest')
+      .send({ uuid: guestUuid });
+    expect(res.status).toBe(200);
+    expect(res.body.token).toBeDefined();
+  });
+
+  it('should_return_same_user_token_when_uuid_repeats', async () => {
+    const first = await request(app.getHttpServer())
+      .post('/api/v1/auth/guest')
+      .send({ uuid: guestUuid });
+
+    const guestToken = first.body.token as string;
+    const progressRes = await request(app.getHttpServer())
+      .get('/api/v1/progress')
+      .set('Authorization', `Bearer ${guestToken}`);
+
+    expect(progressRes.status).not.toBe(401);
+  });
+
+  it('should_return_400_when_uuid_is_invalid', async () => {
+    const res = await request(app.getHttpServer())
+      .post('/api/v1/auth/guest')
+      .send({ uuid: 'not-a-uuid' });
+    expect(res.status).toBe(400);
+  });
+});
+
 // ─── Progress ──────────────────────────────────────────────────────────────
 
 describe('GET /api/v1/progress', () => {

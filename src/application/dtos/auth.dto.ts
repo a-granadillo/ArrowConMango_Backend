@@ -18,3 +18,11 @@ export interface LoginInput {
 export interface LoginOutput {
   token: string;
 }
+
+export interface GuestLoginInput {
+  uuid: string;
+}
+
+export interface GuestLoginOutput {
+  token: string;
+}

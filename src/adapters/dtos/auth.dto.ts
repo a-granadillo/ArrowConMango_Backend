@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsString, MinLength } from 'class-validator';
+import { IsEmail, IsString, IsUUID, MinLength } from 'class-validator';
 
 export class RegisterDto {
   @ApiProperty({ example: 'player@example.com' })
@@ -41,4 +41,13 @@ export class AuthResponseDto {
 export class LoginResponseDto {
   @ApiProperty({ description: 'JWT Bearer token' })
   token!: string;
+}
+
+export class GuestLoginDto {
+  @ApiProperty({
+    example: '3f4a1e2b-5c6d-4e7f-8a9b-0c1d2e3f4a5b',
+    description: 'Client-generated UUID identifying the guest player',
+  })
+  @IsUUID()
+  uuid!: string;
 }
