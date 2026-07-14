@@ -44,6 +44,41 @@ describe('SyncProgressUseCase', () => {
     expect(repo.save).toHaveBeenCalledTimes(1);
   });
 
+  it('should_return_current_level_when_syncing', async () => {
+    const repo = makeRepo(null);
+    const useCase = new SyncProgressUseCase(repo);
+    const result = await useCase.execute({
+      userId,
+      data: { completed: [], best: {}, currentLevel: 3 },
+    });
+    expect(result.currentLevel).toBe(3);
+  });
+
+  it('should_keep_higher_current_level_when_syncing_a_lower_one', async () => {
+    let savedProgress: PlayerProgress | null = null;
+    const repo: IProgressRepository = {
+      byUser: jest
+        .fn()
+        .mockImplementation(() => Promise.resolve(savedProgress)),
+      save: jest.fn().mockImplementation((p: PlayerProgress) => {
+        savedProgress = p;
+        return Promise.resolve();
+      }),
+    };
+    const useCase = new SyncProgressUseCase(repo);
+
+    await useCase.execute({
+      userId,
+      data: { completed: [], best: {}, currentLevel: 5 },
+    });
+    const result = await useCase.execute({
+      userId,
+      data: { completed: [], best: {}, currentLevel: 2 },
+    });
+
+    expect(result.currentLevel).toBe(5);
+  });
+
   it('should_merge_progress_idempotently_when_same_data_sent_twice', async () => {
     // Arrange — start empty
     let savedProgress: PlayerProgress | null = null;

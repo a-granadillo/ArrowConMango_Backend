@@ -101,6 +101,25 @@ describe('PlayerProgress', () => {
     expect(server.isCompleted(lvl1)).toBe(true);
     expect(server.isCompleted(lvl2)).toBe(true);
   });
+
+  it('should_default_current_level_to_zero_when_created', () => {
+    const progress = PlayerProgress.create(uid);
+    expect(progress.currentLevel).toBe(0);
+  });
+
+  it('should_keep_higher_current_level_when_merging_a_lower_one', () => {
+    const server = PlayerProgress.reconstitute(uid, [], {}, 3);
+    const incoming = PlayerProgress.reconstitute(uid, [], {}, 2);
+    server.merge(incoming);
+    expect(server.currentLevel).toBe(3);
+  });
+
+  it('should_advance_current_level_when_merging_a_higher_one', () => {
+    const server = PlayerProgress.reconstitute(uid, [], {}, 2);
+    const incoming = PlayerProgress.reconstitute(uid, [], {}, 5);
+    server.merge(incoming);
+    expect(server.currentLevel).toBe(5);
+  });
 });
 
 // ─── LevelDefinition ──────────────────────────────────────────────────────────
