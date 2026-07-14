@@ -180,6 +180,21 @@
 
 ---
 
+### Entrada #11 — currentLevel en sincronización de progreso (Issue #12, soporte a frontend #45)
+
+- **Fecha / autor:** 2026-07-14 / Equipo backend
+- **Herramienta:** Claude Opus 4.8
+- **Rol en el flujo:** Análisis de issue cross-repo + implementación
+- **Tarea/problema:** El Issue #45 del frontend (`ArrowConMango_Front`) requiere sincronizar el progreso del jugador con el backend, con fallback offline a Hive. Al explorar el modelo local del frontend (`AppProgressModel`) se detectó que este incluye un `currentLevel: int` que el endpoint `GET/PUT /api/v1/progress` existente no persistía (solo `completed` y `best`), lo que habría causado una sincronización con pérdida de datos. Se creó el Issue #12 en el backend para cerrar esta brecha antes de implementar el frontend.
+- **Prompt (paráfrasis fiel):**
+  > "Analiza el issue #45 del repositorio del frontend para comprender la tarea de sincronización de progreso, analiza el backend para adaptarlo a esa necesidad, y crea el issue correspondiente en el backend con su implementación en una rama desde master."
+- **Resultado obtenido:** Campo `currentLevel: number` (default `0`, monotónico vía `Math.max` en `merge()`) añadido a `PlayerProgress` (dominio), `PlayerProgressOrmEntity` (columna `int` con default `0`), `SyncProgressInput`/`ProgressOutput` y `SyncProgressDto`/`ProgressResponseDto` (opcional en el request para no romper clientes existentes), `ProgressMapper`, `SyncProgressUseCase`, `GetProgressUseCase` y `ProgressController`. 7 tests nuevos (dominio, use case, e2e, integración) cubriendo default, avance y no-regresión del valor al mergear.
+- **Modificaciones del equipo:** Se decidió que `currentLevel` fuera opcional en `SyncProgressDto` (no `required`) para mantener retro-compatibilidad con los tests E2E preexistentes que hacen `PUT /progress` sin ese campo. Prettier reformateó la firma multilínea de `PlayerProgress.reconstitute(...)` tras el cambio de constructor.
+- **Verificación:** `npm run format:check && npm run lint && npm run build && npm run test:coverage` (99/99 tests, cobertura 97.3%).
+- **Lecciones / limitaciones:** El backend ya tenía implementada la sincronización de progreso completa (incl. `POST /auth/guest`) antes de este cambio; explorar el código existente reveló que el issue #45 del frontend no requería un módulo nuevo, sino solo cerrar una brecha puntual de esquema — evitar asumir que "sincronizar progreso" implica backend desde cero.
+
+---
+
 ## Evaluación crítica
 
 ### Porcentaje aproximado de código asistido por IA
