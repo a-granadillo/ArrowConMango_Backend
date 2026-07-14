@@ -29,6 +29,7 @@ export class SyncProgressUseCase implements UseCase<SyncInput, ProgressOutput> {
       uid,
       input.data.completed,
       input.data.best,
+      input.data.currentLevel ?? 0,
     );
     serverProgress.merge(incoming);
 
@@ -50,6 +51,7 @@ export class SyncProgressUseCase implements UseCase<SyncInput, ProgressOutput> {
       userId: input.userId,
       completed: Array.from(serverProgress.completed),
       best,
+      currentLevel: serverProgress.currentLevel,
     };
   }
 }

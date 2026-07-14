@@ -15,16 +15,18 @@ export class PlayerProgress {
     private readonly _userId: UserId,
     private _completed: Set<string>,
     private _best: Map<string, Score>,
+    private _currentLevel: number,
   ) {}
 
   static create(userId: UserId): PlayerProgress {
-    return new PlayerProgress(userId, new Set(), new Map());
+    return new PlayerProgress(userId, new Set(), new Map(), 0);
   }
 
   static reconstitute(
     userId: UserId,
     completed: string[],
     best: Record<string, { moves: number; timeMs: number }>,
+    currentLevel = 0,
   ): PlayerProgress {
     const bestMap = new Map<string, Score>(
       Object.entries(best).map(([k, v]) => [
@@ -32,7 +34,12 @@ export class PlayerProgress {
         Score.create(v.moves, v.timeMs),
       ]),
     );
-    return new PlayerProgress(userId, new Set(completed), bestMap);
+    return new PlayerProgress(
+      userId,
+      new Set(completed),
+      bestMap,
+      currentLevel,
+    );
   }
 
   /**
@@ -40,6 +47,7 @@ export class PlayerProgress {
    * Rules:
    *  - completed is a union (a level once cleared stays cleared).
    *  - best keeps the higher Score per level.
+   *  - currentLevel keeps the higher value (never regresses).
    */
   merge(other: PlayerProgress): void {
     for (const levelId of other._completed) {
@@ -51,6 +59,7 @@ export class PlayerProgress {
         this._best.set(levelId, score);
       }
     }
+    this._currentLevel = Math.max(this._currentLevel, other._currentLevel);
   }
 
   markCompleted(levelId: LevelId, score: Score): void {
@@ -79,5 +88,9 @@ export class PlayerProgress {
 
   get best(): Map<string, Score> {
     return new Map(this._best);
+  }
+
+  get currentLevel(): number {
+    return this._currentLevel;
   }
 }

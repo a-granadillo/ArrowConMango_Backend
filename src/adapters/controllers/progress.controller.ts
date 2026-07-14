@@ -37,7 +37,11 @@ export class ProgressController {
   ): Promise<ProgressResponseDto> {
     return this.syncProgress.execute({
       userId,
-      data: { completed: dto.completed, best: dto.best },
+      data: {
+        completed: dto.completed,
+        best: dto.best,
+        currentLevel: dto.currentLevel,
+      },
     });
   }
 }

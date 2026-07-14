@@ -1,5 +1,12 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsArray, IsNumber, IsObject, IsString, Min } from 'class-validator';
+import {
+  IsArray,
+  IsNumber,
+  IsObject,
+  IsOptional,
+  IsString,
+  Min,
+} from 'class-validator';
 
 export class BestScoreDto {
   @ApiProperty()
@@ -24,6 +31,12 @@ export class SyncProgressDto {
   })
   @IsObject()
   best!: Record<string, { moves: number; timeMs: number }>;
+
+  @ApiPropertyOptional({ description: 'Level the player is currently on' })
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  currentLevel?: number;
 }
 
 export class ProgressResponseDto {
@@ -35,4 +48,7 @@ export class ProgressResponseDto {
 
   @ApiProperty()
   best!: Record<string, { moves: number; timeMs: number; value: number }>;
+
+  @ApiProperty()
+  currentLevel!: number;
 }
