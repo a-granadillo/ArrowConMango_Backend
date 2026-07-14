@@ -15,4 +15,8 @@ export class PlayerProgressOrmEntity {
    */
   @Column({ type: 'simple-json' })
   best!: Record<string, { moves: number; timeMs: number }>;
+
+  /** Level the player is currently on. Defaults to 0 for pre-existing rows. */
+  @Column({ type: 'int', default: 0 })
+  currentLevel!: number;
 }

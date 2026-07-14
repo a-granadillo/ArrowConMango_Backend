@@ -143,6 +143,18 @@ describe('TypeOrmProgressRepository', () => {
     const result = await repo.byUser(UserId.create());
     expect(result).toBeNull();
   });
+
+  it('should_persist_and_retrieve_current_level', async () => {
+    // Arrange
+    const repo = makeProgressRepo();
+    const userId = UserId.create();
+    const progress = PlayerProgress.reconstitute(userId, [], {}, 4);
+    // Act
+    await repo.save(progress);
+    const found = await repo.byUser(userId);
+    // Assert
+    expect(found!.currentLevel).toBe(4);
+  });
 });
 
 // ─── LevelRepository ───────────────────────────────────────────────────────

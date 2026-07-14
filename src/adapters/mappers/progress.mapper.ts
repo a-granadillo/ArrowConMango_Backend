@@ -8,6 +8,7 @@ export class ProgressMapper {
       UserId.create(orm.userId),
       orm.completed,
       orm.best,
+      orm.currentLevel ?? 0,
     );
   }
 
@@ -21,6 +22,7 @@ export class ProgressMapper {
       best[levelId] = { moves: score.moves, timeMs: score.timeMs };
     }
     orm.best = best;
+    orm.currentLevel = progress.currentLevel;
     return orm;
   }
 }

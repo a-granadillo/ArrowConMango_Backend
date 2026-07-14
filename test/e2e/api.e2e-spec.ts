@@ -189,6 +189,33 @@ describe('PUT /api/v1/progress', () => {
     expect(res.status).toBe(200);
     expect(res.body.completed).toHaveLength(1);
   });
+
+  it('should_sync_and_return_current_level', async () => {
+    const res = await request(app.getHttpServer())
+      .put('/api/v1/progress')
+      .set('Authorization', `Bearer ${bearerToken}`)
+      .send({ completed: [LEVEL_ID], best: {}, currentLevel: 3 });
+    expect(res.status).toBe(200);
+    expect(res.body.currentLevel).toBe(3);
+
+    const getRes = await request(app.getHttpServer())
+      .get('/api/v1/progress')
+      .set('Authorization', `Bearer ${bearerToken}`);
+    expect(getRes.body.currentLevel).toBe(3);
+  });
+
+  it('should_not_regress_current_level_when_syncing_a_lower_value', async () => {
+    await request(app.getHttpServer())
+      .put('/api/v1/progress')
+      .set('Authorization', `Bearer ${bearerToken}`)
+      .send({ completed: [LEVEL_ID], best: {}, currentLevel: 3 });
+    const res = await request(app.getHttpServer())
+      .put('/api/v1/progress')
+      .set('Authorization', `Bearer ${bearerToken}`)
+      .send({ completed: [LEVEL_ID], best: {}, currentLevel: 2 });
+    expect(res.status).toBe(200);
+    expect(res.body.currentLevel).toBe(3);
+  });
 });
 
 // ─── Levels ────────────────────────────────────────────────────────────────

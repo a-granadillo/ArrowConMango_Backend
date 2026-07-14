@@ -22,6 +22,7 @@ export class GetProgressUseCase implements UseCase<string, ProgressOutput> {
         userId,
         completed: [],
         best: {},
+        currentLevel: 0,
       };
     }
 
@@ -44,6 +45,7 @@ export class GetProgressUseCase implements UseCase<string, ProgressOutput> {
       userId: progress.userId.value,
       completed: Array.from(progress.completed),
       best,
+      currentLevel: progress.currentLevel,
     };
   }
 }
