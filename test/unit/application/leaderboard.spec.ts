@@ -2,12 +2,15 @@ import { GetLeaderboardUseCase } from '../../../src/application/use-cases/get-le
 import { SubmitScoreUseCase } from '../../../src/application/use-cases/submit-score.use-case';
 import { ScoreEntry } from '../../../src/domain/entities/score-entry.entity';
 import { ILeaderboardRepository } from '../../../src/domain/ports/leaderboard.repository';
+import { MangoScore } from '../../../src/domain/services/score-calculation.strategy';
 import { LevelId } from '../../../src/domain/value-objects/level-id.vo';
 import { Score } from '../../../src/domain/value-objects/score.vo';
 import { UserId } from '../../../src/domain/value-objects/user-id.vo';
 
+const strategy = new MangoScore();
+
 const makeLbRepo = (entries: ScoreEntry[]): ILeaderboardRepository => ({
-  top: jest.fn().mockResolvedValue(entries),
+  byLevel: jest.fn().mockResolvedValue(entries),
   add: jest.fn().mockResolvedValue(undefined),
 });
 
@@ -18,7 +21,7 @@ describe('GetLeaderboardUseCase', () => {
     const userId = UserId.create('u1');
     const entry = ScoreEntry.create(userId, levelId, Score.create(3, 10_000));
     const repo = makeLbRepo([entry]);
-    const useCase = new GetLeaderboardUseCase(repo);
+    const useCase = new GetLeaderboardUseCase(repo, strategy);
     // Act
     const result = await useCase.execute({ levelId: 'lvl-1' });
     // Assert
@@ -26,12 +29,12 @@ describe('GetLeaderboardUseCase', () => {
     expect(result[0].userId).toBe('u1');
     expect(result[0].levelId).toBe('lvl-1');
     expect(result[0].value).toBeGreaterThan(0);
-    expect(repo.top).toHaveBeenCalledWith(expect.anything(), 10);
+    expect(repo.byLevel).toHaveBeenCalledWith(expect.anything());
   });
 
   it('should_return_empty_array_when_no_entries', async () => {
     const repo = makeLbRepo([]);
-    const useCase = new GetLeaderboardUseCase(repo);
+    const useCase = new GetLeaderboardUseCase(repo, strategy);
     const result = await useCase.execute({ levelId: 'lvl-x' });
     expect(result).toEqual([]);
   });
@@ -41,7 +44,7 @@ describe('SubmitScoreUseCase', () => {
   it('should_persist_score_entry_when_called', async () => {
     // Arrange
     const repo = makeLbRepo([]);
-    const useCase = new SubmitScoreUseCase(repo);
+    const useCase = new SubmitScoreUseCase(repo, strategy);
     // Act
     const result = await useCase.execute({
       userId: 'user-99',

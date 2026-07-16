@@ -1,5 +1,6 @@
 import { ScoreEntry } from '../../domain/entities/score-entry.entity';
 import { ILeaderboardRepository } from '../../domain/ports/leaderboard.repository';
+import { IScoreCalculationStrategy } from '../../domain/services/score-calculation.strategy';
 import { LevelId } from '../../domain/value-objects/level-id.vo';
 import { Score } from '../../domain/value-objects/score.vo';
 import { UserId } from '../../domain/value-objects/user-id.vo';
@@ -21,7 +22,10 @@ export class SubmitScoreUseCase implements UseCase<
   SubmitInput,
   ScoreEntryOutput
 > {
-  constructor(private readonly leaderboardRepo: ILeaderboardRepository) {}
+  constructor(
+    private readonly leaderboardRepo: ILeaderboardRepository,
+    private readonly scoring: IScoreCalculationStrategy,
+  ) {}
 
   async execute(input: SubmitInput): Promise<ScoreEntryOutput> {
     const userId = UserId.create(input.userId);
@@ -36,7 +40,7 @@ export class SubmitScoreUseCase implements UseCase<
       levelId: entry.levelId.value,
       moves: entry.score.moves,
       timeMs: entry.score.timeMs,
-      value: entry.score.value(),
+      value: this.scoring.compute(entry.score),
       at: entry.at.toISOString(),
     };
   }

@@ -1,3 +1,4 @@
+import { IScoreCalculationStrategy } from '../services/score-calculation.strategy';
 import { LevelId } from '../value-objects/level-id.vo';
 import { Score } from '../value-objects/score.vo';
 import { UserId } from '../value-objects/user-id.vo';
@@ -49,23 +50,27 @@ export class PlayerProgress {
    *  - best keeps the higher Score per level.
    *  - currentLevel keeps the higher value (never regresses).
    */
-  merge(other: PlayerProgress): void {
+  merge(other: PlayerProgress, strategy: IScoreCalculationStrategy): void {
     for (const levelId of other._completed) {
       this._completed.add(levelId);
     }
     for (const [levelId, score] of other._best) {
       const existing = this._best.get(levelId);
-      if (!existing || score.isBetterThan(existing)) {
+      if (!existing || score.isBetterThan(existing, strategy)) {
         this._best.set(levelId, score);
       }
     }
     this._currentLevel = Math.max(this._currentLevel, other._currentLevel);
   }
 
-  markCompleted(levelId: LevelId, score: Score): void {
+  markCompleted(
+    levelId: LevelId,
+    score: Score,
+    strategy: IScoreCalculationStrategy,
+  ): void {
     this._completed.add(levelId.value);
     const existing = this._best.get(levelId.value);
-    if (!existing || score.isBetterThan(existing)) {
+    if (!existing || score.isBetterThan(existing, strategy)) {
       this._best.set(levelId.value, score);
     }
   }

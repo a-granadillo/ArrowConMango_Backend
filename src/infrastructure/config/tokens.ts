@@ -9,3 +9,4 @@ export const LEVEL_REPOSITORY = 'ILevelRepository';
 export const LEADERBOARD_REPOSITORY = 'ILeaderboardRepository';
 export const TOKEN_SERVICE = 'ITokenService';
 export const PASSWORD_HASHER = 'IPasswordHasher';
+export const SCORE_STRATEGY = 'IScoreCalculationStrategy';

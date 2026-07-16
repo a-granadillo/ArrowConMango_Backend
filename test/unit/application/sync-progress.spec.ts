@@ -1,6 +1,7 @@
 import { SyncProgressUseCase } from '../../../src/application/use-cases/sync-progress.use-case';
 import { PlayerProgress } from '../../../src/domain/entities/player-progress.entity';
 import { IProgressRepository } from '../../../src/domain/ports/progress.repository';
+import { MixedScore } from '../../../src/domain/services/score-calculation.strategy';
 import { UserId } from '../../../src/domain/value-objects/user-id.vo';
 
 const makeRepo = (progress: PlayerProgress | null): IProgressRepository => ({
@@ -10,13 +11,14 @@ const makeRepo = (progress: PlayerProgress | null): IProgressRepository => ({
 
 describe('SyncProgressUseCase', () => {
   const userId = 'user-42';
+  const strategy = new MixedScore();
 
   it('should_merge_and_save_progress_when_server_record_exists', async () => {
     // Arrange — server has level-1 already
     const uid = UserId.create(userId);
     const serverProgress = PlayerProgress.create(uid);
     const repo = makeRepo(serverProgress);
-    const useCase = new SyncProgressUseCase(repo);
+    const useCase = new SyncProgressUseCase(repo, strategy);
     // Act
     const result = await useCase.execute({
       userId,
@@ -32,7 +34,7 @@ describe('SyncProgressUseCase', () => {
 
   it('should_create_new_progress_when_no_server_record', async () => {
     const repo = makeRepo(null);
-    const useCase = new SyncProgressUseCase(repo);
+    const useCase = new SyncProgressUseCase(repo, strategy);
     const result = await useCase.execute({
       userId,
       data: {
@@ -46,7 +48,7 @@ describe('SyncProgressUseCase', () => {
 
   it('should_return_current_level_when_syncing', async () => {
     const repo = makeRepo(null);
-    const useCase = new SyncProgressUseCase(repo);
+    const useCase = new SyncProgressUseCase(repo, strategy);
     const result = await useCase.execute({
       userId,
       data: { completed: [], best: {}, currentLevel: 3 },
@@ -65,7 +67,7 @@ describe('SyncProgressUseCase', () => {
         return Promise.resolve();
       }),
     };
-    const useCase = new SyncProgressUseCase(repo);
+    const useCase = new SyncProgressUseCase(repo, strategy);
 
     await useCase.execute({
       userId,
@@ -91,7 +93,7 @@ describe('SyncProgressUseCase', () => {
         return Promise.resolve();
       }),
     };
-    const useCase = new SyncProgressUseCase(repo);
+    const useCase = new SyncProgressUseCase(repo, strategy);
 
     const input = {
       userId,

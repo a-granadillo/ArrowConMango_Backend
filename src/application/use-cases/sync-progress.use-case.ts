@@ -1,7 +1,9 @@
 import { PlayerProgress } from '../../domain/entities/player-progress.entity';
 import { IProgressRepository } from '../../domain/ports/progress.repository';
+import { IScoreCalculationStrategy } from '../../domain/services/score-calculation.strategy';
 import { UserId } from '../../domain/value-objects/user-id.vo';
 import { ProgressOutput, SyncProgressInput } from '../dtos/progress.dto';
+import { ProgressPresenter } from '../shared/progress-presenter';
 import { UseCase } from '../shared/use-case';
 
 interface SyncInput {
@@ -17,7 +19,10 @@ interface SyncInput {
  * twice produces the same result (RF-B-02, GUIA_IA §9).
  */
 export class SyncProgressUseCase implements UseCase<SyncInput, ProgressOutput> {
-  constructor(private readonly progressRepo: IProgressRepository) {}
+  constructor(
+    private readonly progressRepo: IProgressRepository,
+    private readonly scoring: IScoreCalculationStrategy,
+  ) {}
 
   async execute(input: SyncInput): Promise<ProgressOutput> {
     const uid = UserId.create(input.userId);
@@ -31,27 +36,10 @@ export class SyncProgressUseCase implements UseCase<SyncInput, ProgressOutput> {
       input.data.best,
       input.data.currentLevel ?? 0,
     );
-    serverProgress.merge(incoming);
+    serverProgress.merge(incoming, this.scoring);
 
     await this.progressRepo.save(serverProgress);
 
-    const best: Record<
-      string,
-      { moves: number; timeMs: number; value: number }
-    > = {};
-    for (const [levelId, score] of serverProgress.best) {
-      best[levelId] = {
-        moves: score.moves,
-        timeMs: score.timeMs,
-        value: score.value(),
-      };
-    }
-
-    return {
-      userId: input.userId,
-      completed: Array.from(serverProgress.completed),
-      best,
-      currentLevel: serverProgress.currentLevel,
-    };
+    return ProgressPresenter.toOutput(serverProgress, this.scoring);
   }
 }

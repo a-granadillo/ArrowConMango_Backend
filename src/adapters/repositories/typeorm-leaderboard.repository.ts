@@ -14,15 +14,8 @@ export class TypeOrmLeaderboardRepository implements ILeaderboardRepository {
     private readonly repo: Repository<ScoreEntryOrmEntity>,
   ) {}
 
-  async top(levelId: LevelId, n = 10): Promise<ScoreEntry[]> {
-    const orms = await this.repo.find({
-      where: { levelId: levelId.value },
-      order: {
-        moves: 'ASC',
-        timeMs: 'ASC',
-      },
-      take: n,
-    });
+  async byLevel(levelId: LevelId): Promise<ScoreEntry[]> {
+    const orms = await this.repo.find({ where: { levelId: levelId.value } });
     return orms.map(ScoreEntryMapper.toDomain);
   }
 

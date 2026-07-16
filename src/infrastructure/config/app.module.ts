@@ -10,6 +10,8 @@ import { TypeOrmLevelRepository } from '../../adapters/repositories/typeorm-leve
 import { TypeOrmProgressRepository } from '../../adapters/repositories/typeorm-progress.repository';
 import { TypeOrmUserRepository } from '../../adapters/repositories/typeorm-user.repository';
 
+import { MangoScore } from '../../domain/services/score-calculation.strategy';
+
 import { GetLeaderboardUseCase } from '../../application/use-cases/get-leaderboard.use-case';
 import { GetLevelsUseCase } from '../../application/use-cases/get-levels.use-case';
 import { GetProgressUseCase } from '../../application/use-cases/get-progress.use-case';
@@ -27,6 +29,7 @@ import {
   LEVEL_REPOSITORY,
   PASSWORD_HASHER,
   PROGRESS_REPOSITORY,
+  SCORE_STRATEGY,
   TOKEN_SERVICE,
   USER_REPOSITORY,
 } from './tokens';
@@ -68,6 +71,10 @@ import { AuthGuard } from '../aop/auth.guard';
       provide: LEADERBOARD_REPOSITORY,
       useClass: TypeOrmLeaderboardRepository,
     },
+    {
+      provide: SCORE_STRATEGY,
+      useClass: MangoScore,
+    },
 
     // ── AOP aspects ─────────────────────────────────────────────────────────
     AuthGuard,
@@ -93,13 +100,15 @@ import { AuthGuard } from '../aop/auth.guard';
     },
     {
       provide: GetProgressUseCase,
-      useFactory: (repo: any) => new GetProgressUseCase(repo),
-      inject: [PROGRESS_REPOSITORY],
+      useFactory: (repo: any, scoring: any) =>
+        new GetProgressUseCase(repo, scoring),
+      inject: [PROGRESS_REPOSITORY, SCORE_STRATEGY],
     },
     {
       provide: SyncProgressUseCase,
-      useFactory: (repo: any) => new SyncProgressUseCase(repo),
-      inject: [PROGRESS_REPOSITORY],
+      useFactory: (repo: any, scoring: any) =>
+        new SyncProgressUseCase(repo, scoring),
+      inject: [PROGRESS_REPOSITORY, SCORE_STRATEGY],
     },
     {
       provide: GetLevelsUseCase,
@@ -113,13 +122,15 @@ import { AuthGuard } from '../aop/auth.guard';
     },
     {
       provide: GetLeaderboardUseCase,
-      useFactory: (repo: any) => new GetLeaderboardUseCase(repo),
-      inject: [LEADERBOARD_REPOSITORY],
+      useFactory: (repo: any, scoring: any) =>
+        new GetLeaderboardUseCase(repo, scoring),
+      inject: [LEADERBOARD_REPOSITORY, SCORE_STRATEGY],
     },
     {
       provide: SubmitScoreUseCase,
-      useFactory: (repo: any) => new SubmitScoreUseCase(repo),
-      inject: [LEADERBOARD_REPOSITORY],
+      useFactory: (repo: any, scoring: any) =>
+        new SubmitScoreUseCase(repo, scoring),
+      inject: [LEADERBOARD_REPOSITORY, SCORE_STRATEGY],
     },
   ],
 })
