@@ -5,7 +5,7 @@ import { ScoreEntry } from '../../domain/entities/score-entry.entity';
 import { ILeaderboardRepository } from '../../domain/ports/leaderboard.repository';
 import { LevelId } from '../../domain/value-objects/level-id.vo';
 import { ScoreEntryOrmEntity } from '../../infrastructure/orm/score-entry.orm-entity';
-import { ScoreEntryMapper } from '../mappers/score-entry.mapper';
+import { ScoreEntryMapper } from './score-entry.mapper';
 
 @Injectable()
 export class TypeOrmLeaderboardRepository implements ILeaderboardRepository {
