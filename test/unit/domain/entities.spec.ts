@@ -48,6 +48,12 @@ describe('User', () => {
     const result = await user.verify('wrong', hasher);
     expect(result).toBe(false);
   });
+
+  it('should_update_username_when_renamed', () => {
+    const user = makeUser();
+    user.rename('NewName');
+    expect(user.username).toBe('NewName');
+  });
 });
 
 // ─── PlayerProgress ───────────────────────────────────────────────────────────

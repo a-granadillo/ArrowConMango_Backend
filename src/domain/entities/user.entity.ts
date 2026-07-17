@@ -44,6 +44,10 @@ export class User {
     return hasher.compare(plainPassword, this._pass);
   }
 
+  rename(newUsername: string): void {
+    this._username = newUsername;
+  }
+
   get id(): UserId {
     return this._id;
   }
