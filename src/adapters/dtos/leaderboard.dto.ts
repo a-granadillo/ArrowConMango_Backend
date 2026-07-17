@@ -17,8 +17,7 @@ export class SubmitScoreDto {
   timeMs!: number;
 
   @ApiProperty({
-    description:
-      'Game mode (defaults to campaign for backwards compatibility)',
+    description: 'Game mode (defaults to campaign for backwards compatibility)',
     required: false,
     enum: ['campaign', 'survival'],
   })
