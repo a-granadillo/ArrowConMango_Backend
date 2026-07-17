@@ -93,7 +93,12 @@ export class LeaderboardController {
   ): Promise<ScoreEntryResponseDto> {
     return this.submitScore.execute({
       userId,
-      data: { levelId: dto.levelId, moves: dto.moves, timeMs: dto.timeMs },
+      data: {
+        levelId: dto.levelId,
+        moves: dto.moves,
+        timeMs: dto.timeMs,
+        mode: dto.mode,
+      },
     });
   }
 }

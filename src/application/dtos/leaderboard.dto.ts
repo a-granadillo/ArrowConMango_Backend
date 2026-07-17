@@ -2,6 +2,8 @@ export interface SubmitScoreInput {
   levelId: string;
   moves: number;
   timeMs: number;
+  /** Defaults to 'campaign' at the HTTP boundary when omitted. */
+  mode?: 'campaign' | 'survival';
 }
 
 export interface ScoreEntryOutput {

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsString, Min } from 'class-validator';
+import { IsIn, IsNumber, IsOptional, IsString, Min } from 'class-validator';
 
 export class SubmitScoreDto {
   @ApiProperty({ description: 'Level ID' })
@@ -15,6 +15,16 @@ export class SubmitScoreDto {
   @IsNumber()
   @Min(0)
   timeMs!: number;
+
+  @ApiProperty({
+    description:
+      'Game mode (defaults to campaign for backwards compatibility)',
+    required: false,
+    enum: ['campaign', 'survival'],
+  })
+  @IsOptional()
+  @IsIn(['campaign', 'survival'])
+  mode?: 'campaign' | 'survival';
 }
 
 export class ScoreEntryResponseDto {
