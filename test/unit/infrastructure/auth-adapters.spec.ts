@@ -4,6 +4,7 @@ import { JwtTokenService } from '../../../src/infrastructure/auth/jwt-token.serv
 import { UnauthorizedError } from '../../../src/domain/errors/domain-error';
 import { UserId } from '../../../src/domain/value-objects/user-id.vo';
 import { ScoreEntry } from '../../../src/domain/entities/score-entry.entity';
+import { GameMode } from '../../../src/domain/value-objects/game-mode.vo';
 import { LevelId } from '../../../src/domain/value-objects/level-id.vo';
 import { Score } from '../../../src/domain/value-objects/score.vo';
 
@@ -105,7 +106,13 @@ describe('ScoreEntry.reconstitute', () => {
     const score = Score.create(5, 20_000);
     const originalDate = new Date('2024-01-15T10:30:00Z');
     // Act
-    const entry = ScoreEntry.reconstitute(userId, levelId, score, originalDate);
+    const entry = ScoreEntry.reconstitute(
+      userId,
+      levelId,
+      score,
+      originalDate,
+      GameMode.campaign(),
+    );
     // Assert
     expect(entry.at.toISOString()).toBe(originalDate.toISOString());
     expect(entry.userId.value).toBe('u1');

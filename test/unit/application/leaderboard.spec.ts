@@ -5,6 +5,7 @@ import { ScoreEntry } from '../../../src/domain/entities/score-entry.entity';
 import { ILeaderboardRepository } from '../../../src/domain/ports/leaderboard.repository';
 import { IProgressRepository } from '../../../src/domain/ports/progress.repository';
 import { MangoScore } from '../../../src/domain/services/score-calculation.strategy';
+import { GameMode } from '../../../src/domain/value-objects/game-mode.vo';
 import { LevelId } from '../../../src/domain/value-objects/level-id.vo';
 import { Score } from '../../../src/domain/value-objects/score.vo';
 import { UserId } from '../../../src/domain/value-objects/user-id.vo';
@@ -13,6 +14,7 @@ const strategy = new MangoScore();
 
 const makeLbRepo = (entries: ScoreEntry[]): ILeaderboardRepository => ({
   byLevel: jest.fn().mockResolvedValue(entries),
+  bySurvival: jest.fn().mockResolvedValue([]),
   add: jest.fn().mockResolvedValue(undefined),
 });
 
@@ -29,7 +31,12 @@ describe('GetLeaderboardUseCase', () => {
     // Arrange
     const levelId = LevelId.create('lvl-1');
     const userId = UserId.create('u1');
-    const entry = ScoreEntry.create(userId, levelId, Score.create(3, 10_000));
+    const entry = ScoreEntry.create(
+      userId,
+      levelId,
+      Score.create(3, 10_000),
+      GameMode.campaign(),
+    );
     const repo = makeLbRepo([entry]);
     const useCase = new GetLeaderboardUseCase(repo, strategy);
     // Act
@@ -105,5 +112,20 @@ describe('SubmitScoreUseCase', () => {
     const saved = (progressRepo.save as jest.Mock).mock
       .calls[0][0] as PlayerProgress;
     expect(saved.bestFor(levelId)?.moves).toBe(1);
+  });
+
+  it('should_not_touch_player_progress_for_survival_submissions', async () => {
+    // Arrange — survival runs must never leak into campaign best-scores
+    const repo = makeLbRepo([]);
+    const progressRepo = makeProgressRepo(null);
+    const useCase = new SubmitScoreUseCase(repo, progressRepo, strategy);
+    // Act
+    await useCase.execute({
+      userId: 'user-5',
+      data: { levelId: '-1', moves: 2, timeMs: 4_000, mode: 'survival' },
+    });
+    // Assert
+    expect(repo.add).toHaveBeenCalledTimes(1);
+    expect(progressRepo.save).not.toHaveBeenCalled();
   });
 });

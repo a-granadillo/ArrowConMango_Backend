@@ -16,6 +16,7 @@ import {
   TimeBasedScore,
 } from '../../../src/domain/services/score-calculation.strategy';
 import { Email } from '../../../src/domain/value-objects/email.vo';
+import { GameMode } from '../../../src/domain/value-objects/game-mode.vo';
 import { LevelId } from '../../../src/domain/value-objects/level-id.vo';
 import { PasswordHash } from '../../../src/domain/value-objects/password-hash.vo';
 import { PlayerStanding } from '../../../src/domain/value-objects/player-standing.vo';
@@ -268,8 +269,22 @@ describe('Leaderboard', () => {
   it('should_return_top_scores_sorted_descending', () => {
     // Arrange
     const board = Leaderboard.create(levelId);
-    board.submit(ScoreEntry.create(userId1, levelId, Score.create(10, 30_000)));
-    board.submit(ScoreEntry.create(userId2, levelId, Score.create(1, 5_000)));
+    board.submit(
+      ScoreEntry.create(
+        userId1,
+        levelId,
+        Score.create(10, 30_000),
+        GameMode.campaign(),
+      ),
+    );
+    board.submit(
+      ScoreEntry.create(
+        userId2,
+        levelId,
+        Score.create(1, 5_000),
+        GameMode.campaign(),
+      ),
+    );
     // Act
     const top = board.top(strategy, 2);
     // Assert
@@ -285,6 +300,7 @@ describe('Leaderboard', () => {
           UserId.create(`u${i}`),
           levelId,
           Score.create(i, i * 1000),
+          GameMode.campaign(),
         ),
       );
     }
@@ -293,7 +309,14 @@ describe('Leaderboard', () => {
 
   it('should_return_all_entries_when_n_exceeds_total', () => {
     const board = Leaderboard.create(levelId);
-    board.submit(ScoreEntry.create(userId1, levelId, Score.create(3, 10_000)));
+    board.submit(
+      ScoreEntry.create(
+        userId1,
+        levelId,
+        Score.create(3, 10_000),
+        GameMode.campaign(),
+      ),
+    );
     expect(board.top(strategy, 100)).toHaveLength(1);
   });
 
@@ -301,9 +324,30 @@ describe('Leaderboard', () => {
     // A player who retries keeps only their best run in the ranking —
     // otherwise repeated submissions could fill the whole top N.
     const board = Leaderboard.create(levelId);
-    board.submit(ScoreEntry.create(userId1, levelId, Score.create(20, 60_000)));
-    board.submit(ScoreEntry.create(userId1, levelId, Score.create(1, 1_000)));
-    board.submit(ScoreEntry.create(userId1, levelId, Score.create(15, 45_000)));
+    board.submit(
+      ScoreEntry.create(
+        userId1,
+        levelId,
+        Score.create(20, 60_000),
+        GameMode.campaign(),
+      ),
+    );
+    board.submit(
+      ScoreEntry.create(
+        userId1,
+        levelId,
+        Score.create(1, 1_000),
+        GameMode.campaign(),
+      ),
+    );
+    board.submit(
+      ScoreEntry.create(
+        userId1,
+        levelId,
+        Score.create(15, 45_000),
+        GameMode.campaign(),
+      ),
+    );
 
     const top = board.top(strategy, 10);
 
@@ -322,11 +366,13 @@ describe('Leaderboard', () => {
       UserId.create('a'),
       levelId,
       Score.create(1, 90_000),
+      GameMode.campaign(),
     );
     const b = ScoreEntry.create(
       UserId.create('b'),
       levelId,
       Score.create(2, 1_000),
+      GameMode.campaign(),
     );
     board.submit(a);
     board.submit(b);
@@ -345,11 +391,13 @@ describe('Leaderboard', () => {
       UserId.create('few-moves'),
       levelId,
       Score.create(1, 100_000),
+      GameMode.campaign(),
     );
     const manyMovesFastTime = ScoreEntry.create(
       UserId.create('many-moves'),
       levelId,
       Score.create(80, 500),
+      GameMode.campaign(),
     );
     board.submit(fewMovesSlowTime);
     board.submit(manyMovesFastTime);
