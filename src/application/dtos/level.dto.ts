@@ -24,4 +24,6 @@ export interface LevelOutput {
   rules: LevelRules;
   version: number;
   authorId: string | null;
+  isPublished: boolean;
+  publishedAt: Date | null;
 }
