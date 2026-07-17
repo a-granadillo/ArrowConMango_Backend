@@ -1,8 +1,8 @@
 import { DataSource } from 'typeorm';
-import { TypeOrmUserRepository } from '../../src/adapters/repositories/typeorm-user.repository';
-import { TypeOrmProgressRepository } from '../../src/adapters/repositories/typeorm-progress.repository';
-import { TypeOrmLevelRepository } from '../../src/adapters/repositories/typeorm-level.repository';
-import { TypeOrmLeaderboardRepository } from '../../src/adapters/repositories/typeorm-leaderboard.repository';
+import { TypeOrmUserRepository } from '../../src/infrastructure/persistence/typeorm-user.repository';
+import { TypeOrmProgressRepository } from '../../src/infrastructure/persistence/typeorm-progress.repository';
+import { TypeOrmLevelRepository } from '../../src/infrastructure/persistence/typeorm-level.repository';
+import { TypeOrmLeaderboardRepository } from '../../src/infrastructure/persistence/typeorm-leaderboard.repository';
 import { User } from '../../src/domain/entities/user.entity';
 import { PlayerProgress } from '../../src/domain/entities/player-progress.entity';
 import { LevelDefinition } from '../../src/domain/entities/level-definition.entity';

@@ -7,7 +7,7 @@ import {
 } from '@nestjs/swagger';
 import { GetProgressUseCase } from '../../application/use-cases/get-progress.use-case';
 import { SyncProgressUseCase } from '../../application/use-cases/sync-progress.use-case';
-import { AuthGuard } from '../../infrastructure/aop/auth.guard';
+import { AuthGuard } from '../aop/auth.guard';
 import { CurrentUser } from '../decorators/current-user.decorator';
 import { ProgressResponseDto, SyncProgressDto } from '../dtos/progress.dto';
 
