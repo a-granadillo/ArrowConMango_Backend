@@ -11,8 +11,8 @@ export class JwtTokenService implements ITokenService {
   private readonly expiresIn: string;
 
   constructor(private readonly cfg: ConfigService) {
-    this.secret = cfg.get<string>('JWT_SECRET', 'change-me-in-production');
-    this.expiresIn = cfg.get<string>('JWT_EXPIRES_IN', '7d');
+    this.secret = this.cfg.get<string>('app.jwtSecret', { infer: true })!;
+    this.expiresIn = this.cfg.get<string>('app.jwtExpiresIn', { infer: true })!;
   }
 
   sign(userId: UserId): string {
