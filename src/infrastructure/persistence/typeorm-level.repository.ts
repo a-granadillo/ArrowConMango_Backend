@@ -5,7 +5,7 @@ import { LevelDefinition } from '../../domain/entities/level-definition.entity';
 import { ILevelRepository } from '../../domain/ports/level.repository';
 import { LevelId } from '../../domain/value-objects/level-id.vo';
 import { LevelDefinitionOrmEntity } from '../../infrastructure/orm/level.orm-entity';
-import { LevelMapper } from '../mappers/level.mapper';
+import { LevelMapper } from './level.mapper';
 
 @Injectable()
 export class TypeOrmLevelRepository implements ILevelRepository {

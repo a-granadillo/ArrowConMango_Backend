@@ -7,10 +7,10 @@ import { AuthController } from '../../adapters/controllers/auth.controller';
 import { LeaderboardController } from '../../adapters/controllers/leaderboard.controller';
 import { LevelController } from '../../adapters/controllers/level.controller';
 import { ProgressController } from '../../adapters/controllers/progress.controller';
-import { TypeOrmLeaderboardRepository } from '../../adapters/repositories/typeorm-leaderboard.repository';
-import { TypeOrmLevelRepository } from '../../adapters/repositories/typeorm-level.repository';
-import { TypeOrmProgressRepository } from '../../adapters/repositories/typeorm-progress.repository';
-import { TypeOrmUserRepository } from '../../adapters/repositories/typeorm-user.repository';
+import { TypeOrmLeaderboardRepository } from '../persistence/typeorm-leaderboard.repository';
+import { TypeOrmLevelRepository } from '../persistence/typeorm-level.repository';
+import { TypeOrmProgressRepository } from '../persistence/typeorm-progress.repository';
+import { TypeOrmUserRepository } from '../persistence/typeorm-user.repository';
 
 import { GetLeaderboardUseCase } from '../../application/use-cases/get-leaderboard.use-case';
 import { GetLevelsUseCase } from '../../application/use-cases/get-levels.use-case';
@@ -33,7 +33,7 @@ import {
   USER_REPOSITORY,
 } from './tokens';
 
-import { AuthGuard } from '../aop/auth.guard';
+import { AuthGuard } from '../../adapters/aop/auth.guard';
 
 /**
  * Composition Root (D1+D2):

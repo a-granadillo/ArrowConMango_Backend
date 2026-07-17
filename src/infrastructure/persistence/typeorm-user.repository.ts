@@ -6,7 +6,7 @@ import { IUserRepository } from '../../domain/ports/user.repository';
 import { Email } from '../../domain/value-objects/email.vo';
 import { UserId } from '../../domain/value-objects/user-id.vo';
 import { UserOrmEntity } from '../../infrastructure/orm/user.orm-entity';
-import { UserMapper } from '../mappers/user.mapper';
+import { UserMapper } from './user.mapper';
 
 @Injectable()
 export class TypeOrmUserRepository implements IUserRepository {
