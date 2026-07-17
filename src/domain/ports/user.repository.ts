@@ -12,5 +12,6 @@ import { UserId } from '../value-objects/user-id.vo';
 export interface IUserRepository {
   byEmail(email: Email): Promise<User | null>;
   byId(id: UserId): Promise<User | null>;
+  byIds(ids: UserId[]): Promise<User[]>;
   save(user: User): Promise<void>;
 }

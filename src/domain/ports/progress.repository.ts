@@ -7,4 +7,6 @@ import { UserId } from '../value-objects/user-id.vo';
 export interface IProgressRepository {
   byUser(userId: UserId): Promise<PlayerProgress | null>;
   save(progress: PlayerProgress): Promise<void>;
+  /** Every player's progress record — used to build the global leaderboard. */
+  all(): Promise<PlayerProgress[]>;
 }

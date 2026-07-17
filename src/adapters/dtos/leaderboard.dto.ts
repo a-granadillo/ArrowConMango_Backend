@@ -36,3 +36,23 @@ export class ScoreEntryResponseDto {
   @ApiProperty()
   at!: string;
 }
+
+export class PlayerStandingResponseDto {
+  @ApiProperty({ description: '1-based position in the global ranking' })
+  rank!: number;
+
+  @ApiProperty()
+  userId!: string;
+
+  @ApiProperty()
+  displayName!: string;
+
+  @ApiProperty({ description: 'Total mango stars (Σ of 1-3 per level)' })
+  mangos!: number;
+
+  @ApiProperty()
+  levelsCompleted!: number;
+
+  @ApiProperty({ description: 'Whether this row is the requesting player' })
+  isMe!: boolean;
+}

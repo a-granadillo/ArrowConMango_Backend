@@ -21,6 +21,7 @@ const makeProgressRepo = (
 ): IProgressRepository => ({
   byUser: jest.fn().mockResolvedValue(existing),
   save: jest.fn().mockResolvedValue(undefined),
+  all: jest.fn().mockResolvedValue([]),
 });
 
 describe('GetLeaderboardUseCase', () => {

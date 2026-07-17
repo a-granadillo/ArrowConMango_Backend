@@ -15,6 +15,7 @@ import { TypeOrmUserRepository } from '../persistence/typeorm-user.repository';
 
 import { MangoScore } from '../../domain/services/score-calculation.strategy';
 
+import { GetGlobalLeaderboardUseCase } from '../../application/use-cases/get-global-leaderboard.use-case';
 import { GetLeaderboardUseCase } from '../../application/use-cases/get-leaderboard.use-case';
 import { GetLevelsUseCase } from '../../application/use-cases/get-levels.use-case';
 import { GetProgressUseCase } from '../../application/use-cases/get-progress.use-case';
@@ -141,6 +142,12 @@ import { AuthGuard } from '../../adapters/aop/auth.guard';
       provide: UpdatePlayerNameUseCase,
       useFactory: (repo: any) => new UpdatePlayerNameUseCase(repo),
       inject: [USER_REPOSITORY],
+    },
+    {
+      provide: GetGlobalLeaderboardUseCase,
+      useFactory: (progressRepo: any, userRepo: any, scoring: any) =>
+        new GetGlobalLeaderboardUseCase(progressRepo, userRepo, scoring),
+      inject: [PROGRESS_REPOSITORY, USER_REPOSITORY, SCORE_STRATEGY],
     },
   ],
 })

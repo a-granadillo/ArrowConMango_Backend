@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { User } from '../../domain/entities/user.entity';
 import { IUserRepository } from '../../domain/ports/user.repository';
 import { Email } from '../../domain/value-objects/email.vo';
@@ -23,6 +23,14 @@ export class TypeOrmUserRepository implements IUserRepository {
   async byId(id: UserId): Promise<User | null> {
     const orm = await this.repo.findOne({ where: { id: id.value } });
     return orm ? UserMapper.toDomain(orm) : null;
+  }
+
+  async byIds(ids: UserId[]): Promise<User[]> {
+    if (ids.length === 0) return [];
+    const orms = await this.repo.find({
+      where: { id: In(ids.map((id) => id.value)) },
+    });
+    return orms.map(UserMapper.toDomain);
   }
 
   async save(user: User): Promise<void> {
