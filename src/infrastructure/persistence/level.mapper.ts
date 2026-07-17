@@ -19,6 +19,8 @@ export class LevelMapper {
       orm.rules as LevelRules,
       orm.version,
       orm.authorId ? UserId.create(orm.authorId) : null,
+      orm.isPublished,
+      orm.publishedAt,
     );
   }
 
@@ -32,6 +34,8 @@ export class LevelMapper {
     orm.rules = level.rules as Record<string, unknown>;
     orm.version = level.version;
     orm.authorId = level.authorId?.value ?? null;
+    orm.isPublished = level.isPublished;
+    orm.publishedAt = level.publishedAt;
     return orm;
   }
 }

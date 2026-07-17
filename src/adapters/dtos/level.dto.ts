@@ -154,4 +154,10 @@ export class LevelResponseDto {
 
   @ApiProperty({ nullable: true })
   authorId!: string | null;
+
+  @ApiProperty()
+  isPublished!: boolean;
+
+  @ApiProperty({ nullable: true })
+  publishedAt!: Date | null;
 }
