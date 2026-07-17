@@ -45,16 +45,23 @@ beforeAll(async () => {
   // Seed a valid level
   ds = moduleRef.get<DataSource>(getDataSourceToken());
   await ds.query(
-    `INSERT OR IGNORE INTO level_definitions (id, nodes, edges, rules, version) VALUES (?, ?, ?, ?, ?)`,
+    `INSERT OR IGNORE INTO level_definitions (id, name, difficulty, boardSize, arrows, rules, version, authorId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       LEVEL_ID,
+      'E2E Level',
+      'Easy',
+      JSON.stringify({ rows: 2, cols: 2 }),
       JSON.stringify([
-        { id: 'n1', position: [0, 0], type: 'arrow', direction: 'RIGHT' },
-        { id: 'n2', position: [1, 0], type: 'exit' },
+        {
+          id: 'a1',
+          startNode: { row: 0, col: 0 },
+          trajectory: { segments: [{ direction: 'right', length: 2 }] },
+          isSwitchable: false,
+        },
       ]),
-      JSON.stringify([['n1', 'n2']]),
       JSON.stringify({}),
       1,
+      null,
     ],
   );
 });
@@ -255,22 +262,31 @@ describe('PUT /api/v1/levels/:id', () => {
     const res = await request(app.getHttpServer())
       .put('/api/v1/levels/any-level')
       .send({
-        nodes: [
-          { id: 'n1', position: [0, 0], type: 'arrow', direction: 'RIGHT' },
+        name: 'Any Level',
+        difficulty: 'Easy',
+        boardSize: { rows: 2, cols: 2 },
+        arrows: [
+          {
+            id: 'a1',
+            startNode: { row: 0, col: 0 },
+            trajectory: { segments: [{ direction: 'right', length: 2 }] },
+            isSwitchable: false,
+          },
         ],
-        edges: [],
         rules: {},
       });
     expect(res.status).toBe(401);
   });
 
-  it('should_return_422_when_level_has_no_exit', async () => {
+  it('should_return_422_when_level_has_no_arrows', async () => {
     const res = await request(app.getHttpServer())
       .put('/api/v1/levels/invalid-level')
       .set('Authorization', `Bearer ${bearerToken}`)
       .send({
-        nodes: [{ id: 'n1', position: [0, 0], type: 'arrow', direction: 'UP' }],
-        edges: [],
+        name: 'Invalid Level',
+        difficulty: 'Easy',
+        boardSize: { rows: 2, cols: 2 },
+        arrows: [],
         rules: {},
       });
     expect(res.status).toBe(422);
@@ -281,11 +297,17 @@ describe('PUT /api/v1/levels/:id', () => {
       .put('/api/v1/levels/new-e2e-level')
       .set('Authorization', `Bearer ${bearerToken}`)
       .send({
-        nodes: [
-          { id: 'a1', position: [0, 0], type: 'arrow', direction: 'DOWN' },
-          { id: 'a2', position: [0, 1], type: 'exit' },
+        name: 'New E2E Level',
+        difficulty: 'Easy',
+        boardSize: { rows: 2, cols: 2 },
+        arrows: [
+          {
+            id: 'a1',
+            startNode: { row: 0, col: 0 },
+            trajectory: { segments: [{ direction: 'down', length: 2 }] },
+            isSwitchable: false,
+          },
         ],
-        edges: [['a1', 'a2']],
         rules: {},
       });
     expect(res.status).toBe(200);
