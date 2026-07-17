@@ -3,16 +3,19 @@ import { LevelOutput } from '../dtos/level.dto';
 import { UseCase } from '../shared/use-case';
 
 /**
- * «Use Case» GetLevelsUseCase
+ * «Use Case» GetCommunityLevelsUseCase
  *
- * Returns all available level definitions so the Flutter client can download
- * levels without requiring an app update (RF-B-04).
+ * Returns published, community-visible levels (most recently published
+ * first), optionally capped to the top N, for the "Comunidad" screen in
+ * Modo Creativo. No authentication required — these levels are public.
  */
-export class GetLevelsUseCase implements UseCase<void, LevelOutput[]> {
+export class GetCommunityLevelsUseCase
+  implements UseCase<number | undefined, LevelOutput[]>
+{
   constructor(private readonly levelRepo: ILevelRepository) {}
 
-  async execute(): Promise<LevelOutput[]> {
-    const levels = await this.levelRepo.getAll();
+  async execute(top?: number): Promise<LevelOutput[]> {
+    const levels = await this.levelRepo.findPublished(top);
     return levels.map((l) => ({
       id: l.id.value,
       name: l.name,
