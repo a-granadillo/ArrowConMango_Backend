@@ -150,8 +150,12 @@ Prefijo global: `/api/v1`
 | `POST` | `/auth/guest` | — | RF-B-01 | Login de invitado: UUID → JWT (200) |
 | `GET` | `/progress` | Bearer | RF-B-02 | Obtener progreso del usuario |
 | `PUT` | `/progress` | Bearer | RF-B-02 | Sincronizar progreso (merge idempotente) |
-| `GET` | `/levels` | — | RF-B-04 | Listar todas las definiciones de niveles |
-| `PUT` | `/levels/:id` | Bearer | RF-B-04, RF-B-07 | Crear o actualizar nivel (admin) |
+| `GET` | `/levels` | — | RF-B-04 | Catálogo de campaña (`authorId === null`) |
+| `GET` | `/levels/community?top=` | — | RF-B-08 | Niveles de comunidad publicados, más recientes primero |
+| `GET` | `/levels/mine` | Bearer | RF-B-08 | Niveles (borrador o publicados) del llamante |
+| `POST` | `/levels` | Bearer | RF-B-08 | Crear un borrador de nivel de comunidad (autor = llamante) |
+| `PUT` | `/levels/:id` | Bearer | RF-B-04, RF-B-07, RF-B-08 | Editar el propio borrador sin publicar (403 si no eres el autor o es un nivel de campaña; 409 si ya está publicado) |
+| `POST` | `/levels/:id/publish` | Bearer | RF-B-08 | Publicar el propio borrador (irreversible) |
 | `GET` | `/leaderboard?level=&top=` | — | RF-B-03 | Top N scores por nivel (cacheado 30 s) |
 | `POST` | `/leaderboard` | Bearer | RF-B-03 | Enviar score al leaderboard (201) |
 

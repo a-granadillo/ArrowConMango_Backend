@@ -11,8 +11,10 @@ import {
   EmailAlreadyInUseError,
   InvalidCredentialsError,
   InvalidEmailError,
+  LevelAlreadyPublishedError,
   LevelNotFoundError,
   LevelValidationError,
+  NotLevelAuthorError,
   UnauthorizedError,
   UserNotFoundError,
 } from '../../domain/errors/domain-error';
@@ -47,7 +49,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
     statusCode: number;
     body: ErrorResponse;
   } {
-    if (exception instanceof EmailAlreadyInUseError) {
+    if (
+      exception instanceof EmailAlreadyInUseError ||
+      exception instanceof LevelAlreadyPublishedError
+    ) {
       return this.build(HttpStatus.CONFLICT, exception);
     }
     if (
@@ -55,6 +60,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
       exception instanceof UnauthorizedError
     ) {
       return this.build(HttpStatus.UNAUTHORIZED, exception);
+    }
+    if (exception instanceof NotLevelAuthorError) {
+      return this.build(HttpStatus.FORBIDDEN, exception);
     }
     if (
       exception instanceof InvalidEmailError ||

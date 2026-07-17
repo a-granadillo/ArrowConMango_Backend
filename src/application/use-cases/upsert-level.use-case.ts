@@ -1,17 +1,24 @@
 import { LevelDefinition } from '../../domain/entities/level-definition.entity';
+import { NotLevelAuthorError } from '../../domain/errors/domain-error';
 import { ILevelRepository } from '../../domain/ports/level.repository';
 import { LevelId } from '../../domain/value-objects/level-id.vo';
 import { UserId } from '../../domain/value-objects/user-id.vo';
+import { toLevelOutput } from '../shared/level-presenter';
 import { LevelOutput, UpsertLevelInput } from '../dtos/level.dto';
 import { UseCase } from '../shared/use-case';
 
 /**
  * «Use Case» UpsertLevelUseCase
  *
- * Creates or replaces a level definition. Calls LevelDefinition.validate()
- * before persisting to ensure the board is well-formed (arrows in bounds,
- * unique ids, no zero-length segments). This allows administrators — and,
- * eventually, level authors — to publish levels without recompiling the app.
+ * Edits an existing level draft, or provisions one at a specific id if none
+ * exists yet there (kept for the campaign-seeding / admin-provisioning
+ * path). Calls LevelDefinition.validate() before persisting.
+ *
+ * Security: if a level ALREADY EXISTS at the given id, the caller must be
+ * its author and it must not be published yet
+ * (LevelDefinition.assertCanBeEditedBy) — this is what stops any
+ * authenticated user (including a guest with a random UUID) from
+ * overwriting someone else's level, which was previously unrestricted.
  */
 export class UpsertLevelUseCase implements UseCase<
   UpsertLevelInput,
@@ -21,6 +28,15 @@ export class UpsertLevelUseCase implements UseCase<
 
   async execute(input: UpsertLevelInput): Promise<LevelOutput> {
     const levelId = input.id ? LevelId.create(input.id) : LevelId.create();
+    const callerId = input.authorId ? UserId.create(input.authorId) : null;
+
+    const existing = await this.levelRepo.getById(levelId);
+    if (existing) {
+      if (!callerId) {
+        throw new NotLevelAuthorError(levelId.value);
+      }
+      existing.assertCanBeEditedBy(callerId);
+    }
 
     const level = LevelDefinition.create(
       input.name,
@@ -30,22 +46,13 @@ export class UpsertLevelUseCase implements UseCase<
       input.rules,
       levelId,
       input.version ?? 1,
-      input.authorId ? UserId.create(input.authorId) : null,
+      existing ? existing.authorId : callerId,
     );
 
     level.validate();
 
     await this.levelRepo.upsert(level);
 
-    return {
-      id: level.id.value,
-      name: level.name,
-      difficulty: level.difficulty,
-      boardSize: level.boardSize,
-      arrows: level.arrows,
-      rules: level.rules,
-      version: level.version,
-      authorId: level.authorId?.value ?? null,
-    };
+    return toLevelOutput(level);
   }
 }

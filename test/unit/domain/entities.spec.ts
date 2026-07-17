@@ -1,4 +1,8 @@
-import { LevelValidationError } from '../../../src/domain/errors/domain-error';
+import {
+  LevelAlreadyPublishedError,
+  LevelValidationError,
+  NotLevelAuthorError,
+} from '../../../src/domain/errors/domain-error';
 import { GlobalLeaderboard } from '../../../src/domain/entities/global-leaderboard.entity';
 import { Leaderboard } from '../../../src/domain/entities/leaderboard.entity';
 import {
@@ -255,6 +259,134 @@ describe('LevelDefinition', () => {
       {},
     );
     expect(level.validate()).toBe(true);
+  });
+
+  it('should_throw_when_timeLimitSeconds_is_out_of_range', () => {
+    const level = LevelDefinition.create(
+      'Bad time limit',
+      'Easy',
+      boardSize,
+      validArrows,
+      { timeLimitSeconds: 5 },
+    );
+    expect(() => level.validate()).toThrow(LevelValidationError);
+  });
+
+  it('should_throw_when_maxMistakes_is_not_3', () => {
+    const level = LevelDefinition.create(
+      'Bad max mistakes',
+      'Easy',
+      boardSize,
+      validArrows,
+      { maxMistakes: 5 },
+    );
+    expect(() => level.validate()).toThrow(LevelValidationError);
+  });
+
+  it('should_validate_when_timeLimitSeconds_and_maxMistakes_are_sensible', () => {
+    const level = LevelDefinition.create(
+      'Creative level',
+      'Easy',
+      boardSize,
+      validArrows,
+      { timeLimitSeconds: 60, maxMistakes: 3 },
+    );
+    expect(level.validate()).toBe(true);
+  });
+
+  describe('authorization and publishing', () => {
+    const author = UserId.create('author-1');
+    const stranger = UserId.create('stranger');
+
+    it('should_allow_the_author_to_edit_their_own_unpublished_draft', () => {
+      const draft = LevelDefinition.create(
+        'Draft',
+        'Easy',
+        boardSize,
+        validArrows,
+        {},
+        LevelId.create('d1'),
+        1,
+        author,
+      );
+      expect(() => draft.assertCanBeEditedBy(author)).not.toThrow();
+    });
+
+    it('should_reject_a_non_author_editing_the_draft', () => {
+      const draft = LevelDefinition.create(
+        'Draft',
+        'Easy',
+        boardSize,
+        validArrows,
+        {},
+        LevelId.create('d1'),
+        1,
+        author,
+      );
+      expect(() => draft.assertCanBeEditedBy(stranger)).toThrow(
+        NotLevelAuthorError,
+      );
+    });
+
+    it('should_reject_editing_a_campaign_level_authorId_null_even_by_the_caller', () => {
+      const campaign = LevelDefinition.create(
+        'Campaign',
+        'Easy',
+        boardSize,
+        validArrows,
+        {},
+        LevelId.create('1'),
+      );
+      expect(() => campaign.assertCanBeEditedBy(author)).toThrow(
+        NotLevelAuthorError,
+      );
+    });
+
+    it('should_reject_editing_once_the_level_is_published', () => {
+      const published = LevelDefinition.create(
+        'Draft',
+        'Easy',
+        boardSize,
+        validArrows,
+        {},
+        LevelId.create('d1'),
+        1,
+        author,
+      ).publish();
+      expect(() => published.assertCanBeEditedBy(author)).toThrow(
+        LevelAlreadyPublishedError,
+      );
+    });
+
+    it('should_mark_the_level_published_with_a_timestamp', () => {
+      const draft = LevelDefinition.create(
+        'Draft',
+        'Easy',
+        boardSize,
+        validArrows,
+        {},
+        LevelId.create('d1'),
+        1,
+        author,
+      );
+      const published = draft.publish();
+      expect(published.isPublished).toBe(true);
+      expect(published.publishedAt).toBeInstanceOf(Date);
+    });
+
+    it('should_reject_publishing_an_already_published_level', () => {
+      const published = LevelDefinition.create(
+        'Draft',
+        'Easy',
+        boardSize,
+        validArrows,
+        {},
+        LevelId.create('d1'),
+        1,
+        author,
+      ).publish();
+      expect(() => published.publish()).toThrow(LevelAlreadyPublishedError);
+    });
   });
 });
 

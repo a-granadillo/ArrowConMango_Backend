@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { LevelDefinition } from '../../domain/entities/level-definition.entity';
 import { ILevelRepository } from '../../domain/ports/level.repository';
 import { LevelId } from '../../domain/value-objects/level-id.vo';
+import { UserId } from '../../domain/value-objects/user-id.vo';
 import { LevelDefinitionOrmEntity } from '../../infrastructure/orm/level.orm-entity';
 import { LevelMapper } from './level.mapper';
 
@@ -26,5 +27,19 @@ export class TypeOrmLevelRepository implements ILevelRepository {
 
   async upsert(level: LevelDefinition): Promise<void> {
     await this.repo.save(LevelMapper.toOrm(level));
+  }
+
+  async byAuthor(userId: UserId): Promise<LevelDefinition[]> {
+    const orms = await this.repo.find({ where: { authorId: userId.value } });
+    return orms.map(LevelMapper.toDomain);
+  }
+
+  async published(top?: number): Promise<LevelDefinition[]> {
+    const orms = await this.repo.find({
+      where: { isPublished: true },
+      order: { publishedAt: 'DESC' },
+      take: top,
+    });
+    return orms.map(LevelMapper.toDomain);
   }
 }

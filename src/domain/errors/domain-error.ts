@@ -46,3 +46,15 @@ export class UnauthorizedError extends DomainError {
     super('Authentication required');
   }
 }
+
+export class NotLevelAuthorError extends DomainError {
+  constructor(levelId: string) {
+    super(`You are not the author of level "${levelId}"`);
+  }
+}
+
+export class LevelAlreadyPublishedError extends DomainError {
+  constructor(levelId: string) {
+    super(`Level "${levelId}" is published and can no longer be edited`);
+  }
+}

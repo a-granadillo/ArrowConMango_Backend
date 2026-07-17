@@ -224,6 +224,71 @@ describe('TypeOrmLevelRepository', () => {
     const result = await repo.getById(LevelId.create('nonexistent'));
     expect(result).toBeNull();
   });
+
+  it('should_find_levels_by_author', async () => {
+    // Arrange
+    const repo = makeLevelRepo();
+    const author = UserId.create('level-author-1');
+    const mine = LevelDefinition.create(
+      'Mine',
+      'Easy',
+      BOARD_SIZE,
+      VALID_ARROWS,
+      {},
+      LevelId.create('mine-1'),
+      1,
+      author,
+    );
+    const notMine = LevelDefinition.create(
+      'Not mine',
+      'Easy',
+      BOARD_SIZE,
+      VALID_ARROWS,
+      {},
+      LevelId.create('not-mine-1'),
+      1,
+      UserId.create('someone-else'),
+    );
+    await repo.upsert(mine);
+    await repo.upsert(notMine);
+    // Act
+    const found = await repo.byAuthor(author);
+    // Assert
+    expect(found.map((l) => l.id.value)).toEqual(['mine-1']);
+  });
+
+  it('should_find_only_published_levels', async () => {
+    // Arrange
+    const repo = makeLevelRepo();
+    const author = UserId.create('level-author-2');
+    const draft = LevelDefinition.create(
+      'Draft',
+      'Easy',
+      BOARD_SIZE,
+      VALID_ARROWS,
+      {},
+      LevelId.create('draft-1'),
+      1,
+      author,
+    );
+    const published = LevelDefinition.create(
+      'Published',
+      'Easy',
+      BOARD_SIZE,
+      VALID_ARROWS,
+      {},
+      LevelId.create('published-1'),
+      1,
+      author,
+    ).publish();
+    await repo.upsert(draft);
+    await repo.upsert(published);
+    // Act
+    const found = await repo.published();
+    // Assert
+    expect(found.map((l) => l.id.value)).toContain('published-1');
+    expect(found.map((l) => l.id.value)).not.toContain('draft-1');
+  });
 });
 
 // ─── LeaderboardRepository ─────────────────────────────────────────────────

@@ -1,4 +1,8 @@
-import { LevelValidationError } from '../errors/domain-error';
+import {
+  LevelAlreadyPublishedError,
+  LevelValidationError,
+  NotLevelAuthorError,
+} from '../errors/domain-error';
 import { LevelId } from '../value-objects/level-id.vo';
 import { UserId } from '../value-objects/user-id.vo';
 
@@ -57,8 +61,12 @@ export class LevelDefinition {
     private readonly _rules: LevelRules,
     private readonly _version: number,
     private readonly _authorId: UserId | null,
+    private readonly _isPublished: boolean,
+    private readonly _publishedAt: Date | null,
   ) {}
 
+  /** Creates a new draft. Campaign levels pass `authorId: null`; community
+   * levels always have an author and start unpublished. */
   static create(
     name: string,
     difficulty: string,
@@ -78,6 +86,8 @@ export class LevelDefinition {
       rules,
       version,
       authorId,
+      false,
+      null,
     );
   }
 
@@ -90,6 +100,8 @@ export class LevelDefinition {
     rules: LevelRules,
     version: number,
     authorId: UserId | null,
+    isPublished = false,
+    publishedAt: Date | null = null,
   ): LevelDefinition {
     return new LevelDefinition(
       id,
@@ -100,6 +112,45 @@ export class LevelDefinition {
       rules,
       version,
       authorId,
+      isPublished,
+      publishedAt,
+    );
+  }
+
+  /**
+   * Throws unless [userId] is this level's author. Campaign levels
+   * (`authorId === null`) are immutable via the API — nobody passes this
+   * check for them, including admins.
+   */
+  assertCanBeEditedBy(userId: UserId): void {
+    if (this._authorId === null || !this._authorId.equals(userId)) {
+      throw new NotLevelAuthorError(this._id.value);
+    }
+    if (this._isPublished) {
+      throw new LevelAlreadyPublishedError(this._id.value);
+    }
+  }
+
+  /**
+   * Publishes this draft. A published level is immutable — editing it again
+   * would silently invalidate every score already recorded on its
+   * leaderboard, since players would no longer be racing the same board.
+   */
+  publish(): LevelDefinition {
+    if (this._isPublished) {
+      throw new LevelAlreadyPublishedError(this._id.value);
+    }
+    return new LevelDefinition(
+      this._id,
+      this._name,
+      this._difficulty,
+      this._boardSize,
+      this._arrows,
+      this._rules,
+      this._version,
+      this._authorId,
+      true,
+      new Date(),
     );
   }
 
@@ -136,6 +187,21 @@ export class LevelDefinition {
           );
         }
       }
+    }
+
+    const { timeLimitSeconds, maxMistakes } = this._rules;
+    if (
+      timeLimitSeconds != null &&
+      (timeLimitSeconds < 10 || timeLimitSeconds > 600)
+    ) {
+      throw new LevelValidationError(
+        `timeLimitSeconds must be between 10 and 600 (got ${timeLimitSeconds})`,
+      );
+    }
+    if (maxMistakes != null && maxMistakes !== 3) {
+      throw new LevelValidationError(
+        `maxMistakes must be 3 (the game's fixed lives count), got ${maxMistakes}`,
+      );
     }
 
     return true;
@@ -215,5 +281,13 @@ export class LevelDefinition {
 
   get authorId(): UserId | null {
     return this._authorId;
+  }
+
+  get isPublished(): boolean {
+    return this._isPublished;
+  }
+
+  get publishedAt(): Date | null {
+    return this._publishedAt;
   }
 }

@@ -297,6 +297,201 @@ describe('PUT /api/v1/levels/:id', () => {
   });
 });
 
+describe('POST /api/v1/levels (creative mode)', () => {
+  const validBody = {
+    name: 'Community Level',
+    difficulty: 'Easy',
+    boardSize: { rows: 2, cols: 2 },
+    arrows: [
+      {
+        id: 'a1',
+        startNode: { row: 0, col: 0 },
+        trajectory: { segments: [{ direction: 'right', length: 2 }] },
+        isSwitchable: false,
+      },
+    ],
+    rules: {},
+  };
+
+  it('should_return_401_when_no_token', async () => {
+    const res = await request(app.getHttpServer())
+      .post('/api/v1/levels')
+      .send(validBody);
+    expect(res.status).toBe(401);
+  });
+
+  it('should_create_an_unpublished_draft_authored_by_the_caller', async () => {
+    const res = await request(app.getHttpServer())
+      .post('/api/v1/levels')
+      .set('Authorization', `Bearer ${bearerToken}`)
+      .send(validBody);
+    expect(res.status).toBe(201);
+    expect(res.body.isPublished).toBe(false);
+    expect(res.body.authorId).toBeDefined();
+  });
+
+  it('should_not_appear_in_the_campaign_catalogue', async () => {
+    const create = await request(app.getHttpServer())
+      .post('/api/v1/levels')
+      .set('Authorization', `Bearer ${bearerToken}`)
+      .send(validBody);
+    const catalogue = await request(app.getHttpServer()).get('/api/v1/levels');
+    const found = (catalogue.body as Array<{ id: string }>).find(
+      (l) => l.id === create.body.id,
+    );
+    expect(found).toBeUndefined();
+  });
+});
+
+describe('Publishing and community discovery', () => {
+  let ownerToken: string;
+  let otherToken: string;
+  let draftId: string;
+
+  beforeAll(async () => {
+    const owner = await request(app.getHttpServer())
+      .post('/api/v1/auth/guest')
+      .send({ uuid: '11111111-1111-4111-8111-111111111111' });
+    ownerToken = owner.body.token;
+
+    const other = await request(app.getHttpServer())
+      .post('/api/v1/auth/guest')
+      .send({ uuid: '22222222-2222-4222-8222-222222222222' });
+    otherToken = other.body.token;
+
+    const created = await request(app.getHttpServer())
+      .post('/api/v1/levels')
+      .set('Authorization', `Bearer ${ownerToken}`)
+      .send({
+        name: 'Publishable Level',
+        difficulty: 'Easy',
+        boardSize: { rows: 2, cols: 2 },
+        arrows: [
+          {
+            id: 'a1',
+            startNode: { row: 0, col: 0 },
+            trajectory: { segments: [{ direction: 'right', length: 2 }] },
+            isSwitchable: false,
+          },
+        ],
+        rules: {},
+      });
+    draftId = created.body.id;
+  });
+
+  it('should_return_403_when_a_non_author_tries_to_edit_the_draft', async () => {
+    const res = await request(app.getHttpServer())
+      .put(`/api/v1/levels/${draftId}`)
+      .set('Authorization', `Bearer ${otherToken}`)
+      .send({
+        name: 'Hijacked',
+        difficulty: 'Easy',
+        boardSize: { rows: 2, cols: 2 },
+        arrows: [
+          {
+            id: 'a1',
+            startNode: { row: 0, col: 0 },
+            trajectory: { segments: [{ direction: 'right', length: 2 }] },
+            isSwitchable: false,
+          },
+        ],
+        rules: {},
+      });
+    expect(res.status).toBe(403);
+  });
+
+  it('should_return_403_when_a_non_author_tries_to_edit_a_campaign_level', async () => {
+    const res = await request(app.getHttpServer())
+      .put(`/api/v1/levels/${LEVEL_ID}`)
+      .set('Authorization', `Bearer ${otherToken}`)
+      .send({
+        name: 'Hijacked campaign level',
+        difficulty: 'Easy',
+        boardSize: { rows: 2, cols: 2 },
+        arrows: [
+          {
+            id: 'a1',
+            startNode: { row: 0, col: 0 },
+            trajectory: { segments: [{ direction: 'right', length: 2 }] },
+            isSwitchable: false,
+          },
+        ],
+        rules: {},
+      });
+    expect(res.status).toBe(403);
+  });
+
+  it('should_return_403_when_a_non_author_tries_to_publish', async () => {
+    const res = await request(app.getHttpServer())
+      .post(`/api/v1/levels/${draftId}/publish`)
+      .set('Authorization', `Bearer ${otherToken}`);
+    expect(res.status).toBe(403);
+  });
+
+  it('should_let_the_author_publish_their_own_draft', async () => {
+    const res = await request(app.getHttpServer())
+      .post(`/api/v1/levels/${draftId}/publish`)
+      .set('Authorization', `Bearer ${ownerToken}`);
+    expect(res.status).toBe(201);
+    expect(res.body.isPublished).toBe(true);
+  });
+
+  it('should_return_409_when_publishing_again', async () => {
+    const res = await request(app.getHttpServer())
+      .post(`/api/v1/levels/${draftId}/publish`)
+      .set('Authorization', `Bearer ${ownerToken}`);
+    expect(res.status).toBe(409);
+  });
+
+  it('should_return_409_when_the_author_tries_to_edit_it_after_publishing', async () => {
+    const res = await request(app.getHttpServer())
+      .put(`/api/v1/levels/${draftId}`)
+      .set('Authorization', `Bearer ${ownerToken}`)
+      .send({
+        name: 'Too late',
+        difficulty: 'Easy',
+        boardSize: { rows: 2, cols: 2 },
+        arrows: [
+          {
+            id: 'a1',
+            startNode: { row: 0, col: 0 },
+            trajectory: { segments: [{ direction: 'right', length: 2 }] },
+            isSwitchable: false,
+          },
+        ],
+        rules: {},
+      });
+    expect(res.status).toBe(409);
+  });
+
+  it('should_appear_in_the_community_catalogue_once_published', async () => {
+    const res = await request(app.getHttpServer()).get(
+      '/api/v1/levels/community',
+    );
+    expect(res.status).toBe(200);
+    const found = (res.body as Array<{ id: string }>).find(
+      (l) => l.id === draftId,
+    );
+    expect(found).toBeDefined();
+  });
+
+  it('should_list_the_level_under_the_owners_own_levels', async () => {
+    const res = await request(app.getHttpServer())
+      .get('/api/v1/levels/mine')
+      .set('Authorization', `Bearer ${ownerToken}`);
+    expect(res.status).toBe(200);
+    const found = (res.body as Array<{ id: string }>).find(
+      (l) => l.id === draftId,
+    );
+    expect(found).toBeDefined();
+  });
+
+  it('should_return_401_for_mine_without_a_token', async () => {
+    const res = await request(app.getHttpServer()).get('/api/v1/levels/mine');
+    expect(res.status).toBe(401);
+  });
+});
+
 // ─── Leaderboard ───────────────────────────────────────────────────────────
 
 describe('POST /api/v1/leaderboard', () => {
