@@ -6,7 +6,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { UpdatePlayerNameUseCase } from '../../application/use-cases/update-player-name.use-case';
-import { AuthGuard } from '../../infrastructure/aop/auth.guard';
+import { AuthGuard } from '../aop/auth.guard';
 import { CurrentUser } from '../decorators/current-user.decorator';
 import { AuthResponseDto, UpdatePlayerNameDto } from '../dtos/auth.dto';
 

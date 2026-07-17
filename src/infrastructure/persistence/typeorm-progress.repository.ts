@@ -5,7 +5,7 @@ import { PlayerProgress } from '../../domain/entities/player-progress.entity';
 import { IProgressRepository } from '../../domain/ports/progress.repository';
 import { UserId } from '../../domain/value-objects/user-id.vo';
 import { PlayerProgressOrmEntity } from '../../infrastructure/orm/progress.orm-entity';
-import { ProgressMapper } from '../mappers/progress.mapper';
+import { ProgressMapper } from './progress.mapper';
 
 @Injectable()
 export class TypeOrmProgressRepository implements IProgressRepository {

@@ -33,4 +33,35 @@ module.exports = {
       { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
     ],
   },
+  overrides: [
+    {
+      // Enforces the Clean Architecture dependency rule: domain/ and
+      // application/ must stay framework-agnostic and never import outward
+      // into adapters/ or infrastructure/. This turns a one-off grep audit
+      // into a build-breaking guarantee.
+      files: ['src/domain/**/*.ts', 'src/application/**/*.ts'],
+      rules: {
+        'no-restricted-imports': [
+          'error',
+          {
+            patterns: [
+              {
+                group: [
+                  '@nestjs/*',
+                  'typeorm',
+                  'bcrypt',
+                  'jsonwebtoken',
+                  'express',
+                  '**/adapters/*',
+                  '**/infrastructure/*',
+                ],
+                message:
+                  'domain/ and application/ must not depend on adapters/, infrastructure/, or any framework — they are inner layers per the dependency rule.',
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
 };

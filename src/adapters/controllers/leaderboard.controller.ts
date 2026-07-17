@@ -19,8 +19,8 @@ import {
 import { GetGlobalLeaderboardUseCase } from '../../application/use-cases/get-global-leaderboard.use-case';
 import { GetLeaderboardUseCase } from '../../application/use-cases/get-leaderboard.use-case';
 import { SubmitScoreUseCase } from '../../application/use-cases/submit-score.use-case';
-import { AuthGuard } from '../../infrastructure/aop/auth.guard';
-import { CacheInterceptor } from '../../infrastructure/aop/cache.interceptor';
+import { AuthGuard } from '../aop/auth.guard';
+import { CacheInterceptor } from '../aop/cache.interceptor';
 import { CurrentUser } from '../decorators/current-user.decorator';
 import {
   PlayerStandingResponseDto,

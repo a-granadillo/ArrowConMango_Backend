@@ -1,15 +1,17 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
+import envConfig from './env.config';
+
 import { AuthController } from '../../adapters/controllers/auth.controller';
 import { LeaderboardController } from '../../adapters/controllers/leaderboard.controller';
 import { LevelController } from '../../adapters/controllers/level.controller';
 import { PlayerController } from '../../adapters/controllers/player.controller';
 import { ProgressController } from '../../adapters/controllers/progress.controller';
-import { TypeOrmLeaderboardRepository } from '../../adapters/repositories/typeorm-leaderboard.repository';
-import { TypeOrmLevelRepository } from '../../adapters/repositories/typeorm-level.repository';
-import { TypeOrmProgressRepository } from '../../adapters/repositories/typeorm-progress.repository';
-import { TypeOrmUserRepository } from '../../adapters/repositories/typeorm-user.repository';
+import { TypeOrmLeaderboardRepository } from '../persistence/typeorm-leaderboard.repository';
+import { TypeOrmLevelRepository } from '../persistence/typeorm-level.repository';
+import { TypeOrmProgressRepository } from '../persistence/typeorm-progress.repository';
+import { TypeOrmUserRepository } from '../persistence/typeorm-user.repository';
 
 import { MangoScore } from '../../domain/services/score-calculation.strategy';
 
@@ -37,7 +39,7 @@ import {
   USER_REPOSITORY,
 } from './tokens';
 
-import { AuthGuard } from '../aop/auth.guard';
+import { AuthGuard } from '../../adapters/aop/auth.guard';
 
 /**
  * Composition Root (D1+D2):
@@ -46,7 +48,7 @@ import { AuthGuard } from '../aop/auth.guard';
  */
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({ isGlobal: true, load: [envConfig] }),
     DatabaseModule,
     AuthModule,
   ],

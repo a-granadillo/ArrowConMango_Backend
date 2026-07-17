@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { ITokenService } from '../../domain/ports/token.service';
 import { UnauthorizedError } from '../../domain/errors/domain-error';
-import { TOKEN_SERVICE } from '../config/tokens';
+import { TOKEN_SERVICE } from '../../infrastructure/config/tokens';
 
 /**
  * «AOP aspect» AuthGuard — JWT verification before protected endpoints (D5).
