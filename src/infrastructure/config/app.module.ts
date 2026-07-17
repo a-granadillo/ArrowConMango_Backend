@@ -18,6 +18,7 @@ import { MangoScore } from '../../domain/services/score-calculation.strategy';
 import { GetGlobalLeaderboardUseCase } from '../../application/use-cases/get-global-leaderboard.use-case';
 import { GetLeaderboardUseCase } from '../../application/use-cases/get-leaderboard.use-case';
 import { GetLevelsUseCase } from '../../application/use-cases/get-levels.use-case';
+import { GetSurvivalLeaderboardUseCase } from '../../application/use-cases/get-survival-leaderboard.use-case';
 import { GetProgressUseCase } from '../../application/use-cases/get-progress.use-case';
 import { GuestLoginUseCase } from '../../application/use-cases/guest-login.use-case';
 import { LoginUseCase } from '../../application/use-cases/login.use-case';
@@ -148,6 +149,12 @@ import { AuthGuard } from '../../adapters/aop/auth.guard';
       useFactory: (progressRepo: any, userRepo: any, scoring: any) =>
         new GetGlobalLeaderboardUseCase(progressRepo, userRepo, scoring),
       inject: [PROGRESS_REPOSITORY, USER_REPOSITORY, SCORE_STRATEGY],
+    },
+    {
+      provide: GetSurvivalLeaderboardUseCase,
+      useFactory: (leaderboardRepo: any, userRepo: any, scoring: any) =>
+        new GetSurvivalLeaderboardUseCase(leaderboardRepo, userRepo, scoring),
+      inject: [LEADERBOARD_REPOSITORY, USER_REPOSITORY, SCORE_STRATEGY],
     },
   ],
 })

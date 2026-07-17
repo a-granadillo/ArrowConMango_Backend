@@ -377,4 +377,45 @@ describe('GET /api/v1/leaderboard/:nivel', () => {
     expect(Array.isArray(res.body)).toBe(true);
     expect(res.body[0]).not.toHaveProperty('top');
   });
+
+  it('should_not_be_swallowed_by_the_survival_route', async () => {
+    const res = await request(app.getHttpServer())
+      .get('/api/v1/leaderboard/supervivencia')
+      .set('Authorization', `Bearer ${bearerToken}`);
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveProperty('top');
+    expect(res.body).toHaveProperty('me');
+  });
+});
+
+describe('GET /api/v1/leaderboard/supervivencia', () => {
+  it('should_return_401_when_no_token', async () => {
+    const res = await request(app.getHttpServer()).get(
+      '/api/v1/leaderboard/supervivencia',
+    );
+    expect(res.status).toBe(401);
+  });
+
+  it('should_rank_a_survival_submission_and_exclude_it_from_the_level_leaderboard', async () => {
+    await request(app.getHttpServer())
+      .post('/api/v1/leaderboard')
+      .set('Authorization', `Bearer ${bearerToken}`)
+      .send({ levelId: '-1', moves: 3, timeMs: 5_000, mode: 'survival' });
+
+    const survival = await request(app.getHttpServer())
+      .get('/api/v1/leaderboard/supervivencia')
+      .set('Authorization', `Bearer ${bearerToken}`);
+    expect(survival.status).toBe(200);
+    expect(survival.body.top.length).toBeGreaterThan(0);
+    expect(survival.body.top.some((e: { isMe: boolean }) => e.isMe)).toBe(
+      true,
+    );
+
+    const levelBoard = await request(app.getHttpServer())
+      .get('/api/v1/leaderboard/-1')
+      .set('Authorization', `Bearer ${bearerToken}`);
+    expect(levelBoard.status).toBe(200);
+    expect(levelBoard.body.top).toEqual([]);
+    expect(levelBoard.body.me).toBeNull();
+  });
 });
