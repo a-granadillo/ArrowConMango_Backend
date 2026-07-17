@@ -4,6 +4,7 @@ import {
   InvalidEmailError,
 } from '../../../src/domain/errors/domain-error';
 import { IPasswordHasher } from '../../../src/domain/ports/password-hasher';
+import { ITokenService } from '../../../src/domain/ports/token.service';
 import { IUserRepository } from '../../../src/domain/ports/user.repository';
 import { Email } from '../../../src/domain/value-objects/email.vo';
 import { PasswordHash } from '../../../src/domain/value-objects/password-hash.vo';
@@ -22,13 +23,19 @@ const makeHasher = (): IPasswordHasher => ({
   compare: jest.fn().mockResolvedValue(true),
 });
 
+const makeTokenService = (): ITokenService => ({
+  sign: jest.fn().mockReturnValue('signed-jwt'),
+  verify: jest.fn(),
+});
+
 // ─── Tests ────────────────────────────────────────────────────────────────────
 describe('RegisterUserUseCase', () => {
   it('should_register_user_when_email_is_not_taken', async () => {
     // Arrange
     const repo = makeUserRepo(null);
     const hasher = makeHasher();
-    const useCase = new RegisterUserUseCase(repo, hasher);
+    const tokenService = makeTokenService();
+    const useCase = new RegisterUserUseCase(repo, hasher, tokenService);
     // Act
     const result = await useCase.execute({
       email: 'new@user.com',
@@ -43,6 +50,23 @@ describe('RegisterUserUseCase', () => {
     expect(hasher.hash).toHaveBeenCalledWith('secret123');
   });
 
+  it('should_return_a_signed_token_so_registering_leaves_the_caller_logged_in', async () => {
+    // Arrange — registering must not require a follow-up POST /auth/login
+    const repo = makeUserRepo(null);
+    const hasher = makeHasher();
+    const tokenService = makeTokenService();
+    const useCase = new RegisterUserUseCase(repo, hasher, tokenService);
+    // Act
+    const result = await useCase.execute({
+      email: 'new@user.com',
+      password: 'secret123',
+      username: 'newuser',
+    });
+    // Assert
+    expect(result.token).toBe('signed-jwt');
+    expect(tokenService.sign).toHaveBeenCalledTimes(1);
+  });
+
   it('should_throw_EmailAlreadyInUseError_when_email_exists', async () => {
     // Arrange — user already exists
     const existingUser = User.create(
@@ -52,7 +76,8 @@ describe('RegisterUserUseCase', () => {
     );
     const repo = makeUserRepo(existingUser);
     const hasher = makeHasher();
-    const useCase = new RegisterUserUseCase(repo, hasher);
+    const tokenService = makeTokenService();
+    const useCase = new RegisterUserUseCase(repo, hasher, tokenService);
     // Act & Assert
     await expect(
       useCase.execute({
@@ -67,7 +92,8 @@ describe('RegisterUserUseCase', () => {
   it('should_throw_InvalidEmailError_when_email_format_is_wrong', async () => {
     const repo = makeUserRepo(null);
     const hasher = makeHasher();
-    const useCase = new RegisterUserUseCase(repo, hasher);
+    const tokenService = makeTokenService();
+    const useCase = new RegisterUserUseCase(repo, hasher, tokenService);
     await expect(
       useCase.execute({ email: 'bad-email', password: 'pw', username: 'u' }),
     ).rejects.toThrow(InvalidEmailError);
