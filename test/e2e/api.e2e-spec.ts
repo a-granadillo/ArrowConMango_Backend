@@ -26,6 +26,7 @@ process.env['JWT_EXPIRES_IN'] = '1h';
 
 let app: INestApplication;
 let bearerToken: string;
+let ds: DataSource;
 
 const LEVEL_ID = 'e2e-level-001';
 
@@ -42,7 +43,7 @@ beforeAll(async () => {
   await app.init();
 
   // Seed a valid level
-  const ds = moduleRef.get<DataSource>(getDataSourceToken());
+  ds = moduleRef.get<DataSource>(getDataSourceToken());
   await ds.query(
     `INSERT OR IGNORE INTO level_definitions (id, nodes, edges, rules, version) VALUES (?, ?, ?, ?, ?)`,
     [
@@ -139,6 +140,23 @@ describe('POST /api/v1/auth/guest', () => {
       .post('/api/v1/auth/guest')
       .send({ uuid: 'not-a-uuid' });
     expect(res.status).toBe(400);
+  });
+
+  // Regression test: the controller once dropped `displayName` before
+  // forwarding to the use case, so every guest kept the literal username
+  // 'Guest' no matter what the client sent. Unit tests alone didn't catch
+  // this — they call GuestLoginUseCase directly and bypass the controller.
+  it('should_persist_the_provided_displayName_for_a_new_guest', async () => {
+    const uuid = 'd4e5f678-9012-4abc-8def-345678901234';
+    const res = await request(app.getHttpServer())
+      .post('/api/v1/auth/guest')
+      .send({ uuid, displayName: 'E2EDisplayName' });
+    expect(res.status).toBe(200);
+
+    const rows = await ds.query(`SELECT username FROM users WHERE email = ?`, [
+      `guest-${uuid}@guest.local`,
+    ]);
+    expect(rows[0].username).toBe('E2EDisplayName');
   });
 });
 
