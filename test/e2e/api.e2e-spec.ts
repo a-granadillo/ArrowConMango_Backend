@@ -257,6 +257,65 @@ describe('GET /api/v1/levels', () => {
   });
 });
 
+describe('POST /api/v1/levels', () => {
+  it('should_return_401_when_no_token', async () => {
+    const res = await request(app.getHttpServer())
+      .post('/api/v1/levels')
+      .send({
+        name: 'Any Level',
+        difficulty: 'Easy',
+        boardSize: { rows: 2, cols: 2 },
+        arrows: [
+          {
+            id: 'a1',
+            startNode: { row: 0, col: 0 },
+            trajectory: { segments: [{ direction: 'right', length: 2 }] },
+            isSwitchable: false,
+          },
+        ],
+        rules: {},
+      });
+    expect(res.status).toBe(401);
+  });
+
+  it('should_return_422_when_level_has_no_arrows', async () => {
+    const res = await request(app.getHttpServer())
+      .post('/api/v1/levels')
+      .set('Authorization', `Bearer ${bearerToken}`)
+      .send({
+        name: 'Invalid Level',
+        difficulty: 'Easy',
+        boardSize: { rows: 2, cols: 2 },
+        arrows: [],
+        rules: {},
+      });
+    expect(res.status).toBe(422);
+  });
+
+  it('should_return_201_and_a_generated_id_when_valid_level_created', async () => {
+    const res = await request(app.getHttpServer())
+      .post('/api/v1/levels')
+      .set('Authorization', `Bearer ${bearerToken}`)
+      .send({
+        name: 'New Draft Level',
+        difficulty: 'Easy',
+        boardSize: { rows: 2, cols: 2 },
+        arrows: [
+          {
+            id: 'a1',
+            startNode: { row: 0, col: 0 },
+            trajectory: { segments: [{ direction: 'down', length: 2 }] },
+            isSwitchable: false,
+          },
+        ],
+        rules: {},
+      });
+    expect(res.status).toBe(201);
+    expect(res.body.id).toBeDefined();
+    expect(res.body.name).toBe('New Draft Level');
+  });
+});
+
 describe('PUT /api/v1/levels/:id', () => {
   it('should_return_401_when_no_token', async () => {
     const res = await request(app.getHttpServer())
@@ -312,6 +371,77 @@ describe('PUT /api/v1/levels/:id', () => {
       });
     expect(res.status).toBe(200);
     expect(res.body.id).toBe('new-e2e-level');
+  });
+});
+
+describe('GET /api/v1/levels/mine, GET /api/v1/levels/community, POST /api/v1/levels/:id/publish', () => {
+  it('should_return_401_when_no_token_on_mine', async () => {
+    const res = await request(app.getHttpServer()).get('/api/v1/levels/mine');
+    expect(res.status).toBe(401);
+  });
+
+  it('should_return_401_when_no_token_on_publish', async () => {
+    const res = await request(app.getHttpServer()).post(
+      '/api/v1/levels/new-e2e-level/publish',
+    );
+    expect(res.status).toBe(401);
+  });
+
+  it('should_list_only_my_own_levels_and_reject_publishing_someone_elses', async () => {
+    // `new-e2e-level` (created above) belongs to the `bearerToken` user.
+    const mine = await request(app.getHttpServer())
+      .get('/api/v1/levels/mine')
+      .set('Authorization', `Bearer ${bearerToken}`);
+    expect(mine.status).toBe(200);
+    expect(
+      (mine.body as Array<{ id: string }>).find(
+        (l) => l.id === 'new-e2e-level',
+      ),
+    ).toBeDefined();
+
+    const otherGuest = await request(app.getHttpServer())
+      .post('/api/v1/auth/guest')
+      .send({ uuid: 'b2c3d4e5-f6a7-4890-b234-c567d890e123' });
+    const otherToken = otherGuest.body.token as string;
+
+    const forbidden = await request(app.getHttpServer())
+      .post('/api/v1/levels/new-e2e-level/publish')
+      .set('Authorization', `Bearer ${otherToken}`);
+    expect(forbidden.status).toBe(403);
+  });
+
+  it('should_publish_a_level_and_surface_it_in_the_community_list', async () => {
+    const communityBefore = await request(app.getHttpServer()).get(
+      '/api/v1/levels/community',
+    );
+    expect(communityBefore.status).toBe(200);
+    expect(
+      (communityBefore.body as Array<{ id: string }>).find(
+        (l) => l.id === 'new-e2e-level',
+      ),
+    ).toBeUndefined();
+
+    const published = await request(app.getHttpServer())
+      .post('/api/v1/levels/new-e2e-level/publish')
+      .set('Authorization', `Bearer ${bearerToken}`);
+    expect(published.status).toBe(201);
+    expect(published.body.isPublished).toBe(true);
+
+    const communityAfter = await request(app.getHttpServer()).get(
+      '/api/v1/levels/community',
+    );
+    expect(
+      (communityAfter.body as Array<{ id: string }>).find(
+        (l) => l.id === 'new-e2e-level',
+      ),
+    ).toBeDefined();
+  });
+
+  it('should_return_404_when_publishing_a_nonexistent_level', async () => {
+    const res = await request(app.getHttpServer())
+      .post('/api/v1/levels/does-not-exist/publish')
+      .set('Authorization', `Bearer ${bearerToken}`);
+    expect(res.status).toBe(404);
   });
 });
 

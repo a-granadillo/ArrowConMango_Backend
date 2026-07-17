@@ -29,4 +29,10 @@ export class LevelDefinitionOrmEntity {
   /** null for campaign levels; the creator's user id for community levels. */
   @Column({ type: 'varchar', nullable: true })
   authorId!: string | null;
+
+  @Column({ default: false })
+  isPublished!: boolean;
+
+  @Column({ type: 'datetime', nullable: true })
+  publishedAt!: Date | null;
 }

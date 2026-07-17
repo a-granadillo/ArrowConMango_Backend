@@ -11,6 +11,7 @@ import {
   EmailAlreadyInUseError,
   InvalidCredentialsError,
   InvalidEmailError,
+  LevelForbiddenError,
   LevelNotFoundError,
   LevelValidationError,
   UnauthorizedError,
@@ -67,6 +68,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
       exception instanceof LevelNotFoundError
     ) {
       return this.build(HttpStatus.NOT_FOUND, exception);
+    }
+    if (exception instanceof LevelForbiddenError) {
+      return this.build(HttpStatus.FORBIDDEN, exception);
     }
     if (exception instanceof DomainError) {
       return this.build(HttpStatus.BAD_REQUEST, exception);
