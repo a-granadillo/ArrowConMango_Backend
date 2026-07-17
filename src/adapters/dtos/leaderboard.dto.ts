@@ -47,6 +47,58 @@ export class ScoreEntryResponseDto {
   at!: string;
 }
 
+export class RankedScoreEntryResponseDto extends ScoreEntryResponseDto {
+  @ApiProperty({ description: '1-based position in the level ranking' })
+  rank!: number;
+
+  @ApiProperty()
+  displayName!: string;
+
+  @ApiProperty({ description: 'Whether this row is the requesting player' })
+  isMe!: boolean;
+}
+
+export class LevelLeaderboardResponseDto {
+  @ApiProperty({ type: [RankedScoreEntryResponseDto] })
+  top!: RankedScoreEntryResponseDto[];
+
+  @ApiProperty({
+    type: RankedScoreEntryResponseDto,
+    nullable: true,
+    description:
+      "The requesting player's own row with their real rank, even if outside the top",
+  })
+  me!: RankedScoreEntryResponseDto | null;
+}
+
+export class SurvivalStandingResponseDto {
+  @ApiProperty({ description: '1-based position in the survival ranking' })
+  rank!: number;
+
+  @ApiProperty()
+  userId!: string;
+
+  @ApiProperty()
+  displayName!: string;
+
+  @ApiProperty({ description: 'Total mango stars across all survival runs' })
+  mangos!: number;
+
+  @ApiProperty({ description: 'Number of survival runs submitted' })
+  runs!: number;
+
+  @ApiProperty({ description: 'Whether this row is the requesting player' })
+  isMe!: boolean;
+}
+
+export class SurvivalLeaderboardResponseDto {
+  @ApiProperty({ type: [SurvivalStandingResponseDto] })
+  top!: SurvivalStandingResponseDto[];
+
+  @ApiProperty({ type: SurvivalStandingResponseDto, nullable: true })
+  me!: SurvivalStandingResponseDto | null;
+}
+
 export class PlayerStandingResponseDto {
   @ApiProperty({ description: '1-based position in the global ranking' })
   rank!: number;

@@ -2,11 +2,15 @@ import { GetLeaderboardUseCase } from '../../../src/application/use-cases/get-le
 import { SubmitScoreUseCase } from '../../../src/application/use-cases/submit-score.use-case';
 import { PlayerProgress } from '../../../src/domain/entities/player-progress.entity';
 import { ScoreEntry } from '../../../src/domain/entities/score-entry.entity';
+import { User } from '../../../src/domain/entities/user.entity';
 import { ILeaderboardRepository } from '../../../src/domain/ports/leaderboard.repository';
 import { IProgressRepository } from '../../../src/domain/ports/progress.repository';
+import { IUserRepository } from '../../../src/domain/ports/user.repository';
 import { MangoScore } from '../../../src/domain/services/score-calculation.strategy';
+import { Email } from '../../../src/domain/value-objects/email.vo';
 import { GameMode } from '../../../src/domain/value-objects/game-mode.vo';
 import { LevelId } from '../../../src/domain/value-objects/level-id.vo';
+import { PasswordHash } from '../../../src/domain/value-objects/password-hash.vo';
 import { Score } from '../../../src/domain/value-objects/score.vo';
 import { UserId } from '../../../src/domain/value-objects/user-id.vo';
 
@@ -16,6 +20,21 @@ const makeLbRepo = (entries: ScoreEntry[]): ILeaderboardRepository => ({
   byLevel: jest.fn().mockResolvedValue(entries),
   bySurvival: jest.fn().mockResolvedValue([]),
   add: jest.fn().mockResolvedValue(undefined),
+});
+
+const makeUser = (id: string, username: string) =>
+  User.create(
+    Email.create(`guest-${id}@guest.local`),
+    PasswordHash.fromHash('$hash'),
+    username,
+    UserId.create(id),
+  );
+
+const makeUserRepo = (users: User[]): IUserRepository => ({
+  byEmail: jest.fn(),
+  byId: jest.fn(),
+  byIds: jest.fn().mockResolvedValue(users),
+  save: jest.fn(),
 });
 
 const makeProgressRepo = (
@@ -38,22 +57,60 @@ describe('GetLeaderboardUseCase', () => {
       GameMode.campaign(),
     );
     const repo = makeLbRepo([entry]);
-    const useCase = new GetLeaderboardUseCase(repo, strategy);
+    const userRepo = makeUserRepo([makeUser('u1', 'Alice')]);
+    const useCase = new GetLeaderboardUseCase(repo, userRepo, strategy);
     // Act
     const result = await useCase.execute({ levelId: 'lvl-1' });
     // Assert
-    expect(result).toHaveLength(1);
-    expect(result[0].userId).toBe('u1');
-    expect(result[0].levelId).toBe('lvl-1');
-    expect(result[0].value).toBeGreaterThan(0);
+    expect(result.top).toHaveLength(1);
+    expect(result.top[0].userId).toBe('u1');
+    expect(result.top[0].displayName).toBe('Alice');
+    expect(result.top[0].rank).toBe(1);
+    expect(result.top[0].levelId).toBe('lvl-1');
+    expect(result.top[0].value).toBeGreaterThan(0);
     expect(repo.byLevel).toHaveBeenCalledWith(expect.anything());
   });
 
-  it('should_return_empty_array_when_no_entries', async () => {
+  it('should_return_empty_top_and_null_me_when_no_entries', async () => {
     const repo = makeLbRepo([]);
-    const useCase = new GetLeaderboardUseCase(repo, strategy);
+    const userRepo = makeUserRepo([]);
+    const useCase = new GetLeaderboardUseCase(repo, userRepo, strategy);
     const result = await useCase.execute({ levelId: 'lvl-x' });
-    expect(result).toEqual([]);
+    expect(result.top).toEqual([]);
+    expect(result.me).toBeNull();
+  });
+
+  it('should_return_the_real_rank_for_a_player_outside_the_top', async () => {
+    // Arrange — 12 players, requester is the worst (rank 12), top defaults to 10
+    const levelId = LevelId.create('lvl-crowded');
+    const entries = Array.from({ length: 12 }, (_, i) =>
+      ScoreEntry.create(
+        UserId.create(`p${i}`),
+        levelId,
+        // p0 has the best score (fewest moves/fastest time), p11 the worst
+        Score.create(i, i * 1_000),
+        GameMode.campaign(),
+      ),
+    );
+    const repo = makeLbRepo(entries);
+    const userRepo = makeUserRepo(
+      entries.map((e) => makeUser(e.userId.value, e.userId.value)),
+    );
+    const useCase = new GetLeaderboardUseCase(repo, userRepo, strategy);
+
+    // Act
+    const result = await useCase.execute({
+      levelId: 'lvl-crowded',
+      currentUserId: 'p11',
+    });
+
+    // Assert
+    expect(result.top).toHaveLength(10);
+    expect(result.top.some((e) => e.userId === 'p11')).toBe(false);
+    expect(result.me).not.toBeNull();
+    expect(result.me?.userId).toBe('p11');
+    expect(result.me?.rank).toBe(12);
+    expect(result.me?.isMe).toBe(true);
   });
 });
 
