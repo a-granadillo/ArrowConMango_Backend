@@ -4,11 +4,11 @@ import { GuestLoginUseCase } from '../../application/use-cases/guest-login.use-c
 import { LoginUseCase } from '../../application/use-cases/login.use-case';
 import { RegisterUserUseCase } from '../../application/use-cases/register-user.use-case';
 import {
-  AuthResponseDto,
   GuestLoginDto,
   LoginDto,
   LoginResponseDto,
   RegisterDto,
+  RegisterResponseDto,
 } from '../dtos/auth.dto';
 
 @ApiTags('Auth')
@@ -22,10 +22,10 @@ export class AuthController {
 
   @Post('register')
   @ApiOperation({ summary: 'Register a new player account' })
-  @ApiResponse({ status: 201, type: AuthResponseDto })
+  @ApiResponse({ status: 201, type: RegisterResponseDto })
   @ApiResponse({ status: 409, description: 'Email already in use' })
   @ApiResponse({ status: 422, description: 'Validation error' })
-  async register(@Body() dto: RegisterDto): Promise<AuthResponseDto> {
+  async register(@Body() dto: RegisterDto): Promise<RegisterResponseDto> {
     return this.registerUser.execute({
       email: dto.email,
       password: dto.password,

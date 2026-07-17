@@ -85,6 +85,12 @@ describe('POST /api/v1/auth/register', () => {
     expect(res.body.email).toBe('e2e@test.com');
     expect(res.body.username).toBe('E2EUser');
     expect(res.body.id).toBeDefined();
+    // Registering must leave the caller logged in — no follow-up login call.
+    expect(res.body.token).toBeDefined();
+    const authed = await request(app.getHttpServer())
+      .get('/api/v1/progress')
+      .set('Authorization', `Bearer ${res.body.token}`);
+    expect(authed.status).toBe(200);
   });
 
   it('should_return_409_when_email_already_registered', async () => {

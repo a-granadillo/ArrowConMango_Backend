@@ -8,6 +8,7 @@ export interface RegisterOutput {
   id: string;
   email: string;
   username: string;
+  token: string;
 }
 
 export interface LoginInput {
