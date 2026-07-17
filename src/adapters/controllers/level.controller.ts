@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Put, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -26,6 +34,29 @@ export class LevelController {
   async getAll(): Promise<LevelResponseDto[]> {
     const result = await this.getLevels.execute();
     return result as unknown as LevelResponseDto[];
+  }
+
+  @Post()
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Create a level definition (admin)' })
+  @ApiResponse({ status: 201, type: LevelResponseDto })
+  @ApiResponse({ status: 422, description: 'Level validation failed' })
+  async create(
+    @Body() dto: UpsertLevelDto,
+    @CurrentUser() userId: string,
+  ): Promise<LevelResponseDto> {
+    const result = await this.upsertLevel.execute({
+      id: dto.id,
+      name: dto.name,
+      difficulty: dto.difficulty,
+      boardSize: dto.boardSize,
+      arrows: dto.arrows,
+      rules: dto.rules ?? {},
+      version: dto.version,
+      authorId: userId,
+    });
+    return result as unknown as LevelResponseDto;
   }
 
   @Put(':id')
