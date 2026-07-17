@@ -205,11 +205,24 @@ export interface IScoreCalculationStrategy {
 export class MovesBasedScore implements IScoreCalculationStrategy { ... }
 export class TimeBasedScore implements IScoreCalculationStrategy { ... }
 export class MixedScore implements IScoreCalculationStrategy { ... }
+export class MangoScore implements IScoreCalculationStrategy { ... } // usada en producción
 ```
 
-**Patrón Strategy:** La estrategia de puntuación es intercambiable en runtime. El nivel puede
-especificar en sus reglas qué estrategia usar. Un nivel de velocidad usa `TimeBasedScore`;
-uno de eficiencia usa `MovesBasedScore`. No hay `if (tipo === 'speed')` dispersos.
+**Patrón Strategy, pero una sola instancia global — no por nivel.** El diseño
+original de este documento planteaba una estrategia *por nivel* ("un nivel de
+velocidad usa `TimeBasedScore`"). Al implementar el leaderboard global (F5) se
+optó por una única strategy (`MangoScore`, inyectada vía el token
+`SCORE_STRATEGY` en `app.module.ts`) para todo el juego. Razón: el ranking
+global sumaría los `compute()` de niveles distintos para obtener `mangos`; si
+cada nivel puntuara con una fórmula distinta, esos números no serían
+comparables entre sí y la suma no significaría nada. La igualación real ocurre
+un nivel más arriba — `MangoRating`/`MangoStars` convierte el puntaje en 1-3
+estrellas con los mismos umbrales en cualquier nivel, y **eso** es lo que se
+suma en el ranking global (ver `docs/adr/0001-ranking-in-domain.md`). El
+patrón Strategy se conserva (y se prueba intercambiando `TimeBasedScore` en
+`get-leaderboard.use-case.ts`'s test) por si en el futuro se necesita una
+estrategia distinta para el Modo Creativo, pero hoy no hay `if (tipo ===
+'speed')` porque no hay ramificación en absoluto: todo el juego usa la misma.
 
 ---
 

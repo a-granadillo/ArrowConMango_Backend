@@ -1,51 +1,53 @@
-# Capa 3 — Interface Adapters (TODO - Next Phase)
+# Capa 3 — Interface Adapters
 
-Esta capa convierte datos entre el dominio y el mundo exterior (HTTP, ORM).
-Ninguna clase aquí contiene lógica de negocio.
+Esta capa convierte datos entre el dominio y el mundo exterior (HTTP). Ninguna
+clase aquí contiene lógica de negocio — solo mapea request → input de caso de
+uso, y output de caso de uso → response.
 
-## Archivos a implementar
+Los repositorios TypeORM y sus mappers de persistencia viven en
+`infrastructure/persistence/` (ver `infrastructure/README.md`), no aquí: son
+detalles de almacenamiento, no de "adaptar HTTP". `auth.guard.ts` y
+`cache.interceptor.ts` sí están en esta capa (`adapters/aop/`) porque son
+aspectos de HTTP, no de infraestructura de arranque.
 
-### controllers/
-- `auth.controller.ts` — `AuthController` («Controller»)
-  - `POST /api/v1/auth/register` → llama `RegisterUserUseCase`
-  - `POST /api/v1/auth/login`    → llama `LoginUseCase`
-- `progress.controller.ts` — `ProgressController`
-  - `GET  /api/v1/progress` → `GetProgressUseCase` [requiere AuthGuard]
-  - `PUT  /api/v1/progress` → `SyncProgressUseCase` [requiere AuthGuard]
-- `level.controller.ts` — `LevelController`
-  - `GET /api/v1/levels`        → `GetLevelsUseCase`
-  - `GET /api/v1/levels/:id`    → (extensión, misma repo)
-  - `PUT /api/v1/levels/:id`    → `UpsertLevelUseCase` [requiere AuthGuard]
-- `leaderboard.controller.ts` — `LeaderboardController`
-  - `GET  /api/v1/leaderboard?level={id}` → `GetLeaderboardUseCase`
-  - `POST /api/v1/leaderboard`            → `SubmitScoreUseCase` [requiere AuthGuard]
+## controllers/
 
-### dtos/ (con @ApiProperty y class-validator)
-- `auth.dto.ts`        — `RegisterDto`, `LoginDto`, `AuthResponseDto`
-- `progress.dto.ts`    — `SyncProgressDto`, `ProgressResponseDto`
-- `level.dto.ts`       — `UpsertLevelDto`, `LevelResponseDto`
-- `leaderboard.dto.ts` — `SubmitScoreDto`, `ScoreEntryResponseDto`
+| Controller | Ruta | Caso de uso | Auth |
+|---|---|---|---|
+| `auth.controller.ts` | `POST /api/v1/auth/register` | `RegisterUserUseCase` | — |
+| | `POST /api/v1/auth/login` | `LoginUseCase` | — |
+| | `POST /api/v1/auth/guest` | `GuestLoginUseCase` | — |
+| `player.controller.ts` | `PATCH /api/v1/player/me` | `UpdatePlayerNameUseCase` | ✅ |
+| `progress.controller.ts` | `GET /api/v1/progress` | `GetProgressUseCase` | ✅ |
+| | `PUT /api/v1/progress` | `SyncProgressUseCase` | ✅ |
+| `level.controller.ts` | `GET /api/v1/levels` | `GetLevelsUseCase` | — |
+| | `PUT /api/v1/levels/:id` | `UpsertLevelUseCase` | ✅ (autor) |
+| `leaderboard.controller.ts` | `GET /api/v1/leaderboard?level={id}` | `GetLeaderboardUseCase` | — |
+| | `GET /api/v1/leaderboard/global?top={n}` | `GetGlobalLeaderboardUseCase` | — |
+| | `POST /api/v1/leaderboard` | `SubmitScoreUseCase` | ✅ |
 
-### repositories/  (implementan puertos del dominio — Adapter pattern)
-- `typeorm-user.repository.ts`        — `TypeOrmUserRepository implements IUserRepository`
-- `typeorm-progress.repository.ts`    — `TypeOrmProgressRepository implements IProgressRepository`
-- `typeorm-level.repository.ts`       — `TypeOrmLevelRepository implements ILevelRepository`
-- `typeorm-leaderboard.repository.ts` — `TypeOrmLeaderboardRepository implements ILeaderboardRepository`
+## dtos/ (con `@ApiProperty` y `class-validator`)
 
-### mappers/  (Anti-Corruption Layer — Entity ↔ ORM Model ↔ DTO)
-- `user.mapper.ts`     — `UserMapper.toEntity()` / `toDto()`
-- `level.mapper.ts`    — `LevelMapper.toEntity()` / `toDto()`
-- `progress.mapper.ts` — `ProgressMapper.toEntity()` / `toDto()`
+- `auth.dto.ts` — `RegisterDto`, `LoginDto`, `GuestLoginDto`, `AuthResponseDto`, `UpdatePlayerNameDto`
+- `progress.dto.ts` — `SyncProgressDto`, `ProgressResponseDto`
+- `level.dto.ts` — `UpsertLevelDto`, `LevelResponseDto` y sub-DTOs (`BoardSizeDto`, `ArrowDefinitionDto`, `TrajectorySegmentDto`, `LevelRulesDto`)
+- `leaderboard.dto.ts` — `SubmitScoreDto`, `ScoreEntryResponseDto`, `PlayerStandingResponseDto`
 
-## AOP — Aspectos en esta capa (NestJS mechanisms)
+## decorators/
 
-| Aspecto               | Mecanismo NestJS      | Concern                                      |
-|-----------------------|-----------------------|----------------------------------------------|
-| `LoggingInterceptor`  | `NestInterceptor`     | Entrada/salida/duración de cada request      |
-| `MetricsInterceptor`  | `NestInterceptor`     | Tiempo de operaciones costosas (RNF-01)      |
-| `CacheInterceptor`    | `NestInterceptor`     | Caché de `GET /leaderboard`                  |
-| `AuthGuard`           | `CanActivate`         | Verificación JWT antes de endpoints protegidos|
-| `HttpExceptionFilter` | `ExceptionFilter`     | Mapea DomainError → respuesta HTTP uniforme  |
+- `current-user.decorator.ts` — `@CurrentUser()`, extrae el `userId` verificado por `AuthGuard` del request.
 
-Estrategia AOP: todos envuelven un componente sin que este lo conozca (Decorator/Proxy SOLID).
-El caso de uso nunca importa el aspecto — cumple LSP y OCP.
+## AOP — Aspectos en esta capa
+
+| Aspecto | Mecanismo NestJS | Concern |
+|---|---|---|
+| `AuthGuard` (`adapters/aop/auth.guard.ts`) | `CanActivate` | Verifica el JWT antes de endpoints protegidos, expone `req.userId` |
+| `CacheInterceptor` (`adapters/aop/cache.interceptor.ts`) | `NestInterceptor` | Caché de `GET /leaderboard*` |
+
+Los aspectos globales (`LoggingInterceptor`, `MetricsInterceptor`,
+`HttpExceptionFilter`) viven en `infrastructure/aop/` porque se cablean una
+sola vez en `main.ts` para toda la app, no por controller — ver
+`infrastructure/README.md`.
+
+Estrategia AOP: todos envuelven un componente sin que este lo conozca
+(Decorator/Proxy). El caso de uso nunca importa el aspecto — cumple LSP y OCP.

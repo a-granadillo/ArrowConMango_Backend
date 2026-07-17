@@ -16,10 +16,11 @@ La regla de dependencia es estricta: ninguna capa interna importa nada de una ca
 ```
 ┌─────────────────────────────────────────────────────────┐
 │  (4) Frameworks & Drivers  — src/infrastructure/        │
-│   NestJS, TypeORM, SQLite/PostgreSQL, bcrypt, jwt       │
+│   NestJS, TypeORM, SQLite/PostgreSQL, bcrypt, jwt,      │
+│   TypeOrm*Repository + Mappers (persistence/)           │
 │   ┌─────────────────────────────────────────────────┐   │
 │   │  (3) Interface Adapters  — src/adapters/        │   │
-│   │   Controllers, TypeOrm*Repository, Mappers, DTOs │   │
+│   │   Controllers, DTOs, AuthGuard, CacheInterceptor │   │
 │   │   ┌──────────────────────────────────────────┐  │   │
 │   │   │  (2) Application  — src/application/     │  │   │
 │   │   │   8 Use Cases · UseCase<I,O> · DTOs      │  │   │
@@ -53,11 +54,11 @@ la regla de que las interfaces no existen en runtime.
 
 | Patrón | Categoría | Evidencia en el código |
 |---|---|---|
-| **Strategy** | Comportamiento | `IScoreCalculationStrategy` · `MovesBasedScore` · `TimeBasedScore` · `MixedScore` en `src/domain/services/` |
+| **Strategy** | Comportamiento | `IScoreCalculationStrategy` · `MovesBasedScore` · `TimeBasedScore` · `MixedScore` · `MangoScore` (producción) en `src/domain/services/` — una sola instancia global, ver [ADR 0001](docs/adr/0001-ranking-in-domain.md) |
 | **Factory Method** | Creacional | Constructores privados + `Email.create()`, `Score.fromRaw()`, `ScoreEntry.reconstitute()` en todos los VOs/Entidades |
 | **Adapter** | Estructural | `JwtTokenService implements ITokenService` · `BcryptHasher implements IPasswordHasher` en `src/infrastructure/auth/` |
-| **Repository** | Estructural | `TypeOrmUserRepository implements IUserRepository` (y 3 más) en `src/adapters/repositories/` |
-| **Mapper / ACL** | Estructural | `UserMapper`, `ProgressMapper`, `LevelMapper`, `ScoreEntryMapper` en `src/adapters/mappers/` — traducen ORM ↔ dominio |
+| **Repository** | Estructural | `TypeOrmUserRepository implements IUserRepository` (y 3 más) en `src/infrastructure/persistence/` |
+| **Mapper / ACL** | Estructural | `UserMapper`, `ProgressMapper`, `LevelMapper`, `ScoreEntryMapper` en `src/infrastructure/persistence/` — traducen ORM ↔ dominio |
 | **Singleton** | Creacional | Todos los providers NestJS son singletons por defecto (DI container) |
 | **Decorator / Proxy** | Estructural | `UseCase<I,O>` como base; NestJS Interceptors/Guards/Filters como decoradores de cross-cutting concerns |
 
@@ -77,15 +78,17 @@ la regla de que las interfaces no existen en runtime.
 
 ## AOP — Programación Orientada a Aspectos
 
-Cinco aspectos implementados en `src/infrastructure/aop/`, registrados sin modificar la lógica de negocio:
+Cinco aspectos, registrados sin modificar la lógica de negocio. Los globales viven en
+`src/infrastructure/aop/`; los que se aplican por controller viven en `src/adapters/aop/`
+(ver [ADR 0002](docs/adr/0002-layer-topology.md)):
 
 | Aspecto | Mecanismo NestJS | Registro | Función |
 |---|---|---|---|
 | `LoggingInterceptor` | `NestInterceptor` | Global en `main.ts` | Loguea IN/OUT/ERR con tiempo de respuesta |
 | `MetricsInterceptor` | `NestInterceptor` | Global en `main.ts` | Advierte si un handler supera 200 ms |
-| `CacheInterceptor` | `NestInterceptor` | `@UseInterceptors` en `GET /leaderboard` | Caché en memoria Map con TTL 30 s |
-| `AuthGuard` | `CanActivate` | `@UseGuards` en endpoints protegidos | Extrae Bearer token · verifica JWT · deposita `userId` en request |
 | `HttpExceptionFilter` | `ExceptionFilter` | Global en `main.ts` | Mapea `DomainError` → HTTP (409/401/422/404/500) |
+| `CacheInterceptor` | `NestInterceptor` | `@UseInterceptors` en `GET /leaderboard*` | Caché en memoria Map con TTL 30 s |
+| `AuthGuard` | `CanActivate` | `@UseGuards` en endpoints protegidos | Extrae Bearer token · verifica JWT · deposita `userId` en request |
 
 El filtro es el **único** punto de traducción entre el dominio y el protocolo HTTP.
 
@@ -147,13 +150,15 @@ Prefijo global: `/api/v1`
 |---|---|---|---|---|
 | `POST` | `/auth/register` | — | RF-B-01 | Registrar nuevo usuario (201) |
 | `POST` | `/auth/login` | — | RF-B-01 | Autenticar y obtener JWT (200) |
-| `POST` | `/auth/guest` | — | RF-B-01 | Login de invitado: UUID → JWT (200) |
-| `GET` | `/progress` | Bearer | RF-B-02 | Obtener progreso del usuario |
+| `POST` | `/auth/guest` | — | RF-B-01 | Login de invitado: UUID (+ displayName opcional) → JWT (200) |
+| `PATCH` | `/player/me` | Bearer | RF-B-01 | Renombrar al jugador autenticado |
+| `GET` | `/progress` | Bearer | RF-B-02 | Obtener progreso del usuario (incluye `best` por nivel) |
 | `PUT` | `/progress` | Bearer | RF-B-02 | Sincronizar progreso (merge idempotente) |
-| `GET` | `/levels` | — | RF-B-04 | Listar todas las definiciones de niveles |
-| `PUT` | `/levels/:id` | Bearer | RF-B-04, RF-B-07 | Crear o actualizar nivel (admin) |
+| `GET` | `/levels` | — | RF-B-04 | Listar todas las definiciones de niveles (catálogo de campaña) |
+| `PUT` | `/levels/:id` | Bearer | RF-B-04, RF-B-07 | Crear o actualizar nivel — stampa `authorId` con el llamante |
 | `GET` | `/leaderboard?level=&top=` | — | RF-B-03 | Top N scores por nivel (cacheado 30 s) |
-| `POST` | `/leaderboard` | Bearer | RF-B-03 | Enviar score al leaderboard (201) |
+| `GET` | `/leaderboard/global?top=` | — | RF-B-03 | Ranking global por mangos (Σ estrellas), cacheado 30 s |
+| `POST` | `/leaderboard` | Bearer | RF-B-03 | Enviar score — puebla `player_progress.best` (201) |
 
 Documentación interactiva completa: `http://localhost:3000/api/docs`
 
@@ -164,12 +169,12 @@ Documentación interactiva completa: `http://localhost:3000/api/docs`
 ```
 test/
 ├── unit/
-│   ├── domain/          → 25 tests (VOs, entidades, strategy)
-│   ├── application/     → 28 tests (use-cases con mocks de puertos)
-│   └── infrastructure/  →  7 tests (JwtTokenService, BcryptHasher, ScoreEntry.reconstitute)
-├── integration/         → 11 tests (TypeOrm*Repository con SQLite :memory: real)
-└── e2e/                 → 15 tests (flujo HTTP completo con supertest)
-                           Total: 86 pruebas
+│   ├── domain/          → entidades, VOs, strategy (incluye LevelDefinition.validate())
+│   ├── application/     → use-cases con mocks de puertos (leaderboard global, player rename, niveles, etc.)
+│   └── infrastructure/  → JwtTokenService, BcryptHasher, ScoreEntry.reconstitute
+├── integration/         → TypeOrm*Repository con SQLite :memory: real (los 4 repos)
+└── e2e/                 → flujo HTTP completo con supertest (auth → progreso → score → leaderboard → niveles)
+                           Total: 128 pruebas
 ```
 
 Todos los tests usan la convención `should_[resultado]_when_[condición]` y siguen el patrón AAA.
@@ -193,7 +198,30 @@ Conventional Commits) está documentado en [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ---
 
+## Verificación end-to-end (integración con el frontend)
+
+Guía completa paso a paso, incluyendo el frontend Flutter y checklist manual
+por funcionalidad: ver la sección "Verificación end-to-end" en
+[el README del frontend](https://github.com/a-granadillo/ArrowConMango_Front#readme).
+Resumen del lado backend:
+
+```bash
+npm ci --legacy-peer-deps
+npm run seed        # puebla los 15 niveles de campaña
+npm run build
+npm run start:prod  # o: node dist/main.js
+```
+
+`GET /levels` debe devolver los 15 niveles, byte-idénticos al artefacto
+congelado del frontend (`assets/levels/campaign_levels.json`) — ver
+[ADR 0003](docs/adr/0003-generator-stays-in-frontend.md).
+
 ## Documentación adicional
 
 - [Implementación detallada — decisiones de diseño, SOLID, GoF, AOP](docs/IMPLEMENTACION_BACKEND.md)
+- Decisiones de arquitectura (ADRs):
+  - [0001 — Ranking en el dominio, no en SQL; mangos = Σ estrellas](docs/adr/0001-ranking-in-domain.md)
+  - [0002 — Topología de capas: persistencia en `infrastructure/`](docs/adr/0002-layer-topology.md)
+  - [0003 — El generador de niveles se queda en el frontend](docs/adr/0003-generator-stays-in-frontend.md)
+  - [0004 — Solvabilidad de niveles de comunidad: confiada al cliente](docs/adr/0004-community-level-solvability-client-trusted.md)
 - [Registro de uso de IA (entradas #01–#09)](AI_USAGE.md)
