@@ -1,32 +1,124 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsArray,
+  IsBoolean,
+  IsIn,
+  IsInt,
   IsNumber,
   IsObject,
   IsOptional,
   IsString,
   Min,
+  ValidateNested,
 } from 'class-validator';
+import { Type } from 'class-transformer';
+
+export class BoardSizeDto {
+  @ApiProperty()
+  @IsInt()
+  @Min(1)
+  rows!: number;
+
+  @ApiProperty()
+  @IsInt()
+  @Min(1)
+  cols!: number;
+}
+
+export class BoardNodeDto {
+  @ApiProperty()
+  @IsInt()
+  row!: number;
+
+  @ApiProperty()
+  @IsInt()
+  col!: number;
+}
+
+export class TrajectorySegmentDto {
+  @ApiProperty({ enum: ['up', 'down', 'left', 'right'] })
+  @IsIn(['up', 'down', 'left', 'right'])
+  direction!: 'up' | 'down' | 'left' | 'right';
+
+  @ApiProperty()
+  @IsInt()
+  @Min(1)
+  length!: number;
+}
+
+export class TrajectoryDto {
+  @ApiProperty({ type: [TrajectorySegmentDto] })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => TrajectorySegmentDto)
+  segments!: TrajectorySegmentDto[];
+}
+
+export class ArrowDefinitionDto {
+  @ApiProperty()
+  @IsString()
+  id!: string;
+
+  @ApiProperty()
+  @ValidateNested()
+  @Type(() => BoardNodeDto)
+  startNode!: BoardNodeDto;
+
+  @ApiProperty()
+  @ValidateNested()
+  @Type(() => TrajectoryDto)
+  trajectory!: TrajectoryDto;
+
+  @ApiProperty()
+  @IsBoolean()
+  isSwitchable!: boolean;
+}
+
+export class LevelRulesDto {
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  timeLimitSeconds?: number | null;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  maxMistakes?: number | null;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  allowRotation?: boolean | null;
+}
 
 export class UpsertLevelDto {
   @ApiPropertyOptional({
-    description: 'Level ID (UUID). Generated if omitted.',
+    description: 'Level ID. Generated if omitted.',
   })
   @IsOptional()
   @IsString()
   id?: string;
 
-  @ApiProperty({ description: 'Array of node definitions' })
-  @IsArray()
-  nodes!: unknown[];
+  @ApiProperty()
+  @IsString()
+  name!: string;
 
-  @ApiProperty({ description: 'Array of [fromNodeId, toNodeId] edges' })
-  @IsArray()
-  edges!: [string, string][];
+  @ApiProperty()
+  @IsString()
+  difficulty!: string;
 
-  @ApiPropertyOptional({
-    description: 'Level rules (timeLimitSeconds, allowRotation, etc.)',
-  })
+  @ApiProperty()
+  @ValidateNested()
+  @Type(() => BoardSizeDto)
+  boardSize!: BoardSizeDto;
+
+  @ApiProperty({ type: [ArrowDefinitionDto] })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ArrowDefinitionDto)
+  arrows!: ArrowDefinitionDto[];
+
+  @ApiPropertyOptional()
   @IsObject()
   @IsOptional()
   rules?: Record<string, unknown>;
@@ -43,14 +135,23 @@ export class LevelResponseDto {
   id!: string;
 
   @ApiProperty()
-  nodes!: unknown[];
+  name!: string;
 
   @ApiProperty()
-  edges!: [string, string][];
+  difficulty!: string;
+
+  @ApiProperty()
+  boardSize!: { rows: number; cols: number };
+
+  @ApiProperty()
+  arrows!: unknown[];
 
   @ApiProperty()
   rules!: Record<string, unknown>;
 
   @ApiProperty()
   version!: number;
+
+  @ApiProperty({ nullable: true })
+  authorId!: string | null;
 }

@@ -5,7 +5,10 @@ import { TypeOrmLevelRepository } from '../../src/adapters/repositories/typeorm-
 import { TypeOrmLeaderboardRepository } from '../../src/adapters/repositories/typeorm-leaderboard.repository';
 import { User } from '../../src/domain/entities/user.entity';
 import { PlayerProgress } from '../../src/domain/entities/player-progress.entity';
-import { LevelDefinition } from '../../src/domain/entities/level-definition.entity';
+import {
+  ArrowDefinition,
+  LevelDefinition,
+} from '../../src/domain/entities/level-definition.entity';
 import { ScoreEntry } from '../../src/domain/entities/score-entry.entity';
 import { Email } from '../../src/domain/value-objects/email.vo';
 import { PasswordHash } from '../../src/domain/value-objects/password-hash.vo';
@@ -47,14 +50,14 @@ const makeLevelRepo = () =>
 const makeLeaderboardRepo = () =>
   new TypeOrmLeaderboardRepository(ds.getRepository(ScoreEntryOrmEntity));
 
-const VALID_NODES = [
+const BOARD_SIZE = { rows: 4, cols: 4 };
+const VALID_ARROWS: ArrowDefinition[] = [
   {
-    id: 'n1',
-    position: [0, 0] as [number, number],
-    type: 'arrow' as const,
-    direction: 'UP' as const,
+    id: 'a1',
+    startNode: { row: 0, col: 0 },
+    trajectory: { segments: [{ direction: 'right', length: 2 }] },
+    isSwitchable: false,
   },
-  { id: 'n2', position: [1, 0] as [number, number], type: 'exit' as const },
 ];
 
 // ─── UserRepository ────────────────────────────────────────────────────────
@@ -164,8 +167,10 @@ describe('TypeOrmLevelRepository', () => {
     // Arrange
     const repo = makeLevelRepo();
     const level = LevelDefinition.create(
-      VALID_NODES,
-      [['n1', 'n2']],
+      'Level 1',
+      'Easy',
+      BOARD_SIZE,
+      VALID_ARROWS,
       {},
       LevelId.create('test-level-1'),
     );
@@ -175,14 +180,22 @@ describe('TypeOrmLevelRepository', () => {
     // Assert
     const found = all.find((l) => l.id.value === 'test-level-1');
     expect(found).toBeDefined();
-    expect(found!.nodes).toHaveLength(2);
+    expect(found!.arrows).toHaveLength(1);
+    expect(found!.authorId).toBeNull();
   });
 
   it('should_retrieve_level_by_id', async () => {
     // Arrange
     const repo = makeLevelRepo();
     const levelId = LevelId.create('test-level-2');
-    const level = LevelDefinition.create(VALID_NODES, [], {}, levelId);
+    const level = LevelDefinition.create(
+      'Level 2',
+      'Easy',
+      BOARD_SIZE,
+      VALID_ARROWS,
+      {},
+      levelId,
+    );
     await repo.upsert(level);
     // Act
     const found = await repo.getById(levelId);

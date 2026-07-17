@@ -1,0 +1,3556 @@
+[
+  {
+    "id": "1",
+    "name": "Mango Verde",
+    "difficulty": "Easy",
+    "boardSize": {
+      "rows": 6,
+      "cols": 7
+    },
+    "arrows": [
+      {
+        "id": "a566",
+        "startNode": {
+          "row": 1,
+          "col": 5
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a567",
+        "startNode": {
+          "row": 0,
+          "col": 2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a568",
+        "startNode": {
+          "row": 0,
+          "col": 4
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a569",
+        "startNode": {
+          "row": 1,
+          "col": 0
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a570",
+        "startNode": {
+          "row": 1,
+          "col": 6
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a571",
+        "startNode": {
+          "row": 3,
+          "col": 4
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a572",
+        "startNode": {
+          "row": 1,
+          "col": 2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a573",
+        "startNode": {
+          "row": 2,
+          "col": 3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a574",
+        "startNode": {
+          "row": 1,
+          "col": 1
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a575",
+        "startNode": {
+          "row": 3,
+          "col": 2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a576",
+        "startNode": {
+          "row": 4,
+          "col": 3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a577",
+        "startNode": {
+          "row": 2,
+          "col": 5
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      }
+    ],
+    "rules": {},
+    "version": 1,
+    "authorId": null
+  },
+  {
+    "id": "2",
+    "name": "Semilla Tierna",
+    "difficulty": "Easy",
+    "boardSize": {
+      "rows": 7,
+      "cols": 7
+    },
+    "arrows": [
+      {
+        "id": "a842",
+        "startNode": {
+          "row": 2,
+          "col": 0
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a843",
+        "startNode": {
+          "row": 6,
+          "col": 5
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "up",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a844",
+        "startNode": {
+          "row": 2,
+          "col": 3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a845",
+        "startNode": {
+          "row": 4,
+          "col": 2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a846",
+        "startNode": {
+          "row": 6,
+          "col": 1
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a847",
+        "startNode": {
+          "row": 3,
+          "col": 2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "up",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a848",
+        "startNode": {
+          "row": 1,
+          "col": 3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a849",
+        "startNode": {
+          "row": 4,
+          "col": 3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a850",
+        "startNode": {
+          "row": 3,
+          "col": 3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      }
+    ],
+    "rules": {},
+    "version": 1,
+    "authorId": null
+  },
+  {
+    "id": "3",
+    "name": "Brote Nuevo",
+    "difficulty": "Easy",
+    "boardSize": {
+      "rows": 7,
+      "cols": 7
+    },
+    "arrows": [
+      {
+        "id": "a1511",
+        "startNode": {
+          "row": 1,
+          "col": 4
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a1512",
+        "startNode": {
+          "row": 3,
+          "col": 6
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a1513",
+        "startNode": {
+          "row": 6,
+          "col": 2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a1514",
+        "startNode": {
+          "row": 2,
+          "col": 4
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a1515",
+        "startNode": {
+          "row": 3,
+          "col": 2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a1516",
+        "startNode": {
+          "row": 5,
+          "col": 4
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a1517",
+        "startNode": {
+          "row": 4,
+          "col": 3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a1518",
+        "startNode": {
+          "row": 2,
+          "col": 3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      }
+    ],
+    "rules": {},
+    "version": 1,
+    "authorId": null
+  },
+  {
+    "id": "4",
+    "name": "Hoja Fresca",
+    "difficulty": "Easy",
+    "boardSize": {
+      "rows": 7,
+      "cols": 7
+    },
+    "arrows": [
+      {
+        "id": "a1831",
+        "startNode": {
+          "row": 5,
+          "col": 6
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a1832",
+        "startNode": {
+          "row": 3,
+          "col": 6
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a1833",
+        "startNode": {
+          "row": 5,
+          "col": 1
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a1834",
+        "startNode": {
+          "row": 4,
+          "col": 1
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "up",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a1835",
+        "startNode": {
+          "row": 6,
+          "col": 4
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a1836",
+        "startNode": {
+          "row": 1,
+          "col": 4
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a1837",
+        "startNode": {
+          "row": 4,
+          "col": 5
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a1838",
+        "startNode": {
+          "row": 2,
+          "col": 5
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a1839",
+        "startNode": {
+          "row": 1,
+          "col": 2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a1840",
+        "startNode": {
+          "row": 2,
+          "col": 3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a1841",
+        "startNode": {
+          "row": 3,
+          "col": 2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      }
+    ],
+    "rules": {},
+    "version": 1,
+    "authorId": null
+  },
+  {
+    "id": "5",
+    "name": "Sol Naciente",
+    "difficulty": "Easy",
+    "boardSize": {
+      "rows": 7,
+      "cols": 7
+    },
+    "arrows": [
+      {
+        "id": "a1860",
+        "startNode": {
+          "row": 0,
+          "col": 3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a1861",
+        "startNode": {
+          "row": 4,
+          "col": 5
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "up",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a1862",
+        "startNode": {
+          "row": 3,
+          "col": 2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a1863",
+        "startNode": {
+          "row": 4,
+          "col": 4
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a1864",
+        "startNode": {
+          "row": 4,
+          "col": 2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a1865",
+        "startNode": {
+          "row": 5,
+          "col": 4
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a1866",
+        "startNode": {
+          "row": 2,
+          "col": 1
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a1867",
+        "startNode": {
+          "row": 2,
+          "col": 3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      }
+    ],
+    "rules": {},
+    "version": 1,
+    "authorId": null
+  },
+  {
+    "id": "6",
+    "name": "Pulpa Dulce",
+    "difficulty": "Medium",
+    "boardSize": {
+      "rows": 9,
+      "cols": 9
+    },
+    "arrows": [
+      {
+        "id": "a2100",
+        "startNode": {
+          "row": 0,
+          "col": 4
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a2101",
+        "startNode": {
+          "row": 5,
+          "col": 0
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a2102",
+        "startNode": {
+          "row": 6,
+          "col": 7
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "up",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a2103",
+        "startNode": {
+          "row": 3,
+          "col": 3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a2104",
+        "startNode": {
+          "row": 7,
+          "col": 2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a2105",
+        "startNode": {
+          "row": 7,
+          "col": 6
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "up",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a2106",
+        "startNode": {
+          "row": 3,
+          "col": 4
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a2107",
+        "startNode": {
+          "row": 6,
+          "col": 3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a2108",
+        "startNode": {
+          "row": 2,
+          "col": 6
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a2109",
+        "startNode": {
+          "row": 4,
+          "col": 6
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a2110",
+        "startNode": {
+          "row": 4,
+          "col": 4
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a2111",
+        "startNode": {
+          "row": 2,
+          "col": 4
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      }
+    ],
+    "rules": {},
+    "version": 1,
+    "authorId": null
+  },
+  {
+    "id": "7",
+    "name": "Néctar Maduro",
+    "difficulty": "Medium",
+    "boardSize": {
+      "rows": 9,
+      "cols": 9
+    },
+    "arrows": [
+      {
+        "id": "a3737",
+        "startNode": {
+          "row": 5,
+          "col": 8
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "up",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a3738",
+        "startNode": {
+          "row": 2,
+          "col": 7
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a3739",
+        "startNode": {
+          "row": 1,
+          "col": 3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "up",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a3740",
+        "startNode": {
+          "row": 0,
+          "col": 4
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a3741",
+        "startNode": {
+          "row": 0,
+          "col": 5
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a3742",
+        "startNode": {
+          "row": 2,
+          "col": 3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 2
+            },
+            {
+              "direction": "left",
+              "length": 3
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a3743",
+        "startNode": {
+          "row": 3,
+          "col": 1
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "up",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a3744",
+        "startNode": {
+          "row": 2,
+          "col": 4
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a3745",
+        "startNode": {
+          "row": 2,
+          "col": 5
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a3746",
+        "startNode": {
+          "row": 5,
+          "col": 7
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a3747",
+        "startNode": {
+          "row": 6,
+          "col": 7
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a3748",
+        "startNode": {
+          "row": 4,
+          "col": 6
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "up",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a3749",
+        "startNode": {
+          "row": 5,
+          "col": 5
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a3750",
+        "startNode": {
+          "row": 3,
+          "col": 2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "up",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a3751",
+        "startNode": {
+          "row": 6,
+          "col": 4
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a3752",
+        "startNode": {
+          "row": 5,
+          "col": 2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      }
+    ],
+    "rules": {},
+    "version": 1,
+    "authorId": null
+  },
+  {
+    "id": "8",
+    "name": "Cosecha Media",
+    "difficulty": "Medium",
+    "boardSize": {
+      "rows": 9,
+      "cols": 9
+    },
+    "arrows": [
+      {
+        "id": "a3941",
+        "startNode": {
+          "row": 7,
+          "col": 0
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a3942",
+        "startNode": {
+          "row": 4,
+          "col": 7
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a3943",
+        "startNode": {
+          "row": 7,
+          "col": 7
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a3944",
+        "startNode": {
+          "row": 1,
+          "col": 5
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a3945",
+        "startNode": {
+          "row": 8,
+          "col": 2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a3946",
+        "startNode": {
+          "row": 2,
+          "col": 4
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a3947",
+        "startNode": {
+          "row": 8,
+          "col": 6
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "up",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a3948",
+        "startNode": {
+          "row": 7,
+          "col": 8
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a3949",
+        "startNode": {
+          "row": 5,
+          "col": 1
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "up",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a3950",
+        "startNode": {
+          "row": 6,
+          "col": 6
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "up",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a3951",
+        "startNode": {
+          "row": 4,
+          "col": 2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "up",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a3952",
+        "startNode": {
+          "row": 2,
+          "col": 3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a3953",
+        "startNode": {
+          "row": 4,
+          "col": 6
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "up",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a3954",
+        "startNode": {
+          "row": 2,
+          "col": 5
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      }
+    ],
+    "rules": {},
+    "version": 1,
+    "authorId": null
+  },
+  {
+    "id": "9",
+    "name": "Fibra Jugosa",
+    "difficulty": "Medium",
+    "boardSize": {
+      "rows": 9,
+      "cols": 9
+    },
+    "arrows": [
+      {
+        "id": "a5305",
+        "startNode": {
+          "row": 3,
+          "col": 7
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a5306",
+        "startNode": {
+          "row": 5,
+          "col": 5
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 1
+            },
+            {
+              "direction": "up",
+              "length": 4
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a5307",
+        "startNode": {
+          "row": 4,
+          "col": 1
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "up",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a5308",
+        "startNode": {
+          "row": 6,
+          "col": 4
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a5309",
+        "startNode": {
+          "row": 1,
+          "col": 3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a5310",
+        "startNode": {
+          "row": 4,
+          "col": 6
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "up",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a5311",
+        "startNode": {
+          "row": 5,
+          "col": 3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a5312",
+        "startNode": {
+          "row": 8,
+          "col": 5
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a5313",
+        "startNode": {
+          "row": 4,
+          "col": 5
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "up",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a5314",
+        "startNode": {
+          "row": 2,
+          "col": 5
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a5315",
+        "startNode": {
+          "row": 2,
+          "col": 2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      }
+    ],
+    "rules": {},
+    "version": 1,
+    "authorId": null
+  },
+  {
+    "id": "10",
+    "name": "Aroma Tropical",
+    "difficulty": "Medium",
+    "boardSize": {
+      "rows": 9,
+      "cols": 9
+    },
+    "arrows": [
+      {
+        "id": "a7216",
+        "startNode": {
+          "row": 5,
+          "col": 1
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 3
+            },
+            {
+              "direction": "up",
+              "length": 4
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a7217",
+        "startNode": {
+          "row": 2,
+          "col": 3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a7218",
+        "startNode": {
+          "row": 0,
+          "col": 0
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a7219",
+        "startNode": {
+          "row": 7,
+          "col": 0
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a7220",
+        "startNode": {
+          "row": 6,
+          "col": 3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a7221",
+        "startNode": {
+          "row": 7,
+          "col": 5
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "up",
+              "length": 1
+            },
+            {
+              "direction": "right",
+              "length": 3
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a7222",
+        "startNode": {
+          "row": 7,
+          "col": 8
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 1
+            },
+            {
+              "direction": "left",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a7223",
+        "startNode": {
+          "row": 6,
+          "col": 2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a7224",
+        "startNode": {
+          "row": 3,
+          "col": 3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a7225",
+        "startNode": {
+          "row": 2,
+          "col": 6
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a7226",
+        "startNode": {
+          "row": 7,
+          "col": 4
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a7227",
+        "startNode": {
+          "row": 3,
+          "col": 5
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a7228",
+        "startNode": {
+          "row": 4,
+          "col": 3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a7229",
+        "startNode": {
+          "row": 4,
+          "col": 5
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a7230",
+        "startNode": {
+          "row": 5,
+          "col": 5
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      }
+    ],
+    "rules": {},
+    "version": 1,
+    "authorId": null
+  },
+  {
+    "id": "11",
+    "name": "Piel Dorada",
+    "difficulty": "Hard",
+    "boardSize": {
+      "rows": 12,
+      "cols": 12
+    },
+    "arrows": [
+      {
+        "id": "a9158",
+        "startNode": {
+          "row": 5,
+          "col": 11
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a9159",
+        "startNode": {
+          "row": 7,
+          "col": 7
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 2
+            },
+            {
+              "direction": "left",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a9160",
+        "startNode": {
+          "row": 8,
+          "col": 3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "up",
+              "length": 4
+            },
+            {
+              "direction": "right",
+              "length": 2
+            },
+            {
+              "direction": "up",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a9161",
+        "startNode": {
+          "row": 0,
+          "col": 7
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a9162",
+        "startNode": {
+          "row": 1,
+          "col": 8
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 3
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a9163",
+        "startNode": {
+          "row": 5,
+          "col": 1
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 4
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a9164",
+        "startNode": {
+          "row": 2,
+          "col": 8
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 4
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a9165",
+        "startNode": {
+          "row": 6,
+          "col": 9
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a9166",
+        "startNode": {
+          "row": 9,
+          "col": 3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a9167",
+        "startNode": {
+          "row": 10,
+          "col": 4
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a9168",
+        "startNode": {
+          "row": 10,
+          "col": 2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "up",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a9169",
+        "startNode": {
+          "row": 7,
+          "col": 2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "up",
+              "length": 3
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a9170",
+        "startNode": {
+          "row": 7,
+          "col": 8
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      }
+    ],
+    "rules": {},
+    "version": 1,
+    "authorId": null
+  },
+  {
+    "id": "12",
+    "name": "Hueso Duro",
+    "difficulty": "Hard",
+    "boardSize": {
+      "rows": 12,
+      "cols": 12
+    },
+    "arrows": [
+      {
+        "id": "a12222",
+        "startNode": {
+          "row": 10,
+          "col": 0
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a12223",
+        "startNode": {
+          "row": 1,
+          "col": 7
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 3
+            },
+            {
+              "direction": "right",
+              "length": 2
+            },
+            {
+              "direction": "down",
+              "length": 5
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a12224",
+        "startNode": {
+          "row": 0,
+          "col": 10
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a12225",
+        "startNode": {
+          "row": 4,
+          "col": 11
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a12226",
+        "startNode": {
+          "row": 11,
+          "col": 0
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a12227",
+        "startNode": {
+          "row": 10,
+          "col": 9
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 1
+            },
+            {
+              "direction": "right",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a12228",
+        "startNode": {
+          "row": 7,
+          "col": 1
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a12229",
+        "startNode": {
+          "row": 6,
+          "col": 1
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "up",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a12230",
+        "startNode": {
+          "row": 4,
+          "col": 2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 4
+            },
+            {
+              "direction": "down",
+              "length": 4
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a12231",
+        "startNode": {
+          "row": 7,
+          "col": 7
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a12232",
+        "startNode": {
+          "row": 1,
+          "col": 1
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a12233",
+        "startNode": {
+          "row": 7,
+          "col": 2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 2
+            },
+            {
+              "direction": "down",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a12234",
+        "startNode": {
+          "row": 3,
+          "col": 8
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a12235",
+        "startNode": {
+          "row": 0,
+          "col": 1
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a12236",
+        "startNode": {
+          "row": 3,
+          "col": 6
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "up",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a12237",
+        "startNode": {
+          "row": 3,
+          "col": 5
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a12238",
+        "startNode": {
+          "row": 2,
+          "col": 5
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a12239",
+        "startNode": {
+          "row": 8,
+          "col": 3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a12240",
+        "startNode": {
+          "row": 5,
+          "col": 5
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 3
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a12241",
+        "startNode": {
+          "row": 7,
+          "col": 8
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a12242",
+        "startNode": {
+          "row": 2,
+          "col": 3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a12243",
+        "startNode": {
+          "row": 9,
+          "col": 3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      }
+    ],
+    "rules": {},
+    "version": 1,
+    "authorId": null
+  },
+  {
+    "id": "13",
+    "name": "Corazón del Mango",
+    "difficulty": "Hard",
+    "boardSize": {
+      "rows": 11,
+      "cols": 10
+    },
+    "arrows": [
+      {
+        "id": "a14482",
+        "startNode": {
+          "row": 5,
+          "col": 9
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a14483",
+        "startNode": {
+          "row": 8,
+          "col": 9
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a14484",
+        "startNode": {
+          "row": 1,
+          "col": 1
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a14485",
+        "startNode": {
+          "row": 8,
+          "col": 6
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a14486",
+        "startNode": {
+          "row": 1,
+          "col": 8
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 1
+            },
+            {
+              "direction": "left",
+              "length": 5
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a14487",
+        "startNode": {
+          "row": 6,
+          "col": 0
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a14488",
+        "startNode": {
+          "row": 5,
+          "col": 0
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 3
+            },
+            {
+              "direction": "down",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a14489",
+        "startNode": {
+          "row": 3,
+          "col": 2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a14490",
+        "startNode": {
+          "row": 8,
+          "col": 4
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 4
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a14491",
+        "startNode": {
+          "row": 0,
+          "col": 5
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a14492",
+        "startNode": {
+          "row": 4,
+          "col": 6
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 3
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a14493",
+        "startNode": {
+          "row": 9,
+          "col": 2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a14494",
+        "startNode": {
+          "row": 6,
+          "col": 4
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a14495",
+        "startNode": {
+          "row": 3,
+          "col": 5
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a14496",
+        "startNode": {
+          "row": 7,
+          "col": 4
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a14497",
+        "startNode": {
+          "row": 7,
+          "col": 6
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a14498",
+        "startNode": {
+          "row": 6,
+          "col": 6
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      }
+    ],
+    "rules": {},
+    "version": 1,
+    "authorId": null
+  },
+  {
+    "id": "14",
+    "name": "Huerto Salvaje",
+    "difficulty": "Hard",
+    "boardSize": {
+      "rows": 12,
+      "cols": 12
+    },
+    "arrows": [
+      {
+        "id": "a16657",
+        "startNode": {
+          "row": 1,
+          "col": 7
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 3
+            },
+            {
+              "direction": "right",
+              "length": 4
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a16658",
+        "startNode": {
+          "row": 7,
+          "col": 4
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 3
+            },
+            {
+              "direction": "down",
+              "length": 2
+            },
+            {
+              "direction": "left",
+              "length": 3
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a16659",
+        "startNode": {
+          "row": 6,
+          "col": 5
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 3
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a16660",
+        "startNode": {
+          "row": 5,
+          "col": 2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "up",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a16661",
+        "startNode": {
+          "row": 10,
+          "col": 6
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a16662",
+        "startNode": {
+          "row": 5,
+          "col": 0
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "up",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a16663",
+        "startNode": {
+          "row": 5,
+          "col": 3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a16664",
+        "startNode": {
+          "row": 4,
+          "col": 6
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 1
+            },
+            {
+              "direction": "up",
+              "length": 4
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a16665",
+        "startNode": {
+          "row": 5,
+          "col": 10
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a16666",
+        "startNode": {
+          "row": 3,
+          "col": 4
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a16667",
+        "startNode": {
+          "row": 5,
+          "col": 8
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 3
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a16668",
+        "startNode": {
+          "row": 3,
+          "col": 8
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a16669",
+        "startNode": {
+          "row": 5,
+          "col": 9
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a16670",
+        "startNode": {
+          "row": 8,
+          "col": 5
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a16671",
+        "startNode": {
+          "row": 2,
+          "col": 4
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      }
+    ],
+    "rules": {},
+    "version": 1,
+    "authorId": null
+  },
+  {
+    "id": "15",
+    "name": "Rey Mango",
+    "difficulty": "Hard",
+    "boardSize": {
+      "rows": 12,
+      "cols": 12
+    },
+    "arrows": [
+      {
+        "id": "a19174",
+        "startNode": {
+          "row": 4,
+          "col": 10
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a19175",
+        "startNode": {
+          "row": 0,
+          "col": 9
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a19176",
+        "startNode": {
+          "row": 0,
+          "col": 2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a19177",
+        "startNode": {
+          "row": 11,
+          "col": 6
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 5
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a19178",
+        "startNode": {
+          "row": 6,
+          "col": 11
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a19179",
+        "startNode": {
+          "row": 2,
+          "col": 11
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a19180",
+        "startNode": {
+          "row": 10,
+          "col": 2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 2
+            },
+            {
+              "direction": "up",
+              "length": 5
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a19181",
+        "startNode": {
+          "row": 3,
+          "col": 10
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a19182",
+        "startNode": {
+          "row": 7,
+          "col": 7
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "up",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a19183",
+        "startNode": {
+          "row": 9,
+          "col": 10
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a19184",
+        "startNode": {
+          "row": 11,
+          "col": 3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "up",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a19185",
+        "startNode": {
+          "row": 1,
+          "col": 10
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "up",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a19186",
+        "startNode": {
+          "row": 3,
+          "col": 1
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "left",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a19187",
+        "startNode": {
+          "row": 10,
+          "col": 7
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "right",
+              "length": 4
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a19188",
+        "startNode": {
+          "row": 1,
+          "col": 8
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "up",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a19189",
+        "startNode": {
+          "row": 4,
+          "col": 4
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a19190",
+        "startNode": {
+          "row": 7,
+          "col": 6
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "up",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a19191",
+        "startNode": {
+          "row": 6,
+          "col": 4
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a19192",
+        "startNode": {
+          "row": 5,
+          "col": 5
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "down",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a19193",
+        "startNode": {
+          "row": 5,
+          "col": 6
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "up",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "a19194",
+        "startNode": {
+          "row": 5,
+          "col": 7
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "up",
+              "length": 1
+            }
+          ]
+        },
+        "isSwitchable": false
+      }
+    ],
+    "rules": {},
+    "version": 1,
+    "authorId": null
+  }
+]

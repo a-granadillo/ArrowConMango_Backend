@@ -1,18 +1,22 @@
 import { GetLevelsUseCase } from '../../../src/application/use-cases/get-levels.use-case';
 import { UpsertLevelUseCase } from '../../../src/application/use-cases/upsert-level.use-case';
 import {
+  ArrowDefinition,
   LevelDefinition,
-  NodeDefinition,
 } from '../../../src/domain/entities/level-definition.entity';
 import { LevelValidationError } from '../../../src/domain/errors/domain-error';
 import { ILevelRepository } from '../../../src/domain/ports/level.repository';
 import { LevelId } from '../../../src/domain/value-objects/level-id.vo';
 
-const validNodes: NodeDefinition[] = [
-  { id: 'n1', position: [0, 0], type: 'arrow', direction: 'UP' },
-  { id: 'n2', position: [1, 0], type: 'exit' },
+const boardSize = { rows: 4, cols: 4 };
+const validArrows: ArrowDefinition[] = [
+  {
+    id: 'a1',
+    startNode: { row: 0, col: 0 },
+    trajectory: { segments: [{ direction: 'right', length: 2 }] },
+    isSwitchable: false,
+  },
 ];
-const validEdges: [string, string][] = [['n1', 'n2']];
 
 const makeLevelRepo = (levels: LevelDefinition[]): ILevelRepository => ({
   getAll: jest.fn().mockResolvedValue(levels),
@@ -24,8 +28,10 @@ describe('GetLevelsUseCase', () => {
   it('should_return_all_levels', async () => {
     // Arrange
     const level = LevelDefinition.create(
-      validNodes,
-      validEdges,
+      'Level 1',
+      'Easy',
+      boardSize,
+      validArrows,
       {},
       LevelId.create('l1'),
     );
@@ -36,7 +42,8 @@ describe('GetLevelsUseCase', () => {
     // Assert
     expect(result).toHaveLength(1);
     expect(result[0].id).toBe('l1');
-    expect(result[0].nodes).toHaveLength(2);
+    expect(result[0].arrows).toHaveLength(1);
+    expect(result[0].authorId).toBeNull();
   });
 
   it('should_return_empty_array_when_no_levels', async () => {
@@ -48,35 +55,51 @@ describe('GetLevelsUseCase', () => {
 });
 
 describe('UpsertLevelUseCase', () => {
-  it('should_persist_level_when_graph_is_valid', async () => {
+  it('should_persist_level_when_board_is_valid', async () => {
     const repo = makeLevelRepo([]);
     const useCase = new UpsertLevelUseCase(repo);
     const result = await useCase.execute({
-      nodes: validNodes,
-      edges: validEdges,
+      name: 'Level 1',
+      difficulty: 'Easy',
+      boardSize,
+      arrows: validArrows,
       rules: {},
     });
     expect(repo.upsert).toHaveBeenCalledTimes(1);
-    expect(result.nodes).toHaveLength(2);
+    expect(result.arrows).toHaveLength(1);
   });
 
-  it('should_reject_level_when_graph_has_no_exit', async () => {
-    const repo = makeLevelRepo([]);
-    const useCase = new UpsertLevelUseCase(repo);
-    const noExit = validNodes.filter((n) => n.type !== 'exit');
-    await expect(
-      useCase.execute({ nodes: noExit, edges: [], rules: {} }),
-    ).rejects.toThrow(LevelValidationError);
-    expect(repo.upsert).not.toHaveBeenCalled();
-  });
-
-  it('should_reject_level_when_edge_references_unknown_node', async () => {
+  it('should_reject_level_when_it_has_no_arrows', async () => {
     const repo = makeLevelRepo([]);
     const useCase = new UpsertLevelUseCase(repo);
     await expect(
       useCase.execute({
-        nodes: validNodes,
-        edges: [['n1', 'GHOST']],
+        name: 'Empty',
+        difficulty: 'Easy',
+        boardSize,
+        arrows: [],
+        rules: {},
+      }),
+    ).rejects.toThrow(LevelValidationError);
+    expect(repo.upsert).not.toHaveBeenCalled();
+  });
+
+  it('should_reject_level_when_an_arrow_starts_outside_the_board', async () => {
+    const repo = makeLevelRepo([]);
+    const useCase = new UpsertLevelUseCase(repo);
+    await expect(
+      useCase.execute({
+        name: 'Out of bounds',
+        difficulty: 'Easy',
+        boardSize,
+        arrows: [
+          {
+            id: 'a1',
+            startNode: { row: 99, col: 0 },
+            trajectory: { segments: [{ direction: 'right', length: 1 }] },
+            isSwitchable: false,
+          },
+        ],
         rules: {},
       }),
     ).rejects.toThrow(LevelValidationError);
@@ -87,10 +110,26 @@ describe('UpsertLevelUseCase', () => {
     const useCase = new UpsertLevelUseCase(repo);
     const result = await useCase.execute({
       id: 'custom-id',
-      nodes: validNodes,
-      edges: validEdges,
+      name: 'Level 1',
+      difficulty: 'Easy',
+      boardSize,
+      arrows: validArrows,
       rules: {},
     });
     expect(result.id).toBe('custom-id');
+  });
+
+  it('should_set_authorId_when_provided', async () => {
+    const repo = makeLevelRepo([]);
+    const useCase = new UpsertLevelUseCase(repo);
+    const result = await useCase.execute({
+      name: 'Level 1',
+      difficulty: 'Easy',
+      boardSize,
+      arrows: validArrows,
+      rules: {},
+      authorId: 'author-1',
+    });
+    expect(result.authorId).toBe('author-1');
   });
 });

@@ -1,6 +1,9 @@
 import { LevelValidationError } from '../../../src/domain/errors/domain-error';
 import { Leaderboard } from '../../../src/domain/entities/leaderboard.entity';
-import { LevelDefinition } from '../../../src/domain/entities/level-definition.entity';
+import {
+  ArrowDefinition,
+  LevelDefinition,
+} from '../../../src/domain/entities/level-definition.entity';
 import { PlayerProgress } from '../../../src/domain/entities/player-progress.entity';
 import { ScoreEntry } from '../../../src/domain/entities/score-entry.entity';
 import { User } from '../../../src/domain/entities/user.entity';
@@ -124,39 +127,97 @@ describe('PlayerProgress', () => {
 
 // ─── LevelDefinition ──────────────────────────────────────────────────────────
 describe('LevelDefinition', () => {
-  const validNodes = [
+  const boardSize = { rows: 4, cols: 4 };
+  const validArrows: ArrowDefinition[] = [
     {
-      id: 'n1',
-      position: [0, 0] as [number, number],
-      type: 'arrow' as const,
-      direction: 'UP' as const,
+      id: 'a1',
+      startNode: { row: 0, col: 0 },
+      trajectory: { segments: [{ direction: 'right', length: 2 }] },
+      isSwitchable: false,
     },
-    { id: 'n2', position: [0, 1] as [number, number], type: 'exit' as const },
   ];
-  const validEdges: [string, string][] = [['n1', 'n2']];
 
-  it('should_validate_successfully_when_graph_is_correct', () => {
-    const level = LevelDefinition.create(validNodes, validEdges, {});
+  it('should_validate_successfully_when_board_is_correct', () => {
+    const level = LevelDefinition.create(
+      'Test Level',
+      'Easy',
+      boardSize,
+      validArrows,
+      {},
+    );
     expect(level.validate()).toBe(true);
   });
 
-  it('should_throw_when_edge_references_unknown_node', () => {
-    const level = LevelDefinition.create(validNodes, [['n1', 'UNKNOWN']], {});
+  it('should_throw_when_no_arrows', () => {
+    const level = LevelDefinition.create('Empty', 'Easy', boardSize, [], {});
     expect(() => level.validate()).toThrow(LevelValidationError);
   });
 
-  it('should_throw_when_no_exit_node', () => {
-    const noExit = validNodes.filter((n) => n.type !== 'exit');
-    const level = LevelDefinition.create(noExit, [], {});
+  it('should_throw_when_arrow_ids_are_duplicated', () => {
+    const level = LevelDefinition.create(
+      'Dup',
+      'Easy',
+      boardSize,
+      [validArrows[0], { ...validArrows[0] }],
+      {},
+    );
     expect(() => level.validate()).toThrow(LevelValidationError);
   });
 
-  it('should_throw_when_no_arrow_node', () => {
-    const noArrow = [
-      { id: 'e1', position: [0, 0] as [number, number], type: 'exit' as const },
-    ];
-    const level = LevelDefinition.create(noArrow, [], {});
+  it('should_throw_when_startNode_is_outside_the_board', () => {
+    const level = LevelDefinition.create(
+      'Out of bounds',
+      'Easy',
+      boardSize,
+      [
+        {
+          id: 'a1',
+          startNode: { row: 99, col: 0 },
+          trajectory: { segments: [{ direction: 'right', length: 1 }] },
+          isSwitchable: false,
+        },
+      ],
+      {},
+    );
     expect(() => level.validate()).toThrow(LevelValidationError);
+  });
+
+  it('should_throw_when_a_segment_has_length_less_than_one', () => {
+    const level = LevelDefinition.create(
+      'Zero-length',
+      'Easy',
+      boardSize,
+      [
+        {
+          id: 'a1',
+          startNode: { row: 0, col: 0 },
+          trajectory: { segments: [{ direction: 'right', length: 0 }] },
+          isSwitchable: false,
+        },
+      ],
+      {},
+    );
+    expect(() => level.validate()).toThrow(LevelValidationError);
+  });
+
+  it('should_allow_the_exit_trajectory_to_cross_the_board_boundary', () => {
+    // The arrow's body starts in-bounds; its exit path stepping off the
+    // board is fine — arrows exit through the edge, there is no exit node.
+    const level = LevelDefinition.create(
+      'Exits cleanly',
+      'Easy',
+      boardSize,
+      [
+        {
+          id: 'a1',
+          startNode: { row: 0, col: 3 },
+          trajectory: { segments: [{ direction: 'right', length: 5 }] },
+          isSwitchable: false,
+        },
+      ],
+      {},
+    );
+    expect(level.validate()).toBe(true);
   });
 });
 

@@ -1,102 +1,208 @@
 import { LevelValidationError } from '../errors/domain-error';
 import { LevelId } from '../value-objects/level-id.vo';
+import { UserId } from '../value-objects/user-id.vo';
 
-export interface NodeDefinition {
+export type CardinalDirection = 'up' | 'down' | 'left' | 'right';
+
+export interface BoardSize {
+  rows: number;
+  cols: number;
+}
+
+export interface BoardNode {
+  row: number;
+  col: number;
+}
+
+export interface TrajectorySegment {
+  direction: CardinalDirection;
+  length: number;
+}
+
+export interface ArrowDefinition {
   id: string;
-  position: [number, number];
-  type: 'arrow' | 'wall' | 'empty' | 'exit';
-  direction?: 'UP' | 'DOWN' | 'LEFT' | 'RIGHT';
-  shape?: string;
+  startNode: BoardNode;
+  trajectory: { segments: TrajectorySegment[] };
+  isSwitchable: boolean;
 }
 
 export interface LevelRules {
-  timeLimitSeconds?: number;
-  allowRotation?: boolean;
-  hasCollectables?: boolean;
+  timeLimitSeconds?: number | null;
+  maxMistakes?: number | null;
+  allowRotation?: boolean | null;
 }
 
 /**
  * «Aggregate Root» LevelDefinition — immutable blueprint of a puzzle level.
  *
- * Stores the graph representation (nodes + edges) so levels can have
- * arbitrary shapes (RF-B-04). validate() ensures graph integrity before
- * persistence, allowing the admin to add levels without updating the app.
+ * Models the real board domain: a rectangular grid of [boardSize], with
+ * arrows placed as polylines ([ArrowDefinition.trajectory]) rather than an
+ * abstract node/edge graph. Arrows exit through the board's edge — there is
+ * no "exit node" concept, matching how the game actually plays.
  *
  * validate() checks:
- *  - All edge endpoints reference existing node ids.
- *  - There is at least one exit node (otherwise the puzzle is unsolvable).
- *  - There is at least one arrow node (otherwise the puzzle has no content).
+ *  - Every arrow's startNode and every in-board trajectory cell lies within
+ *    boardSize.
+ *  - There is at least one arrow.
+ *  - Arrow ids are unique.
+ *  - Every trajectory segment has length >= 1.
  */
 export class LevelDefinition {
   private constructor(
     private readonly _id: LevelId,
-    private readonly _nodes: NodeDefinition[],
-    private readonly _edges: [string, string][],
+    private readonly _name: string,
+    private readonly _difficulty: string,
+    private readonly _boardSize: BoardSize,
+    private readonly _arrows: ArrowDefinition[],
     private readonly _rules: LevelRules,
     private readonly _version: number,
+    private readonly _authorId: UserId | null,
   ) {}
 
   static create(
-    nodes: NodeDefinition[],
-    edges: [string, string][],
+    name: string,
+    difficulty: string,
+    boardSize: BoardSize,
+    arrows: ArrowDefinition[],
     rules: LevelRules,
     id?: LevelId,
     version = 1,
+    authorId: UserId | null = null,
   ): LevelDefinition {
     return new LevelDefinition(
       id ?? LevelId.create(),
-      nodes,
-      edges,
+      name,
+      difficulty,
+      boardSize,
+      arrows,
       rules,
       version,
+      authorId,
     );
   }
 
   static reconstitute(
     id: LevelId,
-    nodes: NodeDefinition[],
-    edges: [string, string][],
+    name: string,
+    difficulty: string,
+    boardSize: BoardSize,
+    arrows: ArrowDefinition[],
     rules: LevelRules,
     version: number,
+    authorId: UserId | null,
   ): LevelDefinition {
-    return new LevelDefinition(id, nodes, edges, rules, version);
+    return new LevelDefinition(
+      id,
+      name,
+      difficulty,
+      boardSize,
+      arrows,
+      rules,
+      version,
+      authorId,
+    );
   }
 
   validate(): boolean {
-    const nodeIds = new Set(this._nodes.map((n) => n.id));
-
-    for (const [a, b] of this._edges) {
-      if (!nodeIds.has(a)) {
-        throw new LevelValidationError(`Edge references unknown node "${a}"`);
-      }
-      if (!nodeIds.has(b)) {
-        throw new LevelValidationError(`Edge references unknown node "${b}"`);
-      }
+    if (this._arrows.length === 0) {
+      throw new LevelValidationError('Level must have at least one arrow');
     }
 
-    const hasExit = this._nodes.some((n) => n.type === 'exit');
-    if (!hasExit) {
-      throw new LevelValidationError('Level must have at least one exit node');
-    }
+    const seenIds = new Set<string>();
+    for (const arrow of this._arrows) {
+      if (seenIds.has(arrow.id)) {
+        throw new LevelValidationError(`Duplicate arrow id "${arrow.id}"`);
+      }
+      seenIds.add(arrow.id);
 
-    const hasArrow = this._nodes.some((n) => n.type === 'arrow');
-    if (!hasArrow) {
-      throw new LevelValidationError('Level must have at least one arrow node');
+      if (!this._isInBounds(arrow.startNode)) {
+        throw new LevelValidationError(
+          `Arrow "${arrow.id}" starts outside the board`,
+        );
+      }
+
+      for (const segment of arrow.trajectory.segments) {
+        if (segment.length < 1) {
+          throw new LevelValidationError(
+            `Arrow "${arrow.id}" has a segment with length < 1`,
+          );
+        }
+      }
+
+      for (const node of this._trajectoryInBoardNodes(arrow)) {
+        if (!this._isInBounds(node)) {
+          throw new LevelValidationError(
+            `Arrow "${arrow.id}" body leaves the board`,
+          );
+        }
+      }
     }
 
     return true;
+  }
+
+  /**
+   * Nodes the arrow's body occupies while still inside the board (its exit
+   * trajectory is allowed to cross the boundary — that's how it exits).
+   */
+  private _trajectoryInBoardNodes(arrow: ArrowDefinition): BoardNode[] {
+    const nodes: BoardNode[] = [];
+    let { row, col } = arrow.startNode;
+    for (const segment of arrow.trajectory.segments) {
+      for (let step = 0; step < segment.length; step++) {
+        if (this._isInBounds({ row, col })) {
+          nodes.push({ row, col });
+        }
+        [row, col] = this._advance(row, col, segment.direction);
+      }
+    }
+    return nodes;
+  }
+
+  private _advance(
+    row: number,
+    col: number,
+    direction: CardinalDirection,
+  ): [number, number] {
+    switch (direction) {
+      case 'up':
+        return [row - 1, col];
+      case 'down':
+        return [row + 1, col];
+      case 'left':
+        return [row, col - 1];
+      case 'right':
+        return [row, col + 1];
+    }
+  }
+
+  private _isInBounds(node: BoardNode): boolean {
+    return (
+      node.row >= 0 &&
+      node.row < this._boardSize.rows &&
+      node.col >= 0 &&
+      node.col < this._boardSize.cols
+    );
   }
 
   get id(): LevelId {
     return this._id;
   }
 
-  get nodes(): NodeDefinition[] {
-    return [...this._nodes];
+  get name(): string {
+    return this._name;
   }
 
-  get edges(): [string, string][] {
-    return [...this._edges];
+  get difficulty(): string {
+    return this._difficulty;
+  }
+
+  get boardSize(): BoardSize {
+    return { ...this._boardSize };
+  }
+
+  get arrows(): ArrowDefinition[] {
+    return [...this._arrows];
   }
 
   get rules(): LevelRules {
@@ -105,5 +211,9 @@ export class LevelDefinition {
 
   get version(): number {
     return this._version;
+  }
+
+  get authorId(): UserId | null {
+    return this._authorId;
   }
 }

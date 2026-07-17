@@ -8,11 +8,8 @@ import {
 } from '@nestjs/swagger';
 import { GetLevelsUseCase } from '../../application/use-cases/get-levels.use-case';
 import { UpsertLevelUseCase } from '../../application/use-cases/upsert-level.use-case';
-import {
-  NodeDefinition,
-  LevelRules,
-} from '../../domain/entities/level-definition.entity';
 import { AuthGuard } from '../../infrastructure/aop/auth.guard';
+import { CurrentUser } from '../decorators/current-user.decorator';
 import { LevelResponseDto, UpsertLevelDto } from '../dtos/level.dto';
 
 @ApiTags('Levels')
@@ -35,19 +32,23 @@ export class LevelController {
   @UseGuards(AuthGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Create or update a level definition (admin)' })
-  @ApiParam({ name: 'id', description: 'Level UUID' })
+  @ApiParam({ name: 'id', description: 'Level id' })
   @ApiResponse({ status: 200, type: LevelResponseDto })
-  @ApiResponse({ status: 422, description: 'Level graph validation failed' })
+  @ApiResponse({ status: 422, description: 'Level validation failed' })
   async upsert(
     @Param('id') id: string,
     @Body() dto: UpsertLevelDto,
+    @CurrentUser() userId: string,
   ): Promise<LevelResponseDto> {
     const result = await this.upsertLevel.execute({
       id,
-      nodes: dto.nodes as NodeDefinition[],
-      edges: dto.edges,
-      rules: (dto.rules ?? {}) as LevelRules,
+      name: dto.name,
+      difficulty: dto.difficulty,
+      boardSize: dto.boardSize,
+      arrows: dto.arrows,
+      rules: dto.rules ?? {},
       version: dto.version,
+      authorId: userId,
     });
     return result as unknown as LevelResponseDto;
   }
