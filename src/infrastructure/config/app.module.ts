@@ -21,6 +21,7 @@ import { GetLeaderboardUseCase } from '../../application/use-cases/get-leaderboa
 import { GetLevelsUseCase } from '../../application/use-cases/get-levels.use-case';
 import { GetMyLevelsUseCase } from '../../application/use-cases/get-my-levels.use-case';
 import { GetProgressUseCase } from '../../application/use-cases/get-progress.use-case';
+import { GetSurvivalLeaderboardUseCase } from '../../application/use-cases/get-survival-leaderboard.use-case';
 import { GuestLoginUseCase } from '../../application/use-cases/guest-login.use-case';
 import { LoginUseCase } from '../../application/use-cases/login.use-case';
 import { PublishLevelUseCase } from '../../application/use-cases/publish-level.use-case';
@@ -166,6 +167,12 @@ import { AuthGuard } from '../../adapters/aop/auth.guard';
       useFactory: (progressRepo: any, userRepo: any, scoring: any) =>
         new GetGlobalLeaderboardUseCase(progressRepo, userRepo, scoring),
       inject: [PROGRESS_REPOSITORY, USER_REPOSITORY, SCORE_STRATEGY],
+    },
+    {
+      provide: GetSurvivalLeaderboardUseCase,
+      useFactory: (leaderboardRepo: any, userRepo: any, scoring: any) =>
+        new GetSurvivalLeaderboardUseCase(leaderboardRepo, userRepo, scoring),
+      inject: [LEADERBOARD_REPOSITORY, USER_REPOSITORY, SCORE_STRATEGY],
     },
   ],
 })

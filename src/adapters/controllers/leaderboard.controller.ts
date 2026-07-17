@@ -20,6 +20,7 @@ import {
 } from '@nestjs/swagger';
 import { GetGlobalLeaderboardUseCase } from '../../application/use-cases/get-global-leaderboard.use-case';
 import { GetLeaderboardUseCase } from '../../application/use-cases/get-leaderboard.use-case';
+import { GetSurvivalLeaderboardUseCase } from '../../application/use-cases/get-survival-leaderboard.use-case';
 import { SubmitScoreUseCase } from '../../application/use-cases/submit-score.use-case';
 import { AuthGuard } from '../aop/auth.guard';
 import { CacheInterceptor } from '../aop/cache.interceptor';
@@ -29,6 +30,7 @@ import {
   PlayerStandingResponseDto,
   ScoreEntryResponseDto,
   SubmitScoreDto,
+  SurvivalLeaderboardResponseDto,
 } from '../dtos/leaderboard.dto';
 
 @ApiTags('Leaderboard')
@@ -38,6 +40,7 @@ export class LeaderboardController {
     private readonly getLeaderboard: GetLeaderboardUseCase,
     private readonly submitScore: SubmitScoreUseCase,
     private readonly getGlobalLeaderboard: GetGlobalLeaderboardUseCase,
+    private readonly getSurvivalLeaderboard: GetSurvivalLeaderboardUseCase,
   ) {}
 
   // Not cached: CacheInterceptor keys by req.url only (no auth awareness),
@@ -64,6 +67,29 @@ export class LeaderboardController {
     @Query('top') top?: string,
   ): Promise<PlayerStandingResponseDto[]> {
     return this.getGlobalLeaderboard.execute({
+      top: top ? parseInt(top, 10) : undefined,
+      currentUserId: userId,
+    });
+  }
+
+  @Get('supervivencia')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary:
+      'Get the survival ranking by total mangos accumulated in survival runs',
+  })
+  @ApiQuery({
+    name: 'top',
+    required: false,
+    description: 'Number of entries (default 10)',
+  })
+  @ApiResponse({ status: 200, type: SurvivalLeaderboardResponseDto })
+  async getSurvival(
+    @CurrentUser() userId: string,
+    @Query('top') top?: string,
+  ): Promise<SurvivalLeaderboardResponseDto> {
+    return this.getSurvivalLeaderboard.execute({
       top: top ? parseInt(top, 10) : undefined,
       currentUserId: userId,
     });
