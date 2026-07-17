@@ -1,7 +1,8 @@
-import { PlayerProgress } from '../../domain/entities/player-progress.entity';
 import { IProgressRepository } from '../../domain/ports/progress.repository';
+import { IScoreCalculationStrategy } from '../../domain/services/score-calculation.strategy';
 import { UserId } from '../../domain/value-objects/user-id.vo';
 import { ProgressOutput } from '../dtos/progress.dto';
+import { ProgressPresenter } from '../shared/progress-presenter';
 import { UseCase } from '../shared/use-case';
 
 /**
@@ -11,7 +12,10 @@ import { UseCase } from '../shared/use-case';
  * If no progress record exists yet, returns an empty progress object.
  */
 export class GetProgressUseCase implements UseCase<string, ProgressOutput> {
-  constructor(private readonly progressRepo: IProgressRepository) {}
+  constructor(
+    private readonly progressRepo: IProgressRepository,
+    private readonly scoring: IScoreCalculationStrategy,
+  ) {}
 
   async execute(userId: string): Promise<ProgressOutput> {
     const uid = UserId.create(userId);
@@ -26,26 +30,6 @@ export class GetProgressUseCase implements UseCase<string, ProgressOutput> {
       };
     }
 
-    return this.toOutput(progress);
-  }
-
-  private toOutput(progress: PlayerProgress): ProgressOutput {
-    const best: Record<
-      string,
-      { moves: number; timeMs: number; value: number }
-    > = {};
-    for (const [levelId, score] of progress.best) {
-      best[levelId] = {
-        moves: score.moves,
-        timeMs: score.timeMs,
-        value: score.value(),
-      };
-    }
-    return {
-      userId: progress.userId.value,
-      completed: Array.from(progress.completed),
-      best,
-      currentLevel: progress.currentLevel,
-    };
+    return ProgressPresenter.toOutput(progress, this.scoring);
   }
 }
