@@ -29,7 +29,7 @@ export class GuestLoginUseCase implements UseCase<
     let user = await this.userRepo.byEmail(email);
     if (!user) {
       const passwordHash = await this.hasher.hash(input.uuid);
-      user = User.create(email, passwordHash, 'Guest');
+      user = User.create(email, passwordHash, input.displayName ?? 'Guest');
       await this.userRepo.save(user);
     }
 

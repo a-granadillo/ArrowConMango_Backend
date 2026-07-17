@@ -21,8 +21,20 @@ export interface LoginOutput {
 
 export interface GuestLoginInput {
   uuid: string;
+  displayName?: string;
 }
 
 export interface GuestLoginOutput {
   token: string;
+}
+
+export interface UpdatePlayerNameInput {
+  userId: string;
+  displayName: string;
+}
+
+export interface UpdatePlayerNameOutput {
+  id: string;
+  email: string;
+  username: string;
 }

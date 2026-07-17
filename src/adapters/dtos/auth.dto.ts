@@ -1,5 +1,11 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsString, IsUUID, MinLength } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import {
+  IsEmail,
+  IsOptional,
+  IsString,
+  IsUUID,
+  MinLength,
+} from 'class-validator';
 
 export class RegisterDto {
   @ApiProperty({ example: 'player@example.com' })
@@ -50,4 +56,22 @@ export class GuestLoginDto {
   })
   @IsUUID()
   uuid!: string;
+
+  @ApiPropertyOptional({
+    example: 'MangoLoco_42',
+    description:
+      'Display name for a brand-new guest. Ignored if the UUID already ' +
+      'resolves to an existing user — rename via PATCH /player/me instead.',
+  })
+  @IsOptional()
+  @IsString()
+  @MinLength(2)
+  displayName?: string;
+}
+
+export class UpdatePlayerNameDto {
+  @ApiProperty({ example: 'NewName', minLength: 2 })
+  @IsString()
+  @MinLength(2)
+  displayName!: string;
 }
