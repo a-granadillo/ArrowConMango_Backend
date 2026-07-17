@@ -33,7 +33,7 @@ import {
   USER_REPOSITORY,
 } from './tokens';
 
-import { AuthGuard } from '../aop/auth.guard';
+import { AuthGuard } from '../aop';
 
 /**
  * Composition Root (D1+D2):
