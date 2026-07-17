@@ -47,7 +47,10 @@ export class LevelController {
   @Get('mine')
   @UseGuards(AuthGuard)
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Get every level (draft or published) authored by the current user' })
+  @ApiOperation({
+    summary:
+      'Get every level (draft or published) authored by the current user',
+  })
   @ApiResponse({ status: 200, type: [LevelResponseDto] })
   async getMine(@CurrentUser() userId: string): Promise<LevelResponseDto[]> {
     const result = await this.getMyLevels.execute(userId);
@@ -58,9 +61,7 @@ export class LevelController {
   @ApiOperation({ summary: 'Get published community levels' })
   @ApiQuery({ name: 'top', required: false, type: Number })
   @ApiResponse({ status: 200, type: [LevelResponseDto] })
-  async getCommunity(
-    @Query('top') top?: string,
-  ): Promise<LevelResponseDto[]> {
+  async getCommunity(@Query('top') top?: string): Promise<LevelResponseDto[]> {
     const parsedTop = top !== undefined ? Number(top) : undefined;
     const result = await this.getCommunityLevels.execute(parsedTop);
     return result as unknown as LevelResponseDto[];

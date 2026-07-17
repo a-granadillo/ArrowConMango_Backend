@@ -9,9 +9,10 @@ import { UseCase } from '../shared/use-case';
  * first), optionally capped to the top N, for the "Comunidad" screen in
  * Modo Creativo. No authentication required — these levels are public.
  */
-export class GetCommunityLevelsUseCase
-  implements UseCase<number | undefined, LevelOutput[]>
-{
+export class GetCommunityLevelsUseCase implements UseCase<
+  number | undefined,
+  LevelOutput[]
+> {
   constructor(private readonly levelRepo: ILevelRepository) {}
 
   async execute(top?: number): Promise<LevelOutput[]> {

@@ -20,9 +20,10 @@ export interface PublishLevelInput {
  * test-play session — enforced client-side, not re-checked here). Only the
  * level's author may publish it.
  */
-export class PublishLevelUseCase
-  implements UseCase<PublishLevelInput, LevelOutput>
-{
+export class PublishLevelUseCase implements UseCase<
+  PublishLevelInput,
+  LevelOutput
+> {
   constructor(private readonly levelRepo: ILevelRepository) {}
 
   async execute(input: PublishLevelInput): Promise<LevelOutput> {
