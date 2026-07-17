@@ -8,7 +8,7 @@ import {
 } from '@nestjs/swagger';
 import { GetLevelsUseCase } from '../../application/use-cases/get-levels.use-case';
 import { UpsertLevelUseCase } from '../../application/use-cases/upsert-level.use-case';
-import { AuthGuard } from '../../infrastructure/aop/auth.guard';
+import { AuthGuard } from '../aop/auth.guard';
 import { CurrentUser } from '../decorators/current-user.decorator';
 import { LevelResponseDto, UpsertLevelDto } from '../dtos/level.dto';
 

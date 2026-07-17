@@ -1,4 +1,6 @@
+import { IScoreCalculationStrategy } from '../services/score-calculation.strategy';
 import { LevelId } from '../value-objects/level-id.vo';
+import { MangoRating } from '../value-objects/mango-rating.vo';
 import { Score } from '../value-objects/score.vo';
 import { UserId } from '../value-objects/user-id.vo';
 
@@ -49,23 +51,27 @@ export class PlayerProgress {
    *  - best keeps the higher Score per level.
    *  - currentLevel keeps the higher value (never regresses).
    */
-  merge(other: PlayerProgress): void {
+  merge(other: PlayerProgress, strategy: IScoreCalculationStrategy): void {
     for (const levelId of other._completed) {
       this._completed.add(levelId);
     }
     for (const [levelId, score] of other._best) {
       const existing = this._best.get(levelId);
-      if (!existing || score.isBetterThan(existing)) {
+      if (!existing || score.isBetterThan(existing, strategy)) {
         this._best.set(levelId, score);
       }
     }
     this._currentLevel = Math.max(this._currentLevel, other._currentLevel);
   }
 
-  markCompleted(levelId: LevelId, score: Score): void {
+  markCompleted(
+    levelId: LevelId,
+    score: Score,
+    strategy: IScoreCalculationStrategy,
+  ): void {
     this._completed.add(levelId.value);
     const existing = this._best.get(levelId.value);
-    if (!existing || score.isBetterThan(existing)) {
+    if (!existing || score.isBetterThan(existing, strategy)) {
       this._best.set(levelId.value, score);
     }
   }
@@ -76,6 +82,25 @@ export class PlayerProgress {
 
   bestFor(levelId: LevelId): Score | undefined {
     return this._best.get(levelId.value);
+  }
+
+  /**
+   * Total mango stars across every level's best run (1-3 each, per
+   * MangoRating). This — not the sum of raw MangoScore points — is what the
+   * global leaderboard ranks by: it's the frontend's actual UI scale, and
+   * it's the normalization that keeps levels comparable even if scoring
+   * ever becomes per-level (see docs/IMPLEMENTACION_BACKEND.md).
+   */
+  mangos(strategy: IScoreCalculationStrategy): number {
+    let total = 0;
+    for (const score of this._best.values()) {
+      total += MangoRating.fromPoints(strategy.compute(score)).stars;
+    }
+    return total;
+  }
+
+  completedCount(): number {
+    return this._completed.size;
   }
 
   get userId(): UserId {

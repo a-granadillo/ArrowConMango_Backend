@@ -1,3 +1,4 @@
+import { IScoreCalculationStrategy } from '../services/score-calculation.strategy';
 import { LevelId } from '../value-objects/level-id.vo';
 import { ScoreEntry } from './score-entry.entity';
 
@@ -6,8 +7,9 @@ import { ScoreEntry } from './score-entry.entity';
  *
  * submit(entry) appends a new entry (duplicates allowed — one player may submit
  * multiple runs; the client picks the top score via top(n)).
- * top(n) returns the n best entries sorted by Score.value() descending (LSP:
- * sorting uses the Score VO's polymorphic value() method).
+ * top(strategy, n) returns the n best entries sorted by strategy.compute()
+ * descending, deduplicated to one (best) entry per user — otherwise repeated
+ * submissions from the same player could fill the whole top N.
  */
 export class Leaderboard {
   private constructor(
@@ -27,9 +29,17 @@ export class Leaderboard {
     this._entries.push(entry);
   }
 
-  top(n = 10): ScoreEntry[] {
-    return [...this._entries]
-      .sort((a, b) => b.score.value() - a.score.value())
+  top(strategy: IScoreCalculationStrategy, n = 10): ScoreEntry[] {
+    const bestPerUser = new Map<string, ScoreEntry>();
+    for (const entry of this._entries) {
+      const existing = bestPerUser.get(entry.userId.value);
+      if (!existing || entry.score.isBetterThan(existing.score, strategy)) {
+        bestPerUser.set(entry.userId.value, entry);
+      }
+    }
+
+    return [...bestPerUser.values()]
+      .sort((a, b) => strategy.compute(b.score) - strategy.compute(a.score))
       .slice(0, n);
   }
 

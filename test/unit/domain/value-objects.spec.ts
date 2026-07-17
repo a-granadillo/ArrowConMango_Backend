@@ -1,6 +1,8 @@
 import { InvalidEmailError } from '../../../src/domain/errors/domain-error';
+import { MixedScore } from '../../../src/domain/services/score-calculation.strategy';
 import { Email } from '../../../src/domain/value-objects/email.vo';
 import { LevelId } from '../../../src/domain/value-objects/level-id.vo';
+import { MangoRating } from '../../../src/domain/value-objects/mango-rating.vo';
 import { PasswordHash } from '../../../src/domain/value-objects/password-hash.vo';
 import { Score } from '../../../src/domain/value-objects/score.vo';
 import { UserId } from '../../../src/domain/value-objects/user-id.vo';
@@ -81,27 +83,32 @@ describe('Value Objects', () => {
   });
 
   // ─── Score ────────────────────────────────────────────────────────────────
+  // Score itself holds no scoring formula (Strategy pattern) — these tests
+  // exercise isBetterThan() against MixedScore, a strategy that penalises
+  // both moves and time, as a representative case.
   describe('Score', () => {
+    const strategy = new MixedScore();
+
     it('should_compute_positive_value_for_reasonable_play', () => {
       const score = Score.create(5, 30_000);
-      expect(score.value()).toBeGreaterThan(0);
+      expect(strategy.compute(score)).toBeGreaterThan(0);
     });
 
     it('should_score_higher_when_fewer_moves', () => {
       const fast = Score.create(2, 10_000);
       const slow = Score.create(20, 10_000);
-      expect(fast.value()).toBeGreaterThan(slow.value());
+      expect(strategy.compute(fast)).toBeGreaterThan(strategy.compute(slow));
     });
 
     it('should_score_higher_when_less_time', () => {
       const quick = Score.create(5, 5_000);
       const late = Score.create(5, 60_000);
-      expect(quick.value()).toBeGreaterThan(late.value());
+      expect(strategy.compute(quick)).toBeGreaterThan(strategy.compute(late));
     });
 
     it('should_never_return_negative_value', () => {
       const terrible = Score.create(10_000, 999_999);
-      expect(terrible.value()).toBeGreaterThanOrEqual(0);
+      expect(strategy.compute(terrible)).toBeGreaterThanOrEqual(0);
     });
 
     it('should_throw_when_moves_is_negative', () => {
@@ -115,8 +122,28 @@ describe('Value Objects', () => {
     it('should_correctly_compare_two_scores', () => {
       const better = Score.create(1, 1_000);
       const worse = Score.create(20, 60_000);
-      expect(better.isBetterThan(worse)).toBe(true);
-      expect(worse.isBetterThan(better)).toBe(false);
+      expect(better.isBetterThan(worse, strategy)).toBe(true);
+      expect(worse.isBetterThan(better, strategy)).toBe(false);
+    });
+  });
+
+  // ─── MangoRating ────────────────────────────────────────────────────────
+  // Thresholds mirror the frontend's MangoRating.fromScore (mango_rating.dart)
+  // exactly, tuned against MangoScore's 100-1000 point scale.
+  describe('MangoRating', () => {
+    it('should_award_three_stars_at_or_above_900_points', () => {
+      expect(MangoRating.fromPoints(900).stars).toBe(3);
+      expect(MangoRating.fromPoints(1000).stars).toBe(3);
+    });
+
+    it('should_award_two_stars_between_600_and_899_points', () => {
+      expect(MangoRating.fromPoints(600).stars).toBe(2);
+      expect(MangoRating.fromPoints(899).stars).toBe(2);
+    });
+
+    it('should_award_one_star_below_600_points', () => {
+      expect(MangoRating.fromPoints(599).stars).toBe(1);
+      expect(MangoRating.fromPoints(100).stars).toBe(1);
     });
   });
 });

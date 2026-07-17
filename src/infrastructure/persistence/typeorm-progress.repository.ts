@@ -5,7 +5,7 @@ import { PlayerProgress } from '../../domain/entities/player-progress.entity';
 import { IProgressRepository } from '../../domain/ports/progress.repository';
 import { UserId } from '../../domain/value-objects/user-id.vo';
 import { PlayerProgressOrmEntity } from '../../infrastructure/orm/progress.orm-entity';
-import { ProgressMapper } from '../mappers/progress.mapper';
+import { ProgressMapper } from './progress.mapper';
 
 @Injectable()
 export class TypeOrmProgressRepository implements IProgressRepository {
@@ -22,5 +22,10 @@ export class TypeOrmProgressRepository implements IProgressRepository {
   async save(progress: PlayerProgress): Promise<void> {
     const orm = ProgressMapper.toOrm(progress);
     await this.repo.save(orm);
+  }
+
+  async all(): Promise<PlayerProgress[]> {
+    const orms = await this.repo.find();
+    return orms.map(ProgressMapper.toDomain);
   }
 }

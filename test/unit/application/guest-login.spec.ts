@@ -18,6 +18,7 @@ const makeGuestUser = () =>
 const makeRepo = (user: User | null): IUserRepository => ({
   byEmail: jest.fn().mockResolvedValue(user),
   byId: jest.fn().mockResolvedValue(null),
+  byIds: jest.fn().mockResolvedValue([]),
   save: jest.fn(),
 });
 
@@ -52,5 +53,37 @@ describe('GuestLoginUseCase', () => {
     // Assert
     expect(repo.save).toHaveBeenCalledTimes(1);
     expect(result.token).toBe('jwt.token.here');
+  });
+
+  it('should_use_provided_displayName_when_creating_a_new_guest', async () => {
+    // Arrange
+    const repo = makeRepo(null);
+    const useCase = new GuestLoginUseCase(repo, makeHasher(), makeTokenSvc());
+    // Act
+    await useCase.execute({ uuid: GUEST_UUID, displayName: 'MangoLoco_42' });
+    // Assert
+    const savedUser = (repo.save as jest.Mock).mock.calls[0][0] as User;
+    expect(savedUser.username).toBe('MangoLoco_42');
+  });
+
+  it('should_default_to_Guest_when_no_displayName_is_provided_for_a_new_guest', async () => {
+    // Arrange
+    const repo = makeRepo(null);
+    const useCase = new GuestLoginUseCase(repo, makeHasher(), makeTokenSvc());
+    // Act
+    await useCase.execute({ uuid: GUEST_UUID });
+    // Assert
+    const savedUser = (repo.save as jest.Mock).mock.calls[0][0] as User;
+    expect(savedUser.username).toBe('Guest');
+  });
+
+  it('should_ignore_displayName_when_guest_already_exists', async () => {
+    // Arrange — existing guest is already named 'ExistingName'
+    const repo = makeRepo(makeGuestUser());
+    const useCase = new GuestLoginUseCase(repo, makeHasher(), makeTokenSvc());
+    // Act
+    await useCase.execute({ uuid: GUEST_UUID, displayName: 'NewName' });
+    // Assert — find-or-create: no save happens, so no rename either
+    expect(repo.save).not.toHaveBeenCalled();
   });
 });

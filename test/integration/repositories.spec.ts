@@ -1,8 +1,8 @@
 import { DataSource } from 'typeorm';
-import { TypeOrmUserRepository } from '../../src/adapters/repositories/typeorm-user.repository';
-import { TypeOrmProgressRepository } from '../../src/adapters/repositories/typeorm-progress.repository';
-import { TypeOrmLevelRepository } from '../../src/adapters/repositories/typeorm-level.repository';
-import { TypeOrmLeaderboardRepository } from '../../src/adapters/repositories/typeorm-leaderboard.repository';
+import { TypeOrmUserRepository } from '../../src/infrastructure/persistence/typeorm-user.repository';
+import { TypeOrmProgressRepository } from '../../src/infrastructure/persistence/typeorm-progress.repository';
+import { TypeOrmLevelRepository } from '../../src/infrastructure/persistence/typeorm-level.repository';
+import { TypeOrmLeaderboardRepository } from '../../src/infrastructure/persistence/typeorm-leaderboard.repository';
 import { User } from '../../src/domain/entities/user.entity';
 import { PlayerProgress } from '../../src/domain/entities/player-progress.entity';
 import {
@@ -10,6 +10,7 @@ import {
   LevelDefinition,
 } from '../../src/domain/entities/level-definition.entity';
 import { ScoreEntry } from '../../src/domain/entities/score-entry.entity';
+import { MixedScore } from '../../src/domain/services/score-calculation.strategy';
 import { Email } from '../../src/domain/value-objects/email.vo';
 import { PasswordHash } from '../../src/domain/value-objects/password-hash.vo';
 import { UserId } from '../../src/domain/value-objects/user-id.vo';
@@ -106,12 +107,18 @@ describe('TypeOrmUserRepository', () => {
 // ─── ProgressRepository ────────────────────────────────────────────────────
 
 describe('TypeOrmProgressRepository', () => {
+  const strategy = new MixedScore();
+
   it('should_persist_and_retrieve_progress', async () => {
     // Arrange
     const repo = makeProgressRepo();
     const userId = UserId.create();
     const progress = PlayerProgress.create(userId);
-    progress.markCompleted(LevelId.create('lvl-1'), Score.create(3, 10_000));
+    progress.markCompleted(
+      LevelId.create('lvl-1'),
+      Score.create(3, 10_000),
+      strategy,
+    );
     // Act
     await repo.save(progress);
     const found = await repo.byUser(userId);
@@ -126,14 +133,22 @@ describe('TypeOrmProgressRepository', () => {
     const repo = makeProgressRepo();
     const userId = UserId.create();
     const progress = PlayerProgress.create(userId);
-    progress.markCompleted(LevelId.create('lvl-a'), Score.create(5, 20_000));
+    progress.markCompleted(
+      LevelId.create('lvl-a'),
+      Score.create(5, 20_000),
+      strategy,
+    );
     await repo.save(progress);
 
     // Act — save again with better score (idempotent upsert)
     const progress2 = PlayerProgress.create(userId);
-    progress2.markCompleted(LevelId.create('lvl-a'), Score.create(2, 5_000));
+    progress2.markCompleted(
+      LevelId.create('lvl-a'),
+      Score.create(2, 5_000),
+      strategy,
+    );
     const existing = await repo.byUser(userId);
-    existing!.merge(progress2);
+    existing!.merge(progress2, strategy);
     await repo.save(existing!);
 
     const found = await repo.byUser(userId);
@@ -212,9 +227,16 @@ describe('TypeOrmLevelRepository', () => {
 });
 
 // ─── LeaderboardRepository ─────────────────────────────────────────────────
+//
+// The repository is intentionally "dumb": it filters by level and nothing
+// else. Ranking (which entry is "best") is a domain decision made by
+// Leaderboard.top(strategy, n) — see test/unit/domain/entities.spec.ts for
+// the ranking behavior, including the regression test for the bug where
+// this repository used to `ORDER BY moves ASC` in SQL, diverging from the
+// domain's score-based ranking.
 
 describe('TypeOrmLeaderboardRepository', () => {
-  it('should_return_top_entries_ordered_by_best_score', async () => {
+  it('should_return_all_entries_for_a_level_unordered', async () => {
     // Arrange
     const repo = makeLeaderboardRepo();
     const levelId = LevelId.create('leaderboard-level-1');
@@ -225,12 +247,27 @@ describe('TypeOrmLeaderboardRepository', () => {
     ];
     for (const e of entries) await repo.add(e);
     // Act
-    const top = await repo.top(levelId, 2);
+    const found = await repo.byLevel(levelId);
     // Assert
-    expect(top).toHaveLength(2);
-    // Best score = fewest moves first (ASC)
-    expect(top[0].userId.value).toBe('u2');
-    expect(top[1].userId.value).toBe('u3');
+    expect(found).toHaveLength(3);
+    expect(found.map((e) => e.userId.value).sort()).toEqual(['u1', 'u2', 'u3']);
+  });
+
+  it('should_only_return_entries_for_the_requested_level', async () => {
+    const repo = makeLeaderboardRepo();
+    const levelA = LevelId.create('level-a');
+    const levelB = LevelId.create('level-b');
+    await repo.add(
+      ScoreEntry.create(UserId.create('u1'), levelA, Score.create(1, 1_000)),
+    );
+    await repo.add(
+      ScoreEntry.create(UserId.create('u2'), levelB, Score.create(2, 2_000)),
+    );
+
+    const found = await repo.byLevel(levelA);
+
+    expect(found).toHaveLength(1);
+    expect(found[0].userId.value).toBe('u1');
   });
 
   it('should_persist_score_entry_with_correct_data', async () => {
@@ -241,10 +278,10 @@ describe('TypeOrmLeaderboardRepository', () => {
     const entry = ScoreEntry.create(userId, levelId, Score.create(4, 12_000));
     // Act
     await repo.add(entry);
-    const top = await repo.top(levelId, 10);
+    const found = await repo.byLevel(levelId);
     // Assert
-    expect(top).toHaveLength(1);
-    expect(top[0].score.moves).toBe(4);
-    expect(top[0].score.timeMs).toBe(12_000);
+    expect(found).toHaveLength(1);
+    expect(found[0].score.moves).toBe(4);
+    expect(found[0].score.timeMs).toBe(12_000);
   });
 });

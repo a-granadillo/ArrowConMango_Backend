@@ -13,6 +13,7 @@ import { User } from '../../../src/domain/entities/user.entity';
 const makeUserRepo = (existingUser: User | null = null): IUserRepository => ({
   byEmail: jest.fn().mockResolvedValue(existingUser),
   byId: jest.fn().mockResolvedValue(null),
+  byIds: jest.fn().mockResolvedValue([]),
   save: jest.fn().mockResolvedValue(undefined),
 });
 
