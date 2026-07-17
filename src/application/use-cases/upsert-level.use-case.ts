@@ -1,6 +1,7 @@
 import { LevelDefinition } from '../../domain/entities/level-definition.entity';
 import { ILevelRepository } from '../../domain/ports/level.repository';
 import { LevelId } from '../../domain/value-objects/level-id.vo';
+import { UserId } from '../../domain/value-objects/user-id.vo';
 import { LevelOutput, UpsertLevelInput } from '../dtos/level.dto';
 import { UseCase } from '../shared/use-case';
 
@@ -8,8 +9,9 @@ import { UseCase } from '../shared/use-case';
  * «Use Case» UpsertLevelUseCase
  *
  * Creates or replaces a level definition. Calls LevelDefinition.validate()
- * before persisting to ensure graph integrity (no broken edges, has exit + arrows).
- * This allows administrators to publish new levels without recompiling the app.
+ * before persisting to ensure the board is well-formed (arrows in bounds,
+ * unique ids, no zero-length segments). This allows administrators — and,
+ * eventually, level authors — to publish levels without recompiling the app.
  */
 export class UpsertLevelUseCase implements UseCase<
   UpsertLevelInput,
@@ -21,11 +23,14 @@ export class UpsertLevelUseCase implements UseCase<
     const levelId = input.id ? LevelId.create(input.id) : LevelId.create();
 
     const level = LevelDefinition.create(
-      input.nodes,
-      input.edges,
+      input.name,
+      input.difficulty,
+      input.boardSize,
+      input.arrows,
       input.rules,
       levelId,
       input.version ?? 1,
+      input.authorId ? UserId.create(input.authorId) : null,
     );
 
     level.validate();
@@ -34,10 +39,13 @@ export class UpsertLevelUseCase implements UseCase<
 
     return {
       id: level.id.value,
-      nodes: level.nodes,
-      edges: level.edges,
+      name: level.name,
+      difficulty: level.difficulty,
+      boardSize: level.boardSize,
+      arrows: level.arrows,
       rules: level.rules,
       version: level.version,
+      authorId: level.authorId?.value ?? null,
     };
   }
 }

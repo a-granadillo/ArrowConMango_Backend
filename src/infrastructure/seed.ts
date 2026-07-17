@@ -1,4 +1,6 @@
 import 'reflect-metadata';
+import * as fs from 'fs';
+import * as path from 'path';
 import { DataSource } from 'typeorm';
 import { LevelDefinitionOrmEntity } from './orm/level.orm-entity';
 import { UserOrmEntity } from './orm/user.orm-entity';
@@ -17,38 +19,26 @@ const ds = new DataSource({
   synchronize: true,
 });
 
-const LEVELS = [
-  {
-    id: 'level-001',
-    nodes: [
-      { id: 'n1', position: [0, 0], type: 'arrow', direction: 'RIGHT' },
-      { id: 'n2', position: [1, 0], type: 'arrow', direction: 'DOWN' },
-      { id: 'n3', position: [1, 1], type: 'exit' },
-    ],
-    edges: [
-      ['n1', 'n2'],
-      ['n2', 'n3'],
-    ],
-    rules: { timeLimitSeconds: 60 },
-    version: 1,
-  },
-  {
-    id: 'level-002',
-    nodes: [
-      { id: 'a1', position: [0, 0], type: 'arrow', direction: 'DOWN' },
-      { id: 'a2', position: [0, 1], type: 'arrow', direction: 'RIGHT' },
-      { id: 'a3', position: [1, 1], type: 'arrow', direction: 'UP' },
-      { id: 'a4', position: [1, 0], type: 'exit' },
-    ],
-    edges: [
-      ['a1', 'a2'],
-      ['a2', 'a3'],
-      ['a3', 'a4'],
-    ],
-    rules: { timeLimitSeconds: 90, allowRotation: true },
-    version: 1,
-  },
-];
+interface CampaignLevelJson {
+  id: string;
+  name: string;
+  difficulty: string;
+  boardSize: { rows: number; cols: number };
+  arrows: unknown[];
+  rules: Record<string, unknown>;
+  version: number;
+  authorId: string | null;
+}
+
+// Frozen artifact exported by the frontend's tool/export_levels.dart —
+// byte-identical to assets/levels/campaign_levels.json. Re-copy that file
+// here (do not hand-edit) whenever the campaign levels change.
+const LEVELS: CampaignLevelJson[] = JSON.parse(
+  fs.readFileSync(
+    path.join(__dirname, 'seed-data', 'campaign-levels.json'),
+    'utf-8',
+  ),
+) as CampaignLevelJson[];
 
 async function seed(): Promise<void> {
   await ds.initialize();
@@ -58,7 +48,7 @@ async function seed(): Promise<void> {
     const existing = await repo.findOne({ where: { id: level.id } });
     if (!existing) {
       await repo.save(level as unknown as LevelDefinitionOrmEntity);
-      console.log(`Seeded level: ${level.id}`);
+      console.log(`Seeded level: ${level.id} (${level.name})`);
     } else {
       console.log(`Level ${level.id} already exists, skipping.`);
     }

@@ -5,13 +5,19 @@ export class LevelDefinitionOrmEntity {
   @PrimaryColumn('varchar')
   id!: string;
 
-  /** NodeDefinition[] serialized as JSON. */
-  @Column({ type: 'simple-json' })
-  nodes!: unknown[];
+  @Column()
+  name!: string;
 
-  /** [string, string][] serialized as JSON. */
+  @Column()
+  difficulty!: string;
+
+  /** BoardSize serialized as JSON. */
   @Column({ type: 'simple-json' })
-  edges!: [string, string][];
+  boardSize!: { rows: number; cols: number };
+
+  /** ArrowDefinition[] serialized as JSON. */
+  @Column({ type: 'simple-json' })
+  arrows!: unknown[];
 
   /** LevelRules serialized as JSON. */
   @Column({ type: 'simple-json' })
@@ -19,4 +25,8 @@ export class LevelDefinitionOrmEntity {
 
   @Column({ default: 1 })
   version!: number;
+
+  /** null for campaign levels; the creator's user id for community levels. */
+  @Column({ type: 'varchar', nullable: true })
+  authorId!: string | null;
 }

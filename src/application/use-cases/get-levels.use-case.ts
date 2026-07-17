@@ -15,10 +15,13 @@ export class GetLevelsUseCase implements UseCase<void, LevelOutput[]> {
     const levels = await this.levelRepo.getAll();
     return levels.map((l) => ({
       id: l.id.value,
-      nodes: l.nodes,
-      edges: l.edges,
+      name: l.name,
+      difficulty: l.difficulty,
+      boardSize: l.boardSize,
+      arrows: l.arrows,
       rules: l.rules,
       version: l.version,
+      authorId: l.authorId?.value ?? null,
     }));
   }
 }
