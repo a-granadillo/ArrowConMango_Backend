@@ -48,6 +48,9 @@ export class AuthController {
   @ApiResponse({ status: 200, type: LoginResponseDto })
   @ApiResponse({ status: 400, description: 'Validation error' })
   async guest(@Body() dto: GuestLoginDto): Promise<LoginResponseDto> {
-    return this.guestLogin.execute({ uuid: dto.uuid });
+    return this.guestLogin.execute({
+      uuid: dto.uuid,
+      displayName: dto.displayName,
+    });
   }
 }

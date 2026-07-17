@@ -23,4 +23,9 @@ export class TypeOrmProgressRepository implements IProgressRepository {
     const orm = ProgressMapper.toOrm(progress);
     await this.repo.save(orm);
   }
+
+  async all(): Promise<PlayerProgress[]> {
+    const orms = await this.repo.find();
+    return orms.map(ProgressMapper.toDomain);
+  }
 }

@@ -18,6 +18,7 @@ const makeGuestUser = () =>
 const makeRepo = (user: User | null): IUserRepository => ({
   byEmail: jest.fn().mockResolvedValue(user),
   byId: jest.fn().mockResolvedValue(null),
+  byIds: jest.fn().mockResolvedValue([]),
   save: jest.fn(),
 });
 

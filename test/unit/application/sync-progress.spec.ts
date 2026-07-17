@@ -7,6 +7,7 @@ import { UserId } from '../../../src/domain/value-objects/user-id.vo';
 const makeRepo = (progress: PlayerProgress | null): IProgressRepository => ({
   byUser: jest.fn().mockResolvedValue(progress),
   save: jest.fn().mockResolvedValue(undefined),
+  all: jest.fn().mockResolvedValue([]),
 });
 
 describe('SyncProgressUseCase', () => {
@@ -66,6 +67,7 @@ describe('SyncProgressUseCase', () => {
         savedProgress = p;
         return Promise.resolve();
       }),
+      all: jest.fn().mockResolvedValue([]),
     };
     const useCase = new SyncProgressUseCase(repo, strategy);
 
@@ -92,6 +94,7 @@ describe('SyncProgressUseCase', () => {
         savedProgress = p;
         return Promise.resolve();
       }),
+      all: jest.fn().mockResolvedValue([]),
     };
     const useCase = new SyncProgressUseCase(repo, strategy);
 

@@ -1,4 +1,5 @@
 import { LevelValidationError } from '../../../src/domain/errors/domain-error';
+import { GlobalLeaderboard } from '../../../src/domain/entities/global-leaderboard.entity';
 import { Leaderboard } from '../../../src/domain/entities/leaderboard.entity';
 import { LevelDefinition } from '../../../src/domain/entities/level-definition.entity';
 import { PlayerProgress } from '../../../src/domain/entities/player-progress.entity';
@@ -14,6 +15,7 @@ import {
 import { Email } from '../../../src/domain/value-objects/email.vo';
 import { LevelId } from '../../../src/domain/value-objects/level-id.vo';
 import { PasswordHash } from '../../../src/domain/value-objects/password-hash.vo';
+import { PlayerStanding } from '../../../src/domain/value-objects/player-standing.vo';
 import { Score } from '../../../src/domain/value-objects/score.vo';
 import { UserId } from '../../../src/domain/value-objects/user-id.vo';
 
@@ -132,6 +134,28 @@ describe('PlayerProgress', () => {
     const incoming = PlayerProgress.reconstitute(uid, [], {}, 5);
     server.merge(incoming, strategy);
     expect(server.currentLevel).toBe(5);
+  });
+
+  it('should_sum_mango_stars_across_every_best_run', () => {
+    const mangoStrategy = new MangoScore();
+    const progress = PlayerProgress.create(uid);
+    // 5s -> 950 points -> 3 stars
+    progress.markCompleted(lvl1, Score.create(0, 5_000), mangoStrategy);
+    // 50s -> 500 points -> 1 star
+    progress.markCompleted(lvl2, Score.create(0, 50_000), mangoStrategy);
+    expect(progress.mangos(mangoStrategy)).toBe(4);
+  });
+
+  it('should_return_zero_mangos_when_nothing_completed', () => {
+    const progress = PlayerProgress.create(uid);
+    expect(progress.mangos(new MangoScore())).toBe(0);
+  });
+
+  it('should_count_completed_levels', () => {
+    const progress = PlayerProgress.create(uid);
+    progress.markCompleted(lvl1, highScore, strategy);
+    progress.markCompleted(lvl2, highScore, strategy);
+    expect(progress.completedCount()).toBe(2);
   });
 });
 
@@ -274,6 +298,29 @@ describe('Leaderboard', () => {
 
     expect(byTime[0].userId.value).toBe('many-moves');
     expect(byMoves[0].userId.value).toBe('few-moves');
+  });
+});
+
+// ─── GlobalLeaderboard ────────────────────────────────────────────────────────
+describe('GlobalLeaderboard', () => {
+  it('should_rank_standings_by_mangos_descending', () => {
+    const low = PlayerStanding.create('u1', 'Low', 5, 3);
+    const high = PlayerStanding.create('u2', 'High', 40, 15);
+    const board = GlobalLeaderboard.from([low, high]);
+
+    const top = board.top(10);
+
+    expect(top[0].userId).toBe('u2');
+    expect(top[1].userId).toBe('u1');
+  });
+
+  it('should_respect_the_n_limit', () => {
+    const standings = Array.from({ length: 5 }, (_, i) =>
+      PlayerStanding.create(`u${i}`, `Player${i}`, i, i),
+    );
+    const board = GlobalLeaderboard.from(standings);
+
+    expect(board.top(2)).toHaveLength(2);
   });
 });
 
