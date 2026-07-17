@@ -88,9 +88,9 @@ import { AuthGuard } from '../../adapters/aop/auth.guard';
     // ── Use-case factory providers (D1: use-cases stay framework-agnostic) ──
     {
       provide: RegisterUserUseCase,
-      useFactory: (repo: any, hasher: any) =>
-        new RegisterUserUseCase(repo, hasher),
-      inject: [USER_REPOSITORY, PASSWORD_HASHER],
+      useFactory: (repo: any, hasher: any, token: any) =>
+        new RegisterUserUseCase(repo, hasher, token),
+      inject: [USER_REPOSITORY, PASSWORD_HASHER, TOKEN_SERVICE],
     },
     {
       provide: LoginUseCase,

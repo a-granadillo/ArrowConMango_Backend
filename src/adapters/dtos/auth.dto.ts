@@ -44,6 +44,11 @@ export class AuthResponseDto {
   username!: string;
 }
 
+export class RegisterResponseDto extends AuthResponseDto {
+  @ApiProperty({ description: 'JWT Bearer token — registering logs you in' })
+  token!: string;
+}
+
 export class LoginResponseDto {
   @ApiProperty({ description: 'JWT Bearer token' })
   token!: string;
