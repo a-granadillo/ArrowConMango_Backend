@@ -1,5 +1,7 @@
+import { PlayerProgress } from '../../domain/entities/player-progress.entity';
 import { ScoreEntry } from '../../domain/entities/score-entry.entity';
 import { ILeaderboardRepository } from '../../domain/ports/leaderboard.repository';
+import { IProgressRepository } from '../../domain/ports/progress.repository';
 import { IScoreCalculationStrategy } from '../../domain/services/score-calculation.strategy';
 import { LevelId } from '../../domain/value-objects/level-id.vo';
 import { Score } from '../../domain/value-objects/score.vo';
@@ -15,7 +17,11 @@ interface SubmitInput {
 /**
  * «Use Case» SubmitScoreUseCase
  *
- * Records a completed-level score to the leaderboard.
+ * Records a completed-level score to the leaderboard, and marks the level
+ * completed on the player's progress record (keeping the better of the old
+ * and new score — PlayerProgress.markCompleted is merge-safe). This is what
+ * lets a global leaderboard be computed later from PlayerProgress.best
+ * without the client ever having to send `best` itself.
  * The AuthGuard (AOP, NestJS layer) ensures only authenticated users reach this.
  */
 export class SubmitScoreUseCase implements UseCase<
@@ -24,6 +30,7 @@ export class SubmitScoreUseCase implements UseCase<
 > {
   constructor(
     private readonly leaderboardRepo: ILeaderboardRepository,
+    private readonly progressRepo: IProgressRepository,
     private readonly scoring: IScoreCalculationStrategy,
   ) {}
 
@@ -34,6 +41,11 @@ export class SubmitScoreUseCase implements UseCase<
 
     const entry = ScoreEntry.create(userId, levelId, score);
     await this.leaderboardRepo.add(entry);
+
+    const progress =
+      (await this.progressRepo.byUser(userId)) ?? PlayerProgress.create(userId);
+    progress.markCompleted(levelId, score, this.scoring);
+    await this.progressRepo.save(progress);
 
     return {
       userId: entry.userId.value,

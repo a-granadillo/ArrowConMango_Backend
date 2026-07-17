@@ -15,6 +15,13 @@ const makeConfig = (overrides: Record<string, string> = {}): ConfigService => {
   };
   return {
     get: (key: string) => values[key],
+    getOrThrow: (key: string) => {
+      const value = values[key];
+      if (value === undefined) {
+        throw new Error(`Missing config value: ${key}`);
+      }
+      return value;
+    },
   } as unknown as ConfigService;
 };
 

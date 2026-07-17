@@ -1,7 +1,9 @@
 import { GetLeaderboardUseCase } from '../../../src/application/use-cases/get-leaderboard.use-case';
 import { SubmitScoreUseCase } from '../../../src/application/use-cases/submit-score.use-case';
+import { PlayerProgress } from '../../../src/domain/entities/player-progress.entity';
 import { ScoreEntry } from '../../../src/domain/entities/score-entry.entity';
 import { ILeaderboardRepository } from '../../../src/domain/ports/leaderboard.repository';
+import { IProgressRepository } from '../../../src/domain/ports/progress.repository';
 import { MangoScore } from '../../../src/domain/services/score-calculation.strategy';
 import { LevelId } from '../../../src/domain/value-objects/level-id.vo';
 import { Score } from '../../../src/domain/value-objects/score.vo';
@@ -12,6 +14,13 @@ const strategy = new MangoScore();
 const makeLbRepo = (entries: ScoreEntry[]): ILeaderboardRepository => ({
   byLevel: jest.fn().mockResolvedValue(entries),
   add: jest.fn().mockResolvedValue(undefined),
+});
+
+const makeProgressRepo = (
+  existing: PlayerProgress | null = null,
+): IProgressRepository => ({
+  byUser: jest.fn().mockResolvedValue(existing),
+  save: jest.fn().mockResolvedValue(undefined),
 });
 
 describe('GetLeaderboardUseCase', () => {
@@ -44,7 +53,8 @@ describe('SubmitScoreUseCase', () => {
   it('should_persist_score_entry_when_called', async () => {
     // Arrange
     const repo = makeLbRepo([]);
-    const useCase = new SubmitScoreUseCase(repo, strategy);
+    const progressRepo = makeProgressRepo();
+    const useCase = new SubmitScoreUseCase(repo, progressRepo, strategy);
     // Act
     const result = await useCase.execute({
       userId: 'user-99',
@@ -56,5 +66,43 @@ describe('SubmitScoreUseCase', () => {
     expect(result.levelId).toBe('lvl-2');
     expect(result.value).toBeGreaterThanOrEqual(0);
     expect(result.at).toBeDefined();
+  });
+
+  it('should_mark_level_completed_on_progress_when_no_prior_progress_exists', async () => {
+    // Arrange
+    const repo = makeLbRepo([]);
+    const progressRepo = makeProgressRepo(null);
+    const useCase = new SubmitScoreUseCase(repo, progressRepo, strategy);
+    // Act
+    await useCase.execute({
+      userId: 'user-1',
+      data: { levelId: 'lvl-3', moves: 4, timeMs: 8_000 },
+    });
+    // Assert
+    expect(progressRepo.save).toHaveBeenCalledTimes(1);
+    const saved = (progressRepo.save as jest.Mock).mock
+      .calls[0][0] as PlayerProgress;
+    expect(saved.isCompleted(LevelId.create('lvl-3'))).toBe(true);
+    expect(saved.bestFor(LevelId.create('lvl-3'))?.moves).toBe(4);
+  });
+
+  it('should_keep_the_better_score_when_progress_already_exists', async () => {
+    // Arrange — existing progress has a worse run for the same level
+    const userId = UserId.create('user-2');
+    const levelId = LevelId.create('lvl-4');
+    const existing = PlayerProgress.create(userId);
+    existing.markCompleted(levelId, Score.create(50, 60_000), strategy);
+    const repo = makeLbRepo([]);
+    const progressRepo = makeProgressRepo(existing);
+    const useCase = new SubmitScoreUseCase(repo, progressRepo, strategy);
+    // Act — submit a much better run
+    await useCase.execute({
+      userId: 'user-2',
+      data: { levelId: 'lvl-4', moves: 1, timeMs: 1_000 },
+    });
+    // Assert
+    const saved = (progressRepo.save as jest.Mock).mock
+      .calls[0][0] as PlayerProgress;
+    expect(saved.bestFor(levelId)?.moves).toBe(1);
   });
 });

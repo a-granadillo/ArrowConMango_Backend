@@ -18,22 +18,30 @@ const ORM_ENTITIES = [
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (cfg: ConfigService) => {
-        const driver = cfg.get<string>('app.dbDriver', { infer: true });
+        const driver = cfg.get<string>('app.dbDriver', 'sqlite', {
+          infer: true,
+        });
         if (driver === 'postgres') {
           return {
             type: 'postgres',
-            host: cfg.get<string>('app.dbHost', { infer: true }),
-            port: cfg.get<number>('app.dbPort', { infer: true }),
-            username: cfg.get<string>('app.dbUser', { infer: true }),
-            password: cfg.get<string>('app.dbPassword', { infer: true }),
-            database: cfg.get<string>('app.dbName', { infer: true }),
+            host: cfg.get<string>('app.dbHost', 'localhost', { infer: true }),
+            port: cfg.get<number>('app.dbPort', 5432, { infer: true }),
+            username: cfg.get<string>('app.dbUser', 'postgres', {
+              infer: true,
+            }),
+            password: cfg.get<string>('app.dbPassword', '', { infer: true }),
+            database: cfg.get<string>('app.dbName', 'arrow_con_mango', {
+              infer: true,
+            }),
             entities: ORM_ENTITIES,
             synchronize: false,
           };
         }
         return {
           type: 'sqlite',
-          database: cfg.get<string>('app.dbPath', { infer: true }),
+          database: cfg.get<string>('app.dbPath', 'arrow.sqlite', {
+            infer: true,
+          }),
           entities: ORM_ENTITIES,
           synchronize: true,
         };
