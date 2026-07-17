@@ -477,3 +477,34 @@ describe('GET /api/v1/leaderboard', () => {
     expect((res.body as unknown[]).length).toBeGreaterThan(0);
   });
 });
+
+describe('GET /api/v1/leaderboard/:nivel', () => {
+  it('should_return_401_when_no_token', async () => {
+    const res = await request(app.getHttpServer()).get(
+      `/api/v1/leaderboard/${LEVEL_ID}`,
+    );
+    expect(res.status).toBe(401);
+  });
+
+  it('should_return_top_and_me_for_the_requesting_player', async () => {
+    const res = await request(app.getHttpServer())
+      .get(`/api/v1/leaderboard/${LEVEL_ID}`)
+      .set('Authorization', `Bearer ${bearerToken}`);
+    expect(res.status).toBe(200);
+    expect(Array.isArray(res.body.top)).toBe(true);
+    expect(res.body.top.length).toBeGreaterThan(0);
+    expect(res.body.top[0].rank).toBe(1);
+    expect(res.body.top[0].displayName).toBeDefined();
+  });
+
+  it('should_not_be_swallowed_by_the_global_route', async () => {
+    // Regression guard for the Nest route-ordering trap: 'global' must be
+    // matched literally, not treated as a levelId by GET /leaderboard/:nivel.
+    const res = await request(app.getHttpServer())
+      .get('/api/v1/leaderboard/global')
+      .set('Authorization', `Bearer ${bearerToken}`);
+    expect(res.status).toBe(200);
+    expect(Array.isArray(res.body)).toBe(true);
+    expect(res.body[0]).not.toHaveProperty('top');
+  });
+});

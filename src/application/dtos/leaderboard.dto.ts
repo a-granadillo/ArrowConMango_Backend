@@ -15,6 +15,17 @@ export interface ScoreEntryOutput {
   at: string;
 }
 
+export interface RankedScoreEntryOutput extends ScoreEntryOutput {
+  rank: number;
+  displayName: string;
+  isMe: boolean;
+}
+
+export interface LevelLeaderboardOutput {
+  top: RankedScoreEntryOutput[];
+  me: RankedScoreEntryOutput | null;
+}
+
 export interface GetGlobalLeaderboardInput {
   top?: number;
   /** The requesting user's id, if authenticated — used to flag `isMe`. */
@@ -28,4 +39,23 @@ export interface PlayerStandingOutput {
   mangos: number;
   levelsCompleted: number;
   isMe: boolean;
+}
+
+export interface GetSurvivalLeaderboardInput {
+  top?: number;
+  currentUserId?: string;
+}
+
+export interface SurvivalStandingOutput {
+  rank: number;
+  userId: string;
+  displayName: string;
+  mangos: number;
+  runs: number;
+  isMe: boolean;
+}
+
+export interface SurvivalLeaderboardOutput {
+  top: SurvivalStandingOutput[];
+  me: SurvivalStandingOutput | null;
 }

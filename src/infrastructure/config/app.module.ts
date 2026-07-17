@@ -146,9 +146,9 @@ import { AuthGuard } from '../../adapters/aop/auth.guard';
     },
     {
       provide: GetLeaderboardUseCase,
-      useFactory: (repo: any, scoring: any) =>
-        new GetLeaderboardUseCase(repo, scoring),
-      inject: [LEADERBOARD_REPOSITORY, SCORE_STRATEGY],
+      useFactory: (repo: any, userRepo: any, scoring: any) =>
+        new GetLeaderboardUseCase(repo, userRepo, scoring),
+      inject: [LEADERBOARD_REPOSITORY, USER_REPOSITORY, SCORE_STRATEGY],
     },
     {
       provide: SubmitScoreUseCase,

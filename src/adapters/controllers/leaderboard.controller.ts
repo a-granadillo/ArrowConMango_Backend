@@ -4,6 +4,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Param,
   Post,
   Query,
   UseGuards,
@@ -12,6 +13,7 @@ import {
 import {
   ApiBearerAuth,
   ApiOperation,
+  ApiParam,
   ApiQuery,
   ApiResponse,
   ApiTags,
@@ -23,6 +25,7 @@ import { AuthGuard } from '../aop/auth.guard';
 import { CacheInterceptor } from '../aop/cache.interceptor';
 import { CurrentUser } from '../decorators/current-user.decorator';
 import {
+  LevelLeaderboardResponseDto,
   PlayerStandingResponseDto,
   ScoreEntryResponseDto,
   SubmitScoreDto,
@@ -41,6 +44,11 @@ export class LeaderboardController {
   // and this response is personalized per user via `isMe` — caching it would
   // leak one user's `isMe: true` row into every other user's response for
   // the cache TTL.
+  //
+  // 'global' and 'supervivencia' (added alongside this endpoint) MUST stay
+  // declared before the ':nivel' route below — Nest matches routes in
+  // declaration order, so a ':nivel' declared first would swallow both as
+  // literal level ids.
   @Get('global')
   @UseGuards(AuthGuard)
   @ApiBearerAuth()
@@ -61,9 +69,14 @@ export class LeaderboardController {
     });
   }
 
+  /** @deprecated Use GET /leaderboard/:nivel — kept for existing frontend clients. */
   @Get()
   @UseInterceptors(new CacheInterceptor(30))
-  @ApiOperation({ summary: 'Get top scores for a level' })
+  @ApiOperation({
+    summary:
+      'Get top scores for a level (deprecated — use GET /leaderboard/:nivel)',
+    deprecated: true,
+  })
   @ApiQuery({ name: 'level', required: true, description: 'Level ID' })
   @ApiQuery({
     name: 'top',
@@ -75,9 +88,35 @@ export class LeaderboardController {
     @Query('level') levelId: string,
     @Query('top') top?: string,
   ): Promise<ScoreEntryResponseDto[]> {
+    const { top: entries } = await this.getLeaderboard.execute({
+      levelId,
+      top: top ? parseInt(top, 10) : undefined,
+    });
+    return entries.map(({ rank, displayName, isMe, ...rest }) => rest);
+  }
+
+  @Get(':nivel')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: "Get top scores for a level plus the requesting player's own rank",
+  })
+  @ApiParam({ name: 'nivel', description: 'Level ID' })
+  @ApiQuery({
+    name: 'top',
+    required: false,
+    description: 'Number of entries (default 10)',
+  })
+  @ApiResponse({ status: 200, type: LevelLeaderboardResponseDto })
+  async getByLevel(
+    @CurrentUser() userId: string,
+    @Param('nivel') levelId: string,
+    @Query('top') top?: string,
+  ): Promise<LevelLeaderboardResponseDto> {
     return this.getLeaderboard.execute({
       levelId,
       top: top ? parseInt(top, 10) : undefined,
+      currentUserId: userId,
     });
   }
 
