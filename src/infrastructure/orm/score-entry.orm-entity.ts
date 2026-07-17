@@ -19,4 +19,7 @@ export class ScoreEntryOrmEntity {
 
   @Column('datetime')
   at!: Date;
+
+  @Column('varchar', { default: 'campaign' })
+  mode!: string;
 }

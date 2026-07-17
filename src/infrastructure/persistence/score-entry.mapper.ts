@@ -1,4 +1,5 @@
 import { ScoreEntry } from '../../domain/entities/score-entry.entity';
+import { GameMode } from '../../domain/value-objects/game-mode.vo';
 import { LevelId } from '../../domain/value-objects/level-id.vo';
 import { Score } from '../../domain/value-objects/score.vo';
 import { UserId } from '../../domain/value-objects/user-id.vo';
@@ -11,6 +12,7 @@ export class ScoreEntryMapper {
       LevelId.create(orm.levelId),
       Score.create(orm.moves, orm.timeMs),
       new Date(orm.at),
+      GameMode.create(orm.mode ?? 'campaign'),
     );
   }
 
@@ -21,6 +23,7 @@ export class ScoreEntryMapper {
     orm.moves = entry.score.moves;
     orm.timeMs = entry.score.timeMs;
     orm.at = entry.at;
+    orm.mode = entry.mode.value;
     return orm;
   }
 }
