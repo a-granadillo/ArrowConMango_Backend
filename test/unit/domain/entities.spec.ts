@@ -5,6 +5,12 @@ import { PlayerProgress } from '../../../src/domain/entities/player-progress.ent
 import { ScoreEntry } from '../../../src/domain/entities/score-entry.entity';
 import { User } from '../../../src/domain/entities/user.entity';
 import { IPasswordHasher } from '../../../src/domain/ports/password-hasher';
+import {
+  MangoScore,
+  MixedScore,
+  MovesBasedScore,
+  TimeBasedScore,
+} from '../../../src/domain/services/score-calculation.strategy';
 import { Email } from '../../../src/domain/value-objects/email.vo';
 import { LevelId } from '../../../src/domain/value-objects/level-id.vo';
 import { PasswordHash } from '../../../src/domain/value-objects/password-hash.vo';
@@ -57,52 +63,53 @@ describe('PlayerProgress', () => {
   const lvl2 = LevelId.create('lvl-2');
   const lowScore = Score.create(20, 60_000);
   const highScore = Score.create(2, 5_000);
+  const strategy = new MixedScore();
 
   it('should_mark_level_as_completed_when_score_submitted', () => {
     const progress = PlayerProgress.create(uid);
-    progress.markCompleted(lvl1, lowScore);
+    progress.markCompleted(lvl1, lowScore, strategy);
     expect(progress.isCompleted(lvl1)).toBe(true);
   });
 
   it('should_keep_best_score_when_better_score_submitted', () => {
     const progress = PlayerProgress.create(uid);
-    progress.markCompleted(lvl1, lowScore);
-    progress.markCompleted(lvl1, highScore);
-    expect(progress.bestFor(lvl1)!.value()).toBe(highScore.value());
+    progress.markCompleted(lvl1, lowScore, strategy);
+    progress.markCompleted(lvl1, highScore, strategy);
+    expect(progress.bestFor(lvl1)!.equals(highScore)).toBe(true);
   });
 
   it('should_not_replace_best_score_when_worse_score_submitted', () => {
     const progress = PlayerProgress.create(uid);
-    progress.markCompleted(lvl1, highScore);
-    progress.markCompleted(lvl1, lowScore);
-    expect(progress.bestFor(lvl1)!.value()).toBe(highScore.value());
+    progress.markCompleted(lvl1, highScore, strategy);
+    progress.markCompleted(lvl1, lowScore, strategy);
+    expect(progress.bestFor(lvl1)!.equals(highScore)).toBe(true);
   });
 
   it('should_merge_progress_idempotently_when_same_data_sent_twice', () => {
     // Arrange — server has lvl1 with highScore
     const server = PlayerProgress.create(uid);
-    server.markCompleted(lvl1, highScore);
+    server.markCompleted(lvl1, highScore, strategy);
 
     // Client sends same data twice
     const clientData = PlayerProgress.reconstitute(uid, [lvl1.value], {
       [lvl1.value]: { moves: highScore.moves, timeMs: highScore.timeMs },
     });
-    server.merge(clientData);
-    server.merge(clientData); // idempotent: second merge must not change anything
+    server.merge(clientData, strategy);
+    server.merge(clientData, strategy); // idempotent: second merge must not change anything
 
     // Assert — completed still has only lvl1, best is unchanged
     expect(server.completed.size).toBe(1);
-    expect(server.bestFor(lvl1)!.value()).toBe(highScore.value());
+    expect(server.bestFor(lvl1)!.equals(highScore)).toBe(true);
   });
 
   it('should_union_completed_levels_when_merging', () => {
     const server = PlayerProgress.create(uid);
-    server.markCompleted(lvl1, lowScore);
+    server.markCompleted(lvl1, lowScore, strategy);
 
     const incoming = PlayerProgress.reconstitute(uid, [lvl2.value], {
       [lvl2.value]: { moves: 5, timeMs: 10_000 },
     });
-    server.merge(incoming);
+    server.merge(incoming, strategy);
 
     expect(server.isCompleted(lvl1)).toBe(true);
     expect(server.isCompleted(lvl2)).toBe(true);
@@ -116,14 +123,14 @@ describe('PlayerProgress', () => {
   it('should_keep_higher_current_level_when_merging_a_lower_one', () => {
     const server = PlayerProgress.reconstitute(uid, [], {}, 3);
     const incoming = PlayerProgress.reconstitute(uid, [], {}, 2);
-    server.merge(incoming);
+    server.merge(incoming, strategy);
     expect(server.currentLevel).toBe(3);
   });
 
   it('should_advance_current_level_when_merging_a_higher_one', () => {
     const server = PlayerProgress.reconstitute(uid, [], {}, 2);
     const incoming = PlayerProgress.reconstitute(uid, [], {}, 5);
-    server.merge(incoming);
+    server.merge(incoming, strategy);
     expect(server.currentLevel).toBe(5);
   });
 });
@@ -171,6 +178,7 @@ describe('Leaderboard', () => {
   const levelId = LevelId.create('lvl-001');
   const userId1 = UserId.create('u1');
   const userId2 = UserId.create('u2');
+  const strategy = new MixedScore();
 
   it('should_return_top_scores_sorted_descending', () => {
     // Arrange
@@ -178,7 +186,7 @@ describe('Leaderboard', () => {
     board.submit(ScoreEntry.create(userId1, levelId, Score.create(10, 30_000)));
     board.submit(ScoreEntry.create(userId2, levelId, Score.create(1, 5_000)));
     // Act
-    const top = board.top(2);
+    const top = board.top(strategy, 2);
     // Assert
     expect(top[0].userId.value).toBe('u2');
     expect(top[1].userId.value).toBe('u1');
@@ -188,25 +196,89 @@ describe('Leaderboard', () => {
     const board = Leaderboard.create(levelId);
     for (let i = 0; i < 15; i++) {
       board.submit(
-        ScoreEntry.create(userId1, levelId, Score.create(i, i * 1000)),
+        ScoreEntry.create(
+          UserId.create(`u${i}`),
+          levelId,
+          Score.create(i, i * 1000),
+        ),
       );
     }
-    expect(board.top(5)).toHaveLength(5);
+    expect(board.top(strategy, 5)).toHaveLength(5);
   });
 
   it('should_return_all_entries_when_n_exceeds_total', () => {
     const board = Leaderboard.create(levelId);
     board.submit(ScoreEntry.create(userId1, levelId, Score.create(3, 10_000)));
-    expect(board.top(100)).toHaveLength(1);
+    expect(board.top(strategy, 100)).toHaveLength(1);
+  });
+
+  it('should_keep_only_the_best_entry_per_user', () => {
+    // A player who retries keeps only their best run in the ranking —
+    // otherwise repeated submissions could fill the whole top N.
+    const board = Leaderboard.create(levelId);
+    board.submit(ScoreEntry.create(userId1, levelId, Score.create(20, 60_000)));
+    board.submit(ScoreEntry.create(userId1, levelId, Score.create(1, 1_000)));
+    board.submit(ScoreEntry.create(userId1, levelId, Score.create(15, 45_000)));
+
+    const top = board.top(strategy, 10);
+
+    expect(top).toHaveLength(1);
+    expect(top[0].score.equals(Score.create(1, 1_000))).toBe(true);
+  });
+
+  it('should_rank_by_value_descending_not_by_moves_ascending', () => {
+    // Regression test for the SQL-ordering bug: A has fewer moves but a
+    // vastly worse time; B has more moves but a much better time. Ordering
+    // by `moves ASC` (the old, wrong SQL rule) would put A first and could
+    // drop B entirely once `take: n` truncates before value is considered.
+    // The domain rule (MangoScore.compute() descending) must rank B first.
+    const board = Leaderboard.create(levelId);
+    const a = ScoreEntry.create(
+      UserId.create('a'),
+      levelId,
+      Score.create(1, 90_000),
+    );
+    const b = ScoreEntry.create(
+      UserId.create('b'),
+      levelId,
+      Score.create(2, 1_000),
+    );
+    board.submit(a);
+    board.submit(b);
+
+    const top = board.top(new MangoScore(), 1);
+
+    expect(top).toHaveLength(1);
+    expect(top[0].userId.value).toBe('b');
+  });
+
+  it('should_produce_a_different_order_when_the_injected_strategy_changes', () => {
+    // Proves the Strategy pattern is load-bearing, not decorative: swapping
+    // the strategy changes the ranking outcome for the exact same entries.
+    const board = Leaderboard.create(levelId);
+    const fewMovesSlowTime = ScoreEntry.create(
+      UserId.create('few-moves'),
+      levelId,
+      Score.create(1, 100_000),
+    );
+    const manyMovesFastTime = ScoreEntry.create(
+      UserId.create('many-moves'),
+      levelId,
+      Score.create(80, 500),
+    );
+    board.submit(fewMovesSlowTime);
+    board.submit(manyMovesFastTime);
+
+    const byTime = board.top(new TimeBasedScore(), 1);
+    const byMoves = board.top(new MovesBasedScore(), 1);
+
+    expect(byTime[0].userId.value).toBe('many-moves');
+    expect(byMoves[0].userId.value).toBe('few-moves');
   });
 });
 
 // ─── Strategy ─────────────────────────────────────────────────────────────────
 describe('ScoreCalculationStrategy', () => {
-  const { MovesBasedScore, TimeBasedScore, MixedScore } =
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    require('../../../src/domain/services/score-calculation.strategy');
-
   it('should_score_higher_with_fewer_moves_in_MovesBasedScore', () => {
     const s1 = new MovesBasedScore();
     const better = Score.create(1, 60_000);
@@ -228,5 +300,26 @@ describe('ScoreCalculationStrategy', () => {
         expect(s.compute(badScore)).toBeGreaterThanOrEqual(0);
       },
     );
+  });
+
+  // MangoScore is the production default: it must mirror the frontend's
+  // MoveBasedScoring exactly (movePenalty=0 there — time-only scoring), or
+  // the backend-computed leaderboard would disagree with what the player
+  // sees on their own victory screen for the same run.
+  describe('MangoScore', () => {
+    const strategy = new MangoScore();
+
+    it('should_award_max_points_for_a_perfect_zero_time_run', () => {
+      expect(strategy.compute(Score.create(0, 0))).toBe(1000);
+    });
+
+    it('should_deduct_ten_points_per_whole_second_elapsed', () => {
+      expect(strategy.compute(Score.create(0, 5_000))).toBe(950);
+      expect(strategy.compute(Score.create(999, 5_000))).toBe(950); // moves don't affect it
+    });
+
+    it('should_floor_at_the_minimum_points', () => {
+      expect(strategy.compute(Score.create(0, 1_000_000))).toBe(100);
+    });
   });
 });

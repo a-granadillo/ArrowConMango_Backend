@@ -9,12 +9,19 @@ import { Score } from '../../../src/domain/value-objects/score.vo';
 
 const makeConfig = (overrides: Record<string, string> = {}): ConfigService => {
   const values: Record<string, string> = {
-    JWT_SECRET: 'test-secret',
-    JWT_EXPIRES_IN: '1h',
+    'app.jwtSecret': 'test-secret',
+    'app.jwtExpiresIn': '1h',
     ...overrides,
   };
   return {
-    get: (key: string, def?: string) => values[key] ?? def,
+    get: (key: string) => values[key],
+    getOrThrow: (key: string) => {
+      const value = values[key];
+      if (value === undefined) {
+        throw new Error(`Missing config value: ${key}`);
+      }
+      return value;
+    },
   } as unknown as ConfigService;
 };
 
@@ -41,9 +48,11 @@ describe('JwtTokenService', () => {
 
   it('should_throw_UnauthorizedError_when_token_signed_with_different_secret', () => {
     // Arrange
-    const signer = new JwtTokenService(makeConfig({ JWT_SECRET: 'secret-a' }));
+    const signer = new JwtTokenService(
+      makeConfig({ 'app.jwtSecret': 'secret-a' }),
+    );
     const verifier = new JwtTokenService(
-      makeConfig({ JWT_SECRET: 'secret-b' }),
+      makeConfig({ 'app.jwtSecret': 'secret-b' }),
     );
     const token = signer.sign(UserId.create());
     // Act & Assert

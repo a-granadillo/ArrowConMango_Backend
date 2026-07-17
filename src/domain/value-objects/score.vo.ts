@@ -1,9 +1,13 @@
+import type { IScoreCalculationStrategy } from '../services/score-calculation.strategy';
+
 /**
- * «Value Object» Score — derived from moves count and elapsed time.
+ * «Value Object» Score — raw moves count and elapsed time for one run.
  *
- * value() computes a numeric score: fewer moves and less time yields a higher
- * score. The formula is intentionally simple and can be swapped via
- * IScoreCalculationStrategy in the domain service layer (OCP + Strategy).
+ * Score itself has no notion of "how good" a run is — that's a policy
+ * decision, and policies are swappable (Strategy pattern). See
+ * IScoreCalculationStrategy: any comparison or scalar value must go through
+ * a strategy the caller supplies, so two different strategies never
+ * disagree silently by both being baked into this VO at once.
  *
  * Immutable: once created, a Score never changes.
  */
@@ -27,20 +31,8 @@ export class Score {
     return this._timeMs;
   }
 
-  /**
-   * Default scoring: penalise moves (×10) and time (×0.1 ms).
-   * A perfect play with 0 moves/time gives MAX_SAFE_INTEGER-ish value.
-   * The Strategy pattern (IScoreCalculationStrategy) can override this.
-   */
-  value(): number {
-    const BASE = 10_000;
-    const movePenalty = this._moves * 10;
-    const timePenalty = Math.floor(this._timeMs * 0.1);
-    return Math.max(0, BASE - movePenalty - timePenalty);
-  }
-
-  isBetterThan(other: Score): boolean {
-    return this.value() > other.value();
+  isBetterThan(other: Score, strategy: IScoreCalculationStrategy): boolean {
+    return strategy.compute(this) > strategy.compute(other);
   }
 
   equals(other: Score): boolean {

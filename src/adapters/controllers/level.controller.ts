@@ -12,7 +12,7 @@ import {
   NodeDefinition,
   LevelRules,
 } from '../../domain/entities/level-definition.entity';
-import { AuthGuard } from '../../infrastructure/aop/auth.guard';
+import { AuthGuard } from '../aop/auth.guard';
 import { LevelResponseDto, UpsertLevelDto } from '../dtos/level.dto';
 
 @ApiTags('Levels')
