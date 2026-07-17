@@ -15,7 +15,14 @@ export class TypeOrmLeaderboardRepository implements ILeaderboardRepository {
   ) {}
 
   async byLevel(levelId: LevelId): Promise<ScoreEntry[]> {
-    const orms = await this.repo.find({ where: { levelId: levelId.value } });
+    const orms = await this.repo.find({
+      where: { levelId: levelId.value, mode: 'campaign' },
+    });
+    return orms.map(ScoreEntryMapper.toDomain);
+  }
+
+  async bySurvival(): Promise<ScoreEntry[]> {
+    const orms = await this.repo.find({ where: { mode: 'survival' } });
     return orms.map(ScoreEntryMapper.toDomain);
   }
 

@@ -3,6 +3,7 @@ import { ScoreEntry } from '../../domain/entities/score-entry.entity';
 import { ILeaderboardRepository } from '../../domain/ports/leaderboard.repository';
 import { IProgressRepository } from '../../domain/ports/progress.repository';
 import { IScoreCalculationStrategy } from '../../domain/services/score-calculation.strategy';
+import { GameMode } from '../../domain/value-objects/game-mode.vo';
 import { LevelId } from '../../domain/value-objects/level-id.vo';
 import { Score } from '../../domain/value-objects/score.vo';
 import { UserId } from '../../domain/value-objects/user-id.vo';
@@ -38,14 +39,20 @@ export class SubmitScoreUseCase implements UseCase<
     const userId = UserId.create(input.userId);
     const levelId = LevelId.create(input.data.levelId);
     const score = Score.create(input.data.moves, input.data.timeMs);
+    const mode = GameMode.create(input.data.mode ?? 'campaign');
 
-    const entry = ScoreEntry.create(userId, levelId, score);
+    const entry = ScoreEntry.create(userId, levelId, score, mode);
     await this.leaderboardRepo.add(entry);
 
-    const progress =
-      (await this.progressRepo.byUser(userId)) ?? PlayerProgress.create(userId);
-    progress.markCompleted(levelId, score, this.scoring);
-    await this.progressRepo.save(progress);
+    // Only campaign runs feed PlayerProgress.best (and therefore the global
+    // mangos leaderboard) — survival runs must not leak into campaign state.
+    if (!mode.isSurvival()) {
+      const progress =
+        (await this.progressRepo.byUser(userId)) ??
+        PlayerProgress.create(userId);
+      progress.markCompleted(levelId, score, this.scoring);
+      await this.progressRepo.save(progress);
+    }
 
     return {
       userId: entry.userId.value,

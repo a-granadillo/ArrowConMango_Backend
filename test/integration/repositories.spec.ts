@@ -12,6 +12,7 @@ import {
 import { ScoreEntry } from '../../src/domain/entities/score-entry.entity';
 import { MixedScore } from '../../src/domain/services/score-calculation.strategy';
 import { Email } from '../../src/domain/value-objects/email.vo';
+import { GameMode } from '../../src/domain/value-objects/game-mode.vo';
 import { PasswordHash } from '../../src/domain/value-objects/password-hash.vo';
 import { UserId } from '../../src/domain/value-objects/user-id.vo';
 import { LevelId } from '../../src/domain/value-objects/level-id.vo';
@@ -241,9 +242,24 @@ describe('TypeOrmLeaderboardRepository', () => {
     const repo = makeLeaderboardRepo();
     const levelId = LevelId.create('leaderboard-level-1');
     const entries = [
-      ScoreEntry.create(UserId.create('u1'), levelId, Score.create(10, 30_000)),
-      ScoreEntry.create(UserId.create('u2'), levelId, Score.create(3, 5_000)),
-      ScoreEntry.create(UserId.create('u3'), levelId, Score.create(7, 15_000)),
+      ScoreEntry.create(
+        UserId.create('u1'),
+        levelId,
+        Score.create(10, 30_000),
+        GameMode.campaign(),
+      ),
+      ScoreEntry.create(
+        UserId.create('u2'),
+        levelId,
+        Score.create(3, 5_000),
+        GameMode.campaign(),
+      ),
+      ScoreEntry.create(
+        UserId.create('u3'),
+        levelId,
+        Score.create(7, 15_000),
+        GameMode.campaign(),
+      ),
     ];
     for (const e of entries) await repo.add(e);
     // Act
@@ -258,10 +274,20 @@ describe('TypeOrmLeaderboardRepository', () => {
     const levelA = LevelId.create('level-a');
     const levelB = LevelId.create('level-b');
     await repo.add(
-      ScoreEntry.create(UserId.create('u1'), levelA, Score.create(1, 1_000)),
+      ScoreEntry.create(
+        UserId.create('u1'),
+        levelA,
+        Score.create(1, 1_000),
+        GameMode.campaign(),
+      ),
     );
     await repo.add(
-      ScoreEntry.create(UserId.create('u2'), levelB, Score.create(2, 2_000)),
+      ScoreEntry.create(
+        UserId.create('u2'),
+        levelB,
+        Score.create(2, 2_000),
+        GameMode.campaign(),
+      ),
     );
 
     const found = await repo.byLevel(levelA);
@@ -275,7 +301,12 @@ describe('TypeOrmLeaderboardRepository', () => {
     const repo = makeLeaderboardRepo();
     const levelId = LevelId.create('persist-level');
     const userId = UserId.create('persist-user');
-    const entry = ScoreEntry.create(userId, levelId, Score.create(4, 12_000));
+    const entry = ScoreEntry.create(
+      userId,
+      levelId,
+      Score.create(4, 12_000),
+      GameMode.campaign(),
+    );
     // Act
     await repo.add(entry);
     const found = await repo.byLevel(levelId);
@@ -283,5 +314,66 @@ describe('TypeOrmLeaderboardRepository', () => {
     expect(found).toHaveLength(1);
     expect(found[0].score.moves).toBe(4);
     expect(found[0].score.timeMs).toBe(12_000);
+  });
+
+  it('should_exclude_survival_entries_from_byLevel', async () => {
+    const repo = makeLeaderboardRepo();
+    const levelId = LevelId.create('mixed-mode-level');
+    await repo.add(
+      ScoreEntry.create(
+        UserId.create('campaign-player'),
+        levelId,
+        Score.create(5, 10_000),
+        GameMode.campaign(),
+      ),
+    );
+    await repo.add(
+      ScoreEntry.create(
+        UserId.create('survival-player'),
+        levelId,
+        Score.create(2, 3_000),
+        GameMode.survival(),
+      ),
+    );
+
+    const found = await repo.byLevel(levelId);
+
+    expect(found).toHaveLength(1);
+    expect(found[0].userId.value).toBe('campaign-player');
+  });
+
+  it('should_only_return_survival_entries_from_bySurvival', async () => {
+    // Note: this in-memory DataSource is shared across tests in this file
+    // (see repository is "intentionally dumb" comment above), so bySurvival
+    // may include entries from other tests — assert by membership, not
+    // exact length.
+    const repo = makeLeaderboardRepo();
+    const levelId = LevelId.create('bysurvival-level');
+    await repo.add(
+      ScoreEntry.create(
+        UserId.create('campaign-player-bysurvival'),
+        levelId,
+        Score.create(5, 10_000),
+        GameMode.campaign(),
+      ),
+    );
+    await repo.add(
+      ScoreEntry.create(
+        UserId.create('survival-player-bysurvival'),
+        levelId,
+        Score.create(2, 3_000),
+        GameMode.survival(),
+      ),
+    );
+
+    const found = await repo.bySurvival();
+
+    expect(found.every((e) => e.mode.value === 'survival')).toBe(true);
+    expect(
+      found.some((e) => e.userId.value === 'survival-player-bysurvival'),
+    ).toBe(true);
+    expect(
+      found.some((e) => e.userId.value === 'campaign-player-bysurvival'),
+    ).toBe(false);
   });
 });

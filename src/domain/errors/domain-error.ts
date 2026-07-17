@@ -47,6 +47,12 @@ export class UnauthorizedError extends DomainError {
   }
 }
 
+export class InvalidGameModeError extends DomainError {
+  constructor(raw: string) {
+    super(`"${raw}" is not a valid game mode`);
+  }
+}
+
 export class LevelForbiddenError extends DomainError {
   constructor(id: string) {
     super(`You are not the author of level "${id}"`);

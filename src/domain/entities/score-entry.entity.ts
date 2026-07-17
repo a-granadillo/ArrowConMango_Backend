@@ -1,3 +1,4 @@
+import { GameMode } from '../value-objects/game-mode.vo';
 import { LevelId } from '../value-objects/level-id.vo';
 import { Score } from '../value-objects/score.vo';
 import { UserId } from '../value-objects/user-id.vo';
@@ -13,10 +14,16 @@ export class ScoreEntry {
     private readonly _levelId: LevelId,
     private readonly _score: Score,
     private readonly _at: Date,
+    private readonly _mode: GameMode,
   ) {}
 
-  static create(userId: UserId, levelId: LevelId, score: Score): ScoreEntry {
-    return new ScoreEntry(userId, levelId, score, new Date());
+  static create(
+    userId: UserId,
+    levelId: LevelId,
+    score: Score,
+    mode: GameMode,
+  ): ScoreEntry {
+    return new ScoreEntry(userId, levelId, score, new Date(), mode);
   }
 
   /** Rehidrata desde persistencia preservando el timestamp original. */
@@ -25,8 +32,9 @@ export class ScoreEntry {
     levelId: LevelId,
     score: Score,
     at: Date,
+    mode: GameMode,
   ): ScoreEntry {
-    return new ScoreEntry(userId, levelId, score, at);
+    return new ScoreEntry(userId, levelId, score, at, mode);
   }
 
   get userId(): UserId {
@@ -43,5 +51,9 @@ export class ScoreEntry {
 
   get at(): Date {
     return this._at;
+  }
+
+  get mode(): GameMode {
+    return this._mode;
   }
 }
