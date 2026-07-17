@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
+import envConfig from './env.config';
+
 import { AuthController } from '../../adapters/controllers/auth.controller';
 import { LeaderboardController } from '../../adapters/controllers/leaderboard.controller';
 import { LevelController } from '../../adapters/controllers/level.controller';
@@ -40,7 +42,7 @@ import { AuthGuard } from '../aop/auth.guard';
  */
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({ isGlobal: true, load: [envConfig] }),
     DatabaseModule,
     AuthModule,
   ],
