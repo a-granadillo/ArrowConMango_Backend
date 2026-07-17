@@ -73,7 +73,8 @@ export class LeaderboardController {
   @Get()
   @UseInterceptors(new CacheInterceptor(30))
   @ApiOperation({
-    summary: 'Get top scores for a level (deprecated — use GET /leaderboard/:nivel)',
+    summary:
+      'Get top scores for a level (deprecated — use GET /leaderboard/:nivel)',
     deprecated: true,
   })
   @ApiQuery({ name: 'level', required: true, description: 'Level ID' })
@@ -98,8 +99,7 @@ export class LeaderboardController {
   @UseGuards(AuthGuard)
   @ApiBearerAuth()
   @ApiOperation({
-    summary:
-      "Get top scores for a level plus the requesting player's own rank",
+    summary: "Get top scores for a level plus the requesting player's own rank",
   })
   @ApiParam({ name: 'nivel', description: 'Level ID' })
   @ApiQuery({
