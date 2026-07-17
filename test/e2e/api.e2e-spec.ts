@@ -239,6 +239,65 @@ describe('GET /api/v1/levels', () => {
   });
 });
 
+describe('POST /api/v1/levels', () => {
+  it('should_return_401_when_no_token', async () => {
+    const res = await request(app.getHttpServer())
+      .post('/api/v1/levels')
+      .send({
+        name: 'Any Level',
+        difficulty: 'Easy',
+        boardSize: { rows: 2, cols: 2 },
+        arrows: [
+          {
+            id: 'a1',
+            startNode: { row: 0, col: 0 },
+            trajectory: { segments: [{ direction: 'right', length: 2 }] },
+            isSwitchable: false,
+          },
+        ],
+        rules: {},
+      });
+    expect(res.status).toBe(401);
+  });
+
+  it('should_return_422_when_level_has_no_arrows', async () => {
+    const res = await request(app.getHttpServer())
+      .post('/api/v1/levels')
+      .set('Authorization', `Bearer ${bearerToken}`)
+      .send({
+        name: 'Invalid Level',
+        difficulty: 'Easy',
+        boardSize: { rows: 2, cols: 2 },
+        arrows: [],
+        rules: {},
+      });
+    expect(res.status).toBe(422);
+  });
+
+  it('should_return_201_and_a_generated_id_when_valid_level_created', async () => {
+    const res = await request(app.getHttpServer())
+      .post('/api/v1/levels')
+      .set('Authorization', `Bearer ${bearerToken}`)
+      .send({
+        name: 'New Draft Level',
+        difficulty: 'Easy',
+        boardSize: { rows: 2, cols: 2 },
+        arrows: [
+          {
+            id: 'a1',
+            startNode: { row: 0, col: 0 },
+            trajectory: { segments: [{ direction: 'down', length: 2 }] },
+            isSwitchable: false,
+          },
+        ],
+        rules: {},
+      });
+    expect(res.status).toBe(201);
+    expect(res.body.id).toBeDefined();
+    expect(res.body.name).toBe('New Draft Level');
+  });
+});
+
 describe('PUT /api/v1/levels/:id', () => {
   it('should_return_401_when_no_token', async () => {
     const res = await request(app.getHttpServer())
