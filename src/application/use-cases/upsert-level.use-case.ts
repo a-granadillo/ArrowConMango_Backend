@@ -46,6 +46,8 @@ export class UpsertLevelUseCase implements UseCase<
       rules: level.rules,
       version: level.version,
       authorId: level.authorId?.value ?? null,
+      isPublished: level.isPublished,
+      publishedAt: level.publishedAt,
     };
   }
 }

@@ -57,6 +57,8 @@ export class LevelDefinition {
     private readonly _rules: LevelRules,
     private readonly _version: number,
     private readonly _authorId: UserId | null,
+    private readonly _isPublished: boolean,
+    private readonly _publishedAt: Date | null,
   ) {}
 
   static create(
@@ -68,6 +70,8 @@ export class LevelDefinition {
     id?: LevelId,
     version = 1,
     authorId: UserId | null = null,
+    isPublished = false,
+    publishedAt: Date | null = null,
   ): LevelDefinition {
     return new LevelDefinition(
       id ?? LevelId.create(),
@@ -78,6 +82,8 @@ export class LevelDefinition {
       rules,
       version,
       authorId,
+      isPublished,
+      publishedAt,
     );
   }
 
@@ -90,6 +96,8 @@ export class LevelDefinition {
     rules: LevelRules,
     version: number,
     authorId: UserId | null,
+    isPublished: boolean,
+    publishedAt: Date | null,
   ): LevelDefinition {
     return new LevelDefinition(
       id,
@@ -100,6 +108,24 @@ export class LevelDefinition {
       rules,
       version,
       authorId,
+      isPublished,
+      publishedAt,
+    );
+  }
+
+  /** Returns a published copy of this level, stamped with the current time. */
+  publish(): LevelDefinition {
+    return new LevelDefinition(
+      this._id,
+      this._name,
+      this._difficulty,
+      this._boardSize,
+      this._arrows,
+      this._rules,
+      this._version,
+      this._authorId,
+      true,
+      new Date(),
     );
   }
 
@@ -215,5 +241,13 @@ export class LevelDefinition {
 
   get authorId(): UserId | null {
     return this._authorId;
+  }
+
+  get isPublished(): boolean {
+    return this._isPublished;
+  }
+
+  get publishedAt(): Date | null {
+    return this._publishedAt;
   }
 }

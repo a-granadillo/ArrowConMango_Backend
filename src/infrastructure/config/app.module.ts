@@ -15,13 +15,16 @@ import { TypeOrmUserRepository } from '../persistence/typeorm-user.repository';
 
 import { MangoScore } from '../../domain/services/score-calculation.strategy';
 
+import { GetCommunityLevelsUseCase } from '../../application/use-cases/get-community-levels.use-case';
 import { GetGlobalLeaderboardUseCase } from '../../application/use-cases/get-global-leaderboard.use-case';
 import { GetLeaderboardUseCase } from '../../application/use-cases/get-leaderboard.use-case';
 import { GetLevelsUseCase } from '../../application/use-cases/get-levels.use-case';
-import { GetSurvivalLeaderboardUseCase } from '../../application/use-cases/get-survival-leaderboard.use-case';
+import { GetMyLevelsUseCase } from '../../application/use-cases/get-my-levels.use-case';
 import { GetProgressUseCase } from '../../application/use-cases/get-progress.use-case';
+import { GetSurvivalLeaderboardUseCase } from '../../application/use-cases/get-survival-leaderboard.use-case';
 import { GuestLoginUseCase } from '../../application/use-cases/guest-login.use-case';
 import { LoginUseCase } from '../../application/use-cases/login.use-case';
+import { PublishLevelUseCase } from '../../application/use-cases/publish-level.use-case';
 import { RegisterUserUseCase } from '../../application/use-cases/register-user.use-case';
 import { SubmitScoreUseCase } from '../../application/use-cases/submit-score.use-case';
 import { SyncProgressUseCase } from '../../application/use-cases/sync-progress.use-case';
@@ -125,6 +128,21 @@ import { AuthGuard } from '../../adapters/aop/auth.guard';
     {
       provide: UpsertLevelUseCase,
       useFactory: (repo: any) => new UpsertLevelUseCase(repo),
+      inject: [LEVEL_REPOSITORY],
+    },
+    {
+      provide: GetMyLevelsUseCase,
+      useFactory: (repo: any) => new GetMyLevelsUseCase(repo),
+      inject: [LEVEL_REPOSITORY],
+    },
+    {
+      provide: GetCommunityLevelsUseCase,
+      useFactory: (repo: any) => new GetCommunityLevelsUseCase(repo),
+      inject: [LEVEL_REPOSITORY],
+    },
+    {
+      provide: PublishLevelUseCase,
+      useFactory: (repo: any) => new PublishLevelUseCase(repo),
       inject: [LEVEL_REPOSITORY],
     },
     {
