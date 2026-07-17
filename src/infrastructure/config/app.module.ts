@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthController } from '../../adapters/controllers/auth.controller';
 import { LeaderboardController } from '../../adapters/controllers/leaderboard.controller';
 import { LevelController } from '../../adapters/controllers/level.controller';
+import { PlayerController } from '../../adapters/controllers/player.controller';
 import { ProgressController } from '../../adapters/controllers/progress.controller';
 import { TypeOrmLeaderboardRepository } from '../../adapters/repositories/typeorm-leaderboard.repository';
 import { TypeOrmLevelRepository } from '../../adapters/repositories/typeorm-level.repository';
@@ -20,6 +21,7 @@ import { LoginUseCase } from '../../application/use-cases/login.use-case';
 import { RegisterUserUseCase } from '../../application/use-cases/register-user.use-case';
 import { SubmitScoreUseCase } from '../../application/use-cases/submit-score.use-case';
 import { SyncProgressUseCase } from '../../application/use-cases/sync-progress.use-case';
+import { UpdatePlayerNameUseCase } from '../../application/use-cases/update-player-name.use-case';
 import { UpsertLevelUseCase } from '../../application/use-cases/upsert-level.use-case';
 
 import { AuthModule } from '../auth/auth.module';
@@ -52,6 +54,7 @@ import { AuthGuard } from '../aop/auth.guard';
     ProgressController,
     LevelController,
     LeaderboardController,
+    PlayerController,
   ],
   providers: [
     // ── Port → Implementation bindings (Adapter pattern, DIP) ──────────────
@@ -131,6 +134,11 @@ import { AuthGuard } from '../aop/auth.guard';
       useFactory: (leaderboardRepo: any, progressRepo: any, scoring: any) =>
         new SubmitScoreUseCase(leaderboardRepo, progressRepo, scoring),
       inject: [LEADERBOARD_REPOSITORY, PROGRESS_REPOSITORY, SCORE_STRATEGY],
+    },
+    {
+      provide: UpdatePlayerNameUseCase,
+      useFactory: (repo: any) => new UpdatePlayerNameUseCase(repo),
+      inject: [USER_REPOSITORY],
     },
   ],
 })
