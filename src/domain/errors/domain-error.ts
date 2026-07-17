@@ -46,3 +46,9 @@ export class UnauthorizedError extends DomainError {
     super('Authentication required');
   }
 }
+
+export class InvalidGameModeError extends DomainError {
+  constructor(raw: string) {
+    super(`"${raw}" is not a valid game mode`);
+  }
+}

@@ -29,7 +29,12 @@ export class Leaderboard {
     this._entries.push(entry);
   }
 
-  top(strategy: IScoreCalculationStrategy, n = 10): ScoreEntry[] {
+  /**
+   * Every entry, deduplicated to one (best) per user, sorted descending —
+   * the full ranked order, uncut. Used by rankWithSelf to compute a
+   * player's real rank even when they fall outside the top N.
+   */
+  ranked(strategy: IScoreCalculationStrategy): ScoreEntry[] {
     const bestPerUser = new Map<string, ScoreEntry>();
     for (const entry of this._entries) {
       const existing = bestPerUser.get(entry.userId.value);
@@ -38,9 +43,13 @@ export class Leaderboard {
       }
     }
 
-    return [...bestPerUser.values()]
-      .sort((a, b) => strategy.compute(b.score) - strategy.compute(a.score))
-      .slice(0, n);
+    return [...bestPerUser.values()].sort(
+      (a, b) => strategy.compute(b.score) - strategy.compute(a.score),
+    );
+  }
+
+  top(strategy: IScoreCalculationStrategy, n = 10): ScoreEntry[] {
+    return this.ranked(strategy).slice(0, n);
   }
 
   get levelId(): LevelId {
