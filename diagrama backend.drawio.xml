@@ -1,0 +1,986 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net">
+  <diagram name="Arrow con Mango - Diagrama de Clases (Backend API REST) - Clean Architecture + DDD" id="0">
+    <mxGraphModel dx="7945" dy="4855" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="2000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="user" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#FFFAA0;strokeColor=#FFFAA0;fontSize=11;" value="User" vertex="1">
+          <mxGeometry height="130" width="235" x="940" y="2280" as="geometry" />
+        </mxCell>
+        <mxCell id="user_ste" parent="user" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«Aggregate Root»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="user_a0" parent="user" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="- id: UserId" vertex="1">
+          <mxGeometry height="16" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="user_a1" parent="user" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="- email: Email" vertex="1">
+          <mxGeometry height="16" width="235" y="52" as="geometry" />
+        </mxCell>
+        <mxCell id="user_a2" parent="user" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="- pass: PasswordHash" vertex="1">
+          <mxGeometry height="16" width="235" y="68" as="geometry" />
+        </mxCell>
+        <mxCell id="user_a3" parent="user" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="- username" vertex="1">
+          <mxGeometry height="16" width="235" y="84" as="geometry" />
+        </mxCell>
+        <mxCell id="user_sep" parent="user" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="user_m0" parent="user" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ verify(pwd): bool" vertex="1">
+          <mxGeometry height="16" width="235" y="108" as="geometry" />
+        </mxCell>
+        <mxCell id="email" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#FFFAA0;strokeColor=#FFFAA0;fontSize=11;" value="Email" vertex="1">
+          <mxGeometry height="82" width="235" x="-140" y="230" as="geometry" />
+        </mxCell>
+        <mxCell id="email_ste" parent="email" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«Value Object»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="email_a0" parent="email" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="- value" vertex="1">
+          <mxGeometry height="16" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="email_sep" parent="email" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="52" as="geometry" />
+        </mxCell>
+        <mxCell id="email_m0" parent="email" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ isValid(): bool" vertex="1">
+          <mxGeometry height="16" width="235" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="passhash" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#FFFAA0;strokeColor=#FFFAA0;fontSize=11;" value="PasswordHash" vertex="1">
+          <mxGeometry height="66" width="235" x="-400" y="1632" as="geometry" />
+        </mxCell>
+        <mxCell id="passhash_ste" parent="passhash" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«Value Object»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="passhash_a0" parent="passhash" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="- hash" vertex="1">
+          <mxGeometry height="16" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="passhash_sep" parent="passhash" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="52" as="geometry" />
+        </mxCell>
+        <mxCell id="userid" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#FFFAA0;strokeColor=#FFFAA0;fontSize=11;" value="UserId" vertex="1">
+          <mxGeometry height="66" width="235" x="-300" y="1060" as="geometry" />
+        </mxCell>
+        <mxCell id="userid_ste" parent="userid" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«Value Object»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="userid_a0" parent="userid" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="- value" vertex="1">
+          <mxGeometry height="16" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="userid_sep" parent="userid" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="52" as="geometry" />
+        </mxCell>
+        <mxCell id="progressB" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#FFFAA0;strokeColor=#FFFAA0;fontSize=11;" value="PlayerProgress" vertex="1">
+          <mxGeometry height="114" width="235" x="-560" y="1304" as="geometry" />
+        </mxCell>
+        <mxCell id="progressB_ste" parent="progressB" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«Aggregate Root»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="progressB_a0" parent="progressB" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="- userId: UserId" vertex="1">
+          <mxGeometry height="16" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="progressB_a1" parent="progressB" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="- completed: Set" vertex="1">
+          <mxGeometry height="16" width="235" y="52" as="geometry" />
+        </mxCell>
+        <mxCell id="progressB_a2" parent="progressB" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="- best: Map" vertex="1">
+          <mxGeometry height="16" width="235" y="68" as="geometry" />
+        </mxCell>
+        <mxCell id="progressB_sep" parent="progressB" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="84" as="geometry" />
+        </mxCell>
+        <mxCell id="progressB_m0" parent="progressB" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ merge(other)" vertex="1">
+          <mxGeometry height="16" width="235" y="92" as="geometry" />
+        </mxCell>
+        <mxCell id="leveldef" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#FFFAA0;strokeColor=#FFFAA0;fontSize=11;" value="LevelDefinition" vertex="1">
+          <mxGeometry height="130" width="235" x="-360" y="538" as="geometry" />
+        </mxCell>
+        <mxCell id="leveldef_ste" parent="leveldef" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«Aggregate Root»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="leveldef_a0" parent="leveldef" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="- id: LevelId" vertex="1">
+          <mxGeometry height="16" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="leveldef_a1" parent="leveldef" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="- graph: nodes/edges" vertex="1">
+          <mxGeometry height="16" width="235" y="52" as="geometry" />
+        </mxCell>
+        <mxCell id="leveldef_a2" parent="leveldef" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="- rules" vertex="1">
+          <mxGeometry height="16" width="235" y="68" as="geometry" />
+        </mxCell>
+        <mxCell id="leveldef_a3" parent="leveldef" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="- version" vertex="1">
+          <mxGeometry height="16" width="235" y="84" as="geometry" />
+        </mxCell>
+        <mxCell id="leveldef_sep" parent="leveldef" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="leveldef_m0" parent="leveldef" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ validate(): bool" vertex="1">
+          <mxGeometry height="16" width="235" y="108" as="geometry" />
+        </mxCell>
+        <mxCell id="leaderboard" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#FFFAA0;strokeColor=#FFFAA0;fontSize=11;" value="Leaderboard" vertex="1">
+          <mxGeometry height="98" width="235" x="-200" y="828" as="geometry" />
+        </mxCell>
+        <mxCell id="leaderboard_ste" parent="leaderboard" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«Aggregate Root»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="leaderboard_a0" parent="leaderboard" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="- entries: ScoreEntry[*]" vertex="1">
+          <mxGeometry height="16" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="leaderboard_sep" parent="leaderboard" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="52" as="geometry" />
+        </mxCell>
+        <mxCell id="leaderboard_m0" parent="leaderboard" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ top(n): ScoreEntry[]" vertex="1">
+          <mxGeometry height="16" width="235" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="leaderboard_m1" parent="leaderboard" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ submit(e)" vertex="1">
+          <mxGeometry height="16" width="235" y="76" as="geometry" />
+        </mxCell>
+        <mxCell id="scoreentry" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#FFFAA0;strokeColor=#FFFAA0;fontSize=11;" value="ScoreEntry" vertex="1">
+          <mxGeometry height="114" width="235" x="255" y="2430" as="geometry" />
+        </mxCell>
+        <mxCell id="scoreentry_ste" parent="scoreentry" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«Entity»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="scoreentry_a0" parent="scoreentry" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="- userId" vertex="1">
+          <mxGeometry height="16" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="scoreentry_a1" parent="scoreentry" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="- levelId" vertex="1">
+          <mxGeometry height="16" width="235" y="52" as="geometry" />
+        </mxCell>
+        <mxCell id="scoreentry_a2" parent="scoreentry" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="- score: Score" vertex="1">
+          <mxGeometry height="16" width="235" y="68" as="geometry" />
+        </mxCell>
+        <mxCell id="scoreentry_a3" parent="scoreentry" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="- at: DateTime" vertex="1">
+          <mxGeometry height="16" width="235" y="84" as="geometry" />
+        </mxCell>
+        <mxCell id="scoreentry_sep" parent="scoreentry" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="scoreB" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#FFFAA0;strokeColor=#FFFAA0;fontSize=11;" value="Score" vertex="1">
+          <mxGeometry height="98" width="235" x="1170" y="2134" as="geometry" />
+        </mxCell>
+        <mxCell id="scoreB_ste" parent="scoreB" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«Value Object»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="scoreB_a0" parent="scoreB" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="- moves: int" vertex="1">
+          <mxGeometry height="16" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="scoreB_a1" parent="scoreB" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="- timeMs: int" vertex="1">
+          <mxGeometry height="16" width="235" y="52" as="geometry" />
+        </mxCell>
+        <mxCell id="scoreB_sep" parent="scoreB" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="68" as="geometry" />
+        </mxCell>
+        <mxCell id="scoreB_m0" parent="scoreB" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ value(): int" vertex="1">
+          <mxGeometry height="16" width="235" y="76" as="geometry" />
+        </mxCell>
+        <mxCell id="iuserrepo" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#FFFAA0;strokeColor=#FFFAA0;fontSize=11;" value="IUserRepository" vertex="1">
+          <mxGeometry height="82" width="235" x="387.5" y="2031" as="geometry" />
+        </mxCell>
+        <mxCell id="iuserrepo_ste" parent="iuserrepo" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«Port (interface)»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="iuserrepo_sep" parent="iuserrepo" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="iuserrepo_m0" parent="iuserrepo" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ byEmail(e): User" vertex="1">
+          <mxGeometry height="16" width="235" y="44" as="geometry" />
+        </mxCell>
+        <mxCell id="iuserrepo_m1" parent="iuserrepo" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ save(u)" vertex="1">
+          <mxGeometry height="16" width="235" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="iprogrepoB" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#FFFAA0;strokeColor=#FFFAA0;fontSize=11;" value="IProgressRepository" vertex="1">
+          <mxGeometry height="82" width="235" x="450" y="1372" as="geometry" />
+        </mxCell>
+        <mxCell id="iprogrepoB_ste" parent="iprogrepoB" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«Port (interface)»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="iprogrepoB_sep" parent="iprogrepoB" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="iprogrepoB_m0" parent="iprogrepoB" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ byUser(id): Progress" vertex="1">
+          <mxGeometry height="16" width="235" y="44" as="geometry" />
+        </mxCell>
+        <mxCell id="iprogrepoB_m1" parent="iprogrepoB" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ save(p)" vertex="1">
+          <mxGeometry height="16" width="235" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ilevelrepoB" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#FFFAA0;strokeColor=#FFFAA0;fontSize=11;" value="ILevelRepository" vertex="1">
+          <mxGeometry height="82" width="235" x="330" y="1700" as="geometry" />
+        </mxCell>
+        <mxCell id="ilevelrepoB_ste" parent="ilevelrepoB" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«Port (interface)»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="ilevelrepoB_sep" parent="ilevelrepoB" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="ilevelrepoB_m0" parent="ilevelrepoB" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ getAll(): Level[]" vertex="1">
+          <mxGeometry height="16" width="235" y="44" as="geometry" />
+        </mxCell>
+        <mxCell id="ilevelrepoB_m1" parent="ilevelrepoB" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ upsert(l)" vertex="1">
+          <mxGeometry height="16" width="235" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ileadrepoB" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#FFFAA0;strokeColor=#FFFAA0;fontSize=11;" value="ILeaderboardRepository" vertex="1">
+          <mxGeometry height="82" width="235" x="660" y="1521" as="geometry" />
+        </mxCell>
+        <mxCell id="ileadrepoB_ste" parent="ileadrepoB" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«Port (interface)»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="ileadrepoB_sep" parent="ileadrepoB" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="ileadrepoB_m0" parent="ileadrepoB" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ top(level): Score[]" vertex="1">
+          <mxGeometry height="16" width="235" y="44" as="geometry" />
+        </mxCell>
+        <mxCell id="ileadrepoB_m1" parent="ileadrepoB" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ add(e)" vertex="1">
+          <mxGeometry height="16" width="235" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="itoken" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#FFFAA0;strokeColor=#FFFAA0;fontSize=11;" value="ITokenService" vertex="1">
+          <mxGeometry height="82" width="235" x="565" y="2150" as="geometry" />
+        </mxCell>
+        <mxCell id="itoken_ste" parent="itoken" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«Port (interface)»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="itoken_sep" parent="itoken" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="itoken_m0" parent="itoken" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ sign(u): Jwt" vertex="1">
+          <mxGeometry height="16" width="235" y="44" as="geometry" />
+        </mxCell>
+        <mxCell id="itoken_m1" parent="itoken" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ verify(t): UserId" vertex="1">
+          <mxGeometry height="16" width="235" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ihasher" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#FFFAA0;strokeColor=#FFFAA0;fontSize=11;" value="IPasswordHasher" vertex="1">
+          <mxGeometry height="82" width="235" x="1010" y="1891" as="geometry" />
+        </mxCell>
+        <mxCell id="ihasher_ste" parent="ihasher" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«Port (interface)»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="ihasher_sep" parent="ihasher" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="ihasher_m0" parent="ihasher" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ hash(p)" vertex="1">
+          <mxGeometry height="16" width="235" y="44" as="geometry" />
+        </mxCell>
+        <mxCell id="ihasher_m1" parent="ihasher" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ compare(p,h)" vertex="1">
+          <mxGeometry height="16" width="235" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ucregister" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#C3B1E1;strokeColor=#C3B1E1;fontSize=11;" value="RegisterUserUseCase" vertex="1">
+          <mxGeometry height="66" width="235" x="857.5" y="274" as="geometry" />
+        </mxCell>
+        <mxCell id="ucregister_ste" parent="ucregister" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«Use Case»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="ucregister_sep" parent="ucregister" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="ucregister_m0" parent="ucregister" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ execute(dto): User" vertex="1">
+          <mxGeometry height="16" width="235" y="44" as="geometry" />
+        </mxCell>
+        <mxCell id="uclogin" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#C3B1E1;strokeColor=#C3B1E1;fontSize=11;" value="LoginUseCase" vertex="1">
+          <mxGeometry height="66" width="235" x="622.5" y="398" as="geometry" />
+        </mxCell>
+        <mxCell id="uclogin_ste" parent="uclogin" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«Use Case»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="uclogin_sep" parent="uclogin" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="uclogin_m0" parent="uclogin" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ execute(dto): Jwt" vertex="1">
+          <mxGeometry height="16" width="235" y="44" as="geometry" />
+        </mxCell>
+        <mxCell id="ucgetprog" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#C3B1E1;strokeColor=#C3B1E1;fontSize=11;" value="GetProgressUseCase" vertex="1">
+          <mxGeometry height="66" width="235" x="760" y="600" as="geometry" />
+        </mxCell>
+        <mxCell id="ucgetprog_ste" parent="ucgetprog" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«Use Case»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="ucgetprog_sep" parent="ucgetprog" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="ucgetprog_m0" parent="ucgetprog" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ execute(uid): Progress" vertex="1">
+          <mxGeometry height="16" width="235" y="44" as="geometry" />
+        </mxCell>
+        <mxCell id="ucsyncprog" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#C3B1E1;strokeColor=#C3B1E1;fontSize=11;" value="SyncProgressUseCase" vertex="1">
+          <mxGeometry height="66" width="235" x="750" y="762" as="geometry" />
+        </mxCell>
+        <mxCell id="ucsyncprog_ste" parent="ucsyncprog" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«Use Case»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="ucsyncprog_sep" parent="ucsyncprog" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="ucsyncprog_m0" parent="ucsyncprog" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ execute(uid,dto)" vertex="1">
+          <mxGeometry height="16" width="235" y="44" as="geometry" />
+        </mxCell>
+        <mxCell id="ucgetlevels" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#C3B1E1;strokeColor=#C3B1E1;fontSize=11;" value="GetLevelsUseCase" vertex="1">
+          <mxGeometry height="66" width="235" x="430" y="730" as="geometry" />
+        </mxCell>
+        <mxCell id="ucgetlevels_ste" parent="ucgetlevels" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«Use Case»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="ucgetlevels_sep" parent="ucgetlevels" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="ucgetlevels_m0" parent="ucgetlevels" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ execute(): Level[]" vertex="1">
+          <mxGeometry height="16" width="235" y="44" as="geometry" />
+        </mxCell>
+        <mxCell id="ucupsertlevel" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#C3B1E1;strokeColor=#C3B1E1;fontSize=11;" value="UpsertLevelUseCase" vertex="1">
+          <mxGeometry height="66" width="235" x="1010" y="910" as="geometry" />
+        </mxCell>
+        <mxCell id="ucupsertlevel_ste" parent="ucupsertlevel" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«Use Case»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="ucupsertlevel_sep" parent="ucupsertlevel" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="ucupsertlevel_m0" parent="ucupsertlevel" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ execute(dto)" vertex="1">
+          <mxGeometry height="16" width="235" y="44" as="geometry" />
+        </mxCell>
+        <mxCell id="ucgetlead" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#C3B1E1;strokeColor=#C3B1E1;fontSize=11;" value="GetLeaderboardUseCase" vertex="1">
+          <mxGeometry height="66" width="235" x="645" y="910" as="geometry" />
+        </mxCell>
+        <mxCell id="ucgetlead_ste" parent="ucgetlead" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«Use Case»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="ucgetlead_sep" parent="ucgetlead" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="ucgetlead_m0" parent="ucgetlead" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ execute(level): Score[]" vertex="1">
+          <mxGeometry height="16" width="235" y="44" as="geometry" />
+        </mxCell>
+        <mxCell id="ucsubmitscore" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#C3B1E1;strokeColor=#C3B1E1;fontSize=11;" value="SubmitScoreUseCase" vertex="1">
+          <mxGeometry height="66" width="235" x="880" y="1041" as="geometry" />
+        </mxCell>
+        <mxCell id="ucsubmitscore_ste" parent="ucsubmitscore" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«Use Case»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="ucsubmitscore_sep" parent="ucsubmitscore" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="ucsubmitscore_m0" parent="ucsubmitscore" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ execute(uid,dto)" vertex="1">
+          <mxGeometry height="16" width="235" y="44" as="geometry" />
+        </mxCell>
+        <mxCell id="authctrl" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#A7C7E7;strokeColor=#A7C7E7;fontSize=11;" value="AuthController" vertex="1">
+          <mxGeometry height="82" width="235" x="1670" y="192" as="geometry" />
+        </mxCell>
+        <mxCell id="authctrl_ste" parent="authctrl" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«Controller»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="authctrl_sep" parent="authctrl" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="authctrl_m0" parent="authctrl" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ POST /auth/register" vertex="1">
+          <mxGeometry height="16" width="235" y="44" as="geometry" />
+        </mxCell>
+        <mxCell id="authctrl_m1" parent="authctrl" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ POST /auth/login" vertex="1">
+          <mxGeometry height="16" width="235" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="progctrl" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#A7C7E7;strokeColor=#A7C7E7;fontSize=11;" value="ProgressController" vertex="1">
+          <mxGeometry height="82" width="235" x="1190" y="382" as="geometry" />
+        </mxCell>
+        <mxCell id="progctrl_ste" parent="progctrl" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«Controller»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="progctrl_sep" parent="progctrl" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="progctrl_m0" parent="progctrl" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ GET /progress" vertex="1">
+          <mxGeometry height="16" width="235" y="44" as="geometry" />
+        </mxCell>
+        <mxCell id="progctrl_m1" parent="progctrl" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ PUT /progress" vertex="1">
+          <mxGeometry height="16" width="235" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="levelctrl" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#A7C7E7;strokeColor=#A7C7E7;fontSize=11;" value="LevelController" vertex="1">
+          <mxGeometry height="82" width="235" x="1730" y="312" as="geometry" />
+        </mxCell>
+        <mxCell id="levelctrl_ste" parent="levelctrl" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«Controller»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="levelctrl_sep" parent="levelctrl" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="levelctrl_m0" parent="levelctrl" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ GET /levels" vertex="1">
+          <mxGeometry height="16" width="235" y="44" as="geometry" />
+        </mxCell>
+        <mxCell id="levelctrl_m1" parent="levelctrl" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ PUT /levels/{id}" vertex="1">
+          <mxGeometry height="16" width="235" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="leadctrl" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#A7C7E7;strokeColor=#A7C7E7;fontSize=11;" value="LeaderboardController" vertex="1">
+          <mxGeometry height="82" width="235" x="1660" y="456" as="geometry" />
+        </mxCell>
+        <mxCell id="leadctrl_ste" parent="leadctrl" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«Controller»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="leadctrl_sep" parent="leadctrl" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="leadctrl_m0" parent="leadctrl" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ GET /leaderboard" vertex="1">
+          <mxGeometry height="16" width="235" y="44" as="geometry" />
+        </mxCell>
+        <mxCell id="leadctrl_m1" parent="leadctrl" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ POST /leaderboard" vertex="1">
+          <mxGeometry height="16" width="235" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="userrepoimpl" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#A7C7E7;strokeColor=#A7C7E7;fontSize=11;" value="TypeOrmUserRepository" vertex="1">
+          <mxGeometry height="82" width="235" x="1500" y="642" as="geometry" />
+        </mxCell>
+        <mxCell id="userrepoimpl_ste" parent="userrepoimpl" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«Repository impl»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="userrepoimpl_sep" parent="userrepoimpl" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="userrepoimpl_m0" parent="userrepoimpl" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ byEmail()" vertex="1">
+          <mxGeometry height="16" width="235" y="44" as="geometry" />
+        </mxCell>
+        <mxCell id="userrepoimpl_m1" parent="userrepoimpl" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ save()" vertex="1">
+          <mxGeometry height="16" width="235" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="progrepoimpl" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#A7C7E7;strokeColor=#A7C7E7;fontSize=11;" value="TypeOrmProgressRepository" vertex="1">
+          <mxGeometry height="82" width="235" x="1510" y="850" as="geometry" />
+        </mxCell>
+        <mxCell id="progrepoimpl_ste" parent="progrepoimpl" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«Repository impl»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="progrepoimpl_sep" parent="progrepoimpl" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="progrepoimpl_m0" parent="progrepoimpl" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ byUser()" vertex="1">
+          <mxGeometry height="16" width="235" y="44" as="geometry" />
+        </mxCell>
+        <mxCell id="progrepoimpl_m1" parent="progrepoimpl" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ save()" vertex="1">
+          <mxGeometry height="16" width="235" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="levelrepoimpl" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#A7C7E7;strokeColor=#A7C7E7;fontSize=11;" value="TypeOrmLevelRepository" vertex="1">
+          <mxGeometry height="82" width="235" x="1530" y="959" as="geometry" />
+        </mxCell>
+        <mxCell id="levelrepoimpl_ste" parent="levelrepoimpl" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«Repository impl»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="levelrepoimpl_sep" parent="levelrepoimpl" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="levelrepoimpl_m0" parent="levelrepoimpl" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ getAll()" vertex="1">
+          <mxGeometry height="16" width="235" y="44" as="geometry" />
+        </mxCell>
+        <mxCell id="levelrepoimpl_m1" parent="levelrepoimpl" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ upsert()" vertex="1">
+          <mxGeometry height="16" width="235" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="leadrepoimpl" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#A7C7E7;strokeColor=#A7C7E7;fontSize=11;" value="TypeOrmLeaderboardRepository" vertex="1">
+          <mxGeometry height="82" width="235" x="1520" y="1073" as="geometry" />
+        </mxCell>
+        <mxCell id="leadrepoimpl_ste" parent="leadrepoimpl" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«Repository impl»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="leadrepoimpl_sep" parent="leadrepoimpl" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="leadrepoimpl_m0" parent="leadrepoimpl" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ top()" vertex="1">
+          <mxGeometry height="16" width="235" y="44" as="geometry" />
+        </mxCell>
+        <mxCell id="leadrepoimpl_m1" parent="leadrepoimpl" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ add()" vertex="1">
+          <mxGeometry height="16" width="235" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="tokensvc" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#A7C7E7;strokeColor=#A7C7E7;fontSize=11;" value="JwtTokenService" vertex="1">
+          <mxGeometry height="82" width="235" x="1340" y="1710" as="geometry" />
+        </mxCell>
+        <mxCell id="tokensvc_ste" parent="tokensvc" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«Adapter (port impl)»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="tokensvc_sep" parent="tokensvc" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="tokensvc_m0" parent="tokensvc" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ sign()" vertex="1">
+          <mxGeometry height="16" width="235" y="44" as="geometry" />
+        </mxCell>
+        <mxCell id="tokensvc_m1" parent="tokensvc" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ verify()" vertex="1">
+          <mxGeometry height="16" width="235" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="hashersvc" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#A7C7E7;strokeColor=#A7C7E7;fontSize=11;" value="BcryptHasher" vertex="1">
+          <mxGeometry height="82" width="235" x="1135" y="1196" as="geometry" />
+        </mxCell>
+        <mxCell id="hashersvc_ste" parent="hashersvc" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«Adapter (port impl)»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="hashersvc_sep" parent="hashersvc" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="hashersvc_m0" parent="hashersvc" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ hash()" vertex="1">
+          <mxGeometry height="16" width="235" y="44" as="geometry" />
+        </mxCell>
+        <mxCell id="hashersvc_m1" parent="hashersvc" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ compare()" vertex="1">
+          <mxGeometry height="16" width="235" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="usermapper" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#A7C7E7;strokeColor=#A7C7E7;fontSize=11;" value="UserMapper" vertex="1">
+          <mxGeometry height="82" width="235" x="1340" y="1581" as="geometry" />
+        </mxCell>
+        <mxCell id="usermapper_ste" parent="usermapper" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«Mapper»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="usermapper_sep" parent="usermapper" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="usermapper_m0" parent="usermapper" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ toEntity()" vertex="1">
+          <mxGeometry height="16" width="235" y="44" as="geometry" />
+        </mxCell>
+        <mxCell id="usermapper_m1" parent="usermapper" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ toDto()" vertex="1">
+          <mxGeometry height="16" width="235" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="levelmapper" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#A7C7E7;strokeColor=#A7C7E7;fontSize=11;" value="LevelMapper" vertex="1">
+          <mxGeometry height="82" width="235" x="1410" y="1290" as="geometry" />
+        </mxCell>
+        <mxCell id="levelmapper_ste" parent="levelmapper" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«Mapper»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="levelmapper_sep" parent="levelmapper" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="levelmapper_m0" parent="levelmapper" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ toEntity()" vertex="1">
+          <mxGeometry height="16" width="235" y="44" as="geometry" />
+        </mxCell>
+        <mxCell id="levelmapper_m1" parent="levelmapper" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ toDto()" vertex="1">
+          <mxGeometry height="16" width="235" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="progmapper" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#A7C7E7;strokeColor=#A7C7E7;fontSize=11;" value="ProgressMapper" vertex="1">
+          <mxGeometry height="82" width="235" x="1370" y="1438" as="geometry" />
+        </mxCell>
+        <mxCell id="progmapper_ste" parent="progmapper" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«Mapper»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="progmapper_sep" parent="progmapper" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="progmapper_m0" parent="progmapper" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ toEntity()" vertex="1">
+          <mxGeometry height="16" width="235" y="44" as="geometry" />
+        </mxCell>
+        <mxCell id="progmapper_m1" parent="progmapper" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ toDto()" vertex="1">
+          <mxGeometry height="16" width="235" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="authdto" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#A7C7E7;strokeColor=#A7C7E7;fontSize=11;" value="AuthDTO" vertex="1">
+          <mxGeometry height="82" width="235" x="1710" y="1550" as="geometry" />
+        </mxCell>
+        <mxCell id="authdto_ste" parent="authdto" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«DTO»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="authdto_a0" parent="authdto" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="email, password," vertex="1">
+          <mxGeometry height="16" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="authdto_a1" parent="authdto" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="username" vertex="1">
+          <mxGeometry height="16" width="235" y="52" as="geometry" />
+        </mxCell>
+        <mxCell id="authdto_sep" parent="authdto" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="68" as="geometry" />
+        </mxCell>
+        <mxCell id="progdtoB" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#A7C7E7;strokeColor=#A7C7E7;fontSize=11;" value="ProgressDTO" vertex="1">
+          <mxGeometry height="66" width="235" x="1870" y="1420" as="geometry" />
+        </mxCell>
+        <mxCell id="progdtoB_ste" parent="progdtoB" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«DTO»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="progdtoB_a0" parent="progdtoB" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="completed, best" vertex="1">
+          <mxGeometry height="16" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="progdtoB_sep" parent="progdtoB" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="52" as="geometry" />
+        </mxCell>
+        <mxCell id="leveldtoB" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#A7C7E7;strokeColor=#A7C7E7;fontSize=11;" value="LevelDTO" vertex="1">
+          <mxGeometry height="82" width="235" x="1880" y="1222" as="geometry" />
+        </mxCell>
+        <mxCell id="leveldtoB_ste" parent="leveldtoB" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«DTO»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="leveldtoB_a0" parent="leveldtoB" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="nodes, edges," vertex="1">
+          <mxGeometry height="16" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="leveldtoB_a1" parent="leveldtoB" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="rules, version" vertex="1">
+          <mxGeometry height="16" width="235" y="52" as="geometry" />
+        </mxCell>
+        <mxCell id="leveldtoB_sep" parent="leveldtoB" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="68" as="geometry" />
+        </mxCell>
+        <mxCell id="loginterceptor" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#A7C7E7;strokeColor=#A7C7E7;fontSize=11;" value="LoggingInterceptor" vertex="1">
+          <mxGeometry height="66" width="235" x="1880" y="1130" as="geometry" />
+        </mxCell>
+        <mxCell id="loginterceptor_ste" parent="loginterceptor" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«AOP aspect»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="loginterceptor_sep" parent="loginterceptor" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="loginterceptor_m0" parent="loginterceptor" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ intercept(ctx)" vertex="1">
+          <mxGeometry height="16" width="235" y="44" as="geometry" />
+        </mxCell>
+        <mxCell id="authguard" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#A7C7E7;strokeColor=#A7C7E7;fontSize=11;" value="AuthGuard" vertex="1">
+          <mxGeometry height="66" width="235" x="1880" y="1020" as="geometry" />
+        </mxCell>
+        <mxCell id="authguard_ste" parent="authguard" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«AOP aspect (security)»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="authguard_sep" parent="authguard" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="authguard_m0" parent="authguard" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ canActivate(ctx)" vertex="1">
+          <mxGeometry height="16" width="235" y="44" as="geometry" />
+        </mxCell>
+        <mxCell id="exfilter" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#A7C7E7;strokeColor=#A7C7E7;fontSize=11;" value="HttpExceptionFilter" vertex="1">
+          <mxGeometry height="66" width="235" x="1880" y="910" as="geometry" />
+        </mxCell>
+        <mxCell id="exfilter_ste" parent="exfilter" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«AOP aspect»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="exfilter_sep" parent="exfilter" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="exfilter_m0" parent="exfilter" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ catch(err)" vertex="1">
+          <mxGeometry height="16" width="235" y="44" as="geometry" />
+        </mxCell>
+        <mxCell id="cacheinterceptor" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#A7C7E7;strokeColor=#A7C7E7;fontSize=11;" value="CacheInterceptor" vertex="1">
+          <mxGeometry height="66" width="235" x="1860" y="808" as="geometry" />
+        </mxCell>
+        <mxCell id="cacheinterceptor_ste" parent="cacheinterceptor" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«AOP aspect»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="cacheinterceptor_sep" parent="cacheinterceptor" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="cacheinterceptor_m0" parent="cacheinterceptor" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ intercept(ctx)" vertex="1">
+          <mxGeometry height="16" width="235" y="44" as="geometry" />
+        </mxCell>
+        <mxCell id="metricsinterceptor" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#A7C7E7;strokeColor=#A7C7E7;fontSize=11;" value="MetricsInterceptor" vertex="1">
+          <mxGeometry height="66" width="235" x="1940" y="620" as="geometry" />
+        </mxCell>
+        <mxCell id="metricsinterceptor_ste" parent="metricsinterceptor" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«AOP aspect»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="metricsinterceptor_sep" parent="metricsinterceptor" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="metricsinterceptor_m0" parent="metricsinterceptor" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ intercept(ctx)" vertex="1">
+          <mxGeometry height="16" width="235" y="44" as="geometry" />
+        </mxCell>
+        <mxCell id="nest" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#A7C7E7;strokeColor=#A7C7E7;fontSize=11;" value="Nest bootstrap / DI" vertex="1">
+          <mxGeometry height="82" width="235" x="2440" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="nest_ste" parent="nest" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«Composition Root»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="nest_sep" parent="nest" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="nest_m0" parent="nest" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ bootstrap()" vertex="1">
+          <mxGeometry height="16" width="235" y="44" as="geometry" />
+        </mxCell>
+        <mxCell id="nest_m1" parent="nest" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ register()" vertex="1">
+          <mxGeometry height="16" width="235" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="swagger" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#A7C7E7;strokeColor=#A7C7E7;fontSize=11;" value="Swagger / OpenAPI" vertex="1">
+          <mxGeometry height="66" width="235" x="2490" y="154" as="geometry" />
+        </mxCell>
+        <mxCell id="swagger_ste" parent="swagger" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«infra»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="swagger_sep" parent="swagger" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="swagger_m0" parent="swagger" style="text;html=1;align=left;spacingLeft=6;fontSize=10;verticalAlign=middle;" value="+ setup(app)" vertex="1">
+          <mxGeometry height="16" width="235" y="44" as="geometry" />
+        </mxCell>
+        <mxCell id="orm" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#A7C7E7;strokeColor=#A7C7E7;fontSize=11;" value="TypeORM / Prisma" vertex="1">
+          <mxGeometry height="50" width="235" x="2510" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="orm_ste" parent="orm" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«external lib»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="orm_sep" parent="orm" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="db" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#A7C7E7;strokeColor=#A7C7E7;fontSize=11;" value="PostgreSQL" vertex="1">
+          <mxGeometry height="50" width="235" x="2230" y="262" as="geometry" />
+        </mxCell>
+        <mxCell id="db_ste" parent="db" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«external (DB)»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="db_sep" parent="db" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="jwtlib" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#A7C7E7;strokeColor=#A7C7E7;fontSize=11;" value="jsonwebtoken" vertex="1">
+          <mxGeometry height="50" width="235" x="2250" y="398" as="geometry" />
+        </mxCell>
+        <mxCell id="jwtlib_ste" parent="jwtlib" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«external lib»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="jwtlib_sep" parent="jwtlib" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="bcryptlib" parent="1" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;startSize=22;horizontalStack=0;resizeParent=1;collapsible=0;fillColor=#A7C7E7;strokeColor=#A7C7E7;fontSize=11;" value="bcrypt" vertex="1">
+          <mxGeometry height="50" width="235" x="2390" y="712" as="geometry" />
+        </mxCell>
+        <mxCell id="bcryptlib_ste" parent="bcryptlib" style="text;html=1;align=center;fontStyle=2;fontSize=9;verticalAlign=middle;" value="«external lib»" vertex="1">
+          <mxGeometry height="14" width="235" y="22" as="geometry" />
+        </mxCell>
+        <mxCell id="bcryptlib_sep" parent="bcryptlib" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="235" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="e0" edge="1" parent="1" source="user" style="startArrow=diamondThin;startFill=1;endArrow=open;endFill=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="email" value="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="158" y="2390" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="user" style="startArrow=diamondThin;startFill=1;endArrow=open;endFill=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="passhash" value="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="90" y="2350" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="user" style="endArrow=open;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="userid" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="110" y="2320" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="leaderboard" style="startArrow=diamondThin;startFill=1;endArrow=open;endFill=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="scoreentry" value="* entries">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-82" y="1756" />
+              <mxPoint x="300" y="1756" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="scoreentry" style="endArrow=open;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="scoreB" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="1" source="userrepoimpl" style="endArrow=block;endFill=0;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="iuserrepo" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="1" source="progrepoimpl" style="endArrow=block;endFill=0;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="iprogrepoB" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="1" source="levelrepoimpl" style="endArrow=block;endFill=0;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="ilevelrepoB" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="1" source="leadrepoimpl" style="endArrow=block;endFill=0;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="ileadrepoB" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" edge="1" parent="1" source="tokensvc" style="endArrow=block;endFill=0;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;jumpStyle=arc;" target="itoken" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" edge="1" parent="1" source="hashersvc" style="endArrow=block;endFill=0;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="ihasher" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e11" edge="1" parent="1" source="ucregister" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="iuserrepo" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="480" y="307" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e12" edge="1" parent="1" source="ucregister" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="ihasher" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e13" edge="1" parent="1" source="ucregister" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;jumpStyle=arc;" target="user" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="975" y="1310" />
+              <mxPoint x="980" y="1310" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e14" edge="1" parent="1" source="uclogin" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="iuserrepo" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="740" y="1247" />
+              <mxPoint x="410" y="1247" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e15" edge="1" parent="1" source="uclogin" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;jumpStyle=arc;" target="ihasher" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560" y="431" />
+              <mxPoint x="560" y="1931" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e16" edge="1" parent="1" source="uclogin" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="itoken" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="350" y="431" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e17" edge="1" parent="1" source="ucgetprog" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="iprogrepoB" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e18" edge="1" parent="1" source="ucsyncprog" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="iprogrepoB" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e19" edge="1" parent="1" source="ucsyncprog" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="progressB" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e20" edge="1" parent="1" source="ucgetlevels" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="ilevelrepoB" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="608" y="1275" />
+              <mxPoint x="470" y="1275" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e21" edge="1" parent="1" source="ucupsertlevel" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="ilevelrepoB" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="430" y="943" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e22" edge="1" parent="1" source="ucupsertlevel" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="leveldef" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e23" edge="1" parent="1" source="ucgetlead" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="ileadrepoB" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="762" y="1248" />
+              <mxPoint x="690" y="1248" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e24" edge="1" parent="1" source="ucsubmitscore" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="ileadrepoB" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="998" y="1314" />
+              <mxPoint x="720" y="1314" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e25" edge="1" parent="1" source="ucsubmitscore" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="scoreentry" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="280" y="1074" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e26" edge="1" parent="1" source="authctrl" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="ucregister" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e27" edge="1" parent="1" source="authctrl" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="uclogin" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e28" edge="1" parent="1" source="progctrl" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="ucgetprog" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e29" edge="1" parent="1" source="progctrl" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="ucsyncprog" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e30" edge="1" parent="1" source="levelctrl" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="ucgetlevels" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e31" edge="1" parent="1" source="levelctrl" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="ucupsertlevel" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e32" edge="1" parent="1" source="leadctrl" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="ucgetlead" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="740" y="497" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e33" edge="1" parent="1" source="leadctrl" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="ucsubmitscore" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e34" edge="1" parent="1" source="loginterceptor" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="progctrl" value="intercepts">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e35" edge="1" parent="1" source="authguard" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="progctrl" value="guards">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e36" edge="1" parent="1" source="authguard" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="levelctrl" value="guards">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e37" edge="1" parent="1" source="exfilter" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="leadctrl" value="filters">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e38" edge="1" parent="1" source="cacheinterceptor" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="ucgetlead" value="caches">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e39" edge="1" parent="1" source="metricsinterceptor" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="ucgetlevels" value="profiles">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e40" edge="1" parent="1" source="usermapper" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;jumpStyle=arc;" target="user" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="810" y="1621" />
+              <mxPoint x="810" y="2330" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e41" edge="1" parent="1" source="usermapper" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="authdto" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e42" edge="1" parent="1" source="levelmapper" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="leveldef" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="250" y="1331" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e43" edge="1" parent="1" source="levelmapper" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="leveldtoB" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e44" edge="1" parent="1" source="progmapper" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="progressB" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="120" y="1479" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e45" edge="1" parent="1" source="progmapper" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="progdtoB" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e46" edge="1" parent="1" source="userrepoimpl" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="orm" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1617" y="600" />
+              <mxPoint x="2627" y="600" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e47" edge="1" parent="1" source="progrepoimpl" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="orm" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e48" edge="1" parent="1" source="levelrepoimpl" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="orm" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e49" edge="1" parent="1" source="leadrepoimpl" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="orm" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e50" edge="1" parent="1" source="orm" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="db" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e51" edge="1" parent="1" source="tokensvc" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="jwtlib" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e52" edge="1" parent="1" source="hashersvc" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="bcryptlib" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e53" edge="1" parent="1" source="nest" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="authctrl" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e54" edge="1" parent="1" source="nest" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="userrepoimpl" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e55" edge="1" parent="1" source="nest" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="tokensvc" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2558" y="130" />
+              <mxPoint x="1458" y="130" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e56" edge="1" parent="1" source="swagger" style="endArrow=open;dashed=1;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="authctrl" value="documents">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lg" parent="1" style="text;html=1;align=center;fontSize=36;fontStyle=1;" value="Arrow con Mango - Diagrama de Clases (Backend API REST) - Clean Architecture + DDD&lt;div&gt;Leyenda de capas (color):&lt;/div&gt;&lt;div&gt;Amarillo=Dominio&lt;/div&gt;&lt;div&gt;Morado=Aplicacion&lt;/div&gt;&lt;div&gt;Azul=Adaptadores&lt;/div&gt;&lt;div&gt;Azul=Frameworks&lt;/div&gt;" vertex="1">
+          <mxGeometry height="310" width="1550" x="25" y="-150" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
