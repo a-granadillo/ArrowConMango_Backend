@@ -13,5 +13,7 @@ export interface ILeaderboardRepository {
   byLevel(levelId: LevelId): Promise<ScoreEntry[]>;
   /** All survival entries across every player, unordered. */
   bySurvival(): Promise<ScoreEntry[]>;
+  /** All hexagonal-mode entries across every player, unordered. */
+  byHexagonal(): Promise<ScoreEntry[]>;
   add(entry: ScoreEntry): Promise<void>;
 }

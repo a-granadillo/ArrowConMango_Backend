@@ -11,9 +11,13 @@ export class LevelDefinitionOrmEntity {
   @Column()
   difficulty!: string;
 
-  /** BoardSize serialized as JSON. */
+  /** Board coordinate system: 'grid2d' (rectangular) or 'hex' (hexagonal). */
+  @Column({ type: 'varchar', default: 'grid2d' })
+  shape!: string;
+
+  /** AnyBoardSize serialized as JSON — {rows,cols} for grid2d, {radius} for hex. */
   @Column({ type: 'simple-json' })
-  boardSize!: { rows: number; cols: number };
+  boardSize!: { rows?: number; cols?: number; radius?: number };
 
   /** ArrowDefinition[] serialized as JSON. */
   @Column({ type: 'simple-json' })

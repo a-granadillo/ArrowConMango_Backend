@@ -28,6 +28,7 @@ export class GetCommunityLevelsUseCase implements UseCase<
       authorId: l.authorId?.value ?? null,
       isPublished: l.isPublished,
       publishedAt: l.publishedAt,
+      shape: l.shape,
     }));
   }
 }

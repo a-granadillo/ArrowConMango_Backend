@@ -44,8 +44,10 @@ export class SubmitScoreUseCase implements UseCase<
     const entry = ScoreEntry.create(userId, levelId, score, mode);
     await this.leaderboardRepo.add(entry);
 
-    // Only campaign runs feed PlayerProgress.best (and therefore the global
-    // mangos leaderboard) — survival runs must not leak into campaign state.
+    // Campaign and hexagonal runs feed PlayerProgress.best (and therefore the
+    // global mangos leaderboard) — only survival runs must not leak into
+    // campaign state, since survival levels are endless/generated and share
+    // no stable levelId with the campaign catalogue.
     if (!mode.isSurvival()) {
       const progress =
         (await this.progressRepo.byUser(userId)) ??

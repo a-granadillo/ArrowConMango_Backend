@@ -1,0 +1,163 @@
+[
+  {
+    "id": "hex-001",
+    "name": "Panal Verde",
+    "difficulty": "Easy",
+    "shape": "hex",
+    "boardSize": { "radius": 1 },
+    "arrows": [
+      {
+        "id": "h1a",
+        "startNode": { "q": 0, "r": 0 },
+        "trajectory": { "segments": [{ "direction": "n", "length": 1 }] },
+        "isSwitchable": false
+      },
+      {
+        "id": "h1b",
+        "startNode": { "q": 1, "r": 0 },
+        "trajectory": { "segments": [{ "direction": "sw", "length": 1 }] },
+        "isSwitchable": false
+      }
+    ],
+    "rules": { "timeLimitSeconds": null, "maxMistakes": null, "allowRotation": true },
+    "version": 1,
+    "authorId": null
+  },
+  {
+    "id": "hex-002",
+    "name": "Panal Amarillo",
+    "difficulty": "Easy",
+    "shape": "hex",
+    "boardSize": { "radius": 1 },
+    "arrows": [
+      {
+        "id": "h2a",
+        "startNode": { "q": 0, "r": 0 },
+        "trajectory": { "segments": [{ "direction": "n", "length": 1 }] },
+        "isSwitchable": false
+      },
+      {
+        "id": "h2b",
+        "startNode": { "q": 1, "r": 0 },
+        "trajectory": { "segments": [{ "direction": "sw", "length": 1 }] },
+        "isSwitchable": false
+      },
+      {
+        "id": "h2c",
+        "startNode": { "q": -1, "r": 1 },
+        "trajectory": { "segments": [{ "direction": "ne", "length": 1 }] },
+        "isSwitchable": false
+      }
+    ],
+    "rules": { "timeLimitSeconds": null, "maxMistakes": null, "allowRotation": true },
+    "version": 1,
+    "authorId": null
+  },
+  {
+    "id": "hex-003",
+    "name": "Colmena Naranja",
+    "difficulty": "Medium",
+    "shape": "hex",
+    "boardSize": { "radius": 2 },
+    "arrows": [
+      {
+        "id": "h3a",
+        "startNode": { "q": 0, "r": 0 },
+        "trajectory": { "segments": [{ "direction": "se", "length": 2 }] },
+        "isSwitchable": false
+      },
+      {
+        "id": "h3b",
+        "startNode": { "q": -2, "r": 2 },
+        "trajectory": { "segments": [{ "direction": "ne", "length": 1 }] },
+        "isSwitchable": false
+      },
+      {
+        "id": "h3c",
+        "startNode": { "q": 2, "r": -2 },
+        "trajectory": { "segments": [{ "direction": "nw", "length": 2 }] },
+        "isSwitchable": false
+      }
+    ],
+    "rules": { "timeLimitSeconds": null, "maxMistakes": null, "allowRotation": true },
+    "version": 1,
+    "authorId": null
+  },
+  {
+    "id": "hex-004",
+    "name": "Colmena Roja",
+    "difficulty": "Medium",
+    "shape": "hex",
+    "boardSize": { "radius": 2 },
+    "arrows": [
+      {
+        "id": "h4a",
+        "startNode": { "q": 0, "r": 0 },
+        "trajectory": {
+          "segments": [
+            { "direction": "se", "length": 2 },
+            { "direction": "n", "length": 1 }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h4b",
+        "startNode": { "q": -1, "r": 1 },
+        "trajectory": { "segments": [{ "direction": "s", "length": 1 }] },
+        "isSwitchable": false
+      },
+      {
+        "id": "h4c",
+        "startNode": { "q": 0, "r": -2 },
+        "trajectory": { "segments": [{ "direction": "se", "length": 1 }] },
+        "isSwitchable": true
+      }
+    ],
+    "rules": { "timeLimitSeconds": null, "maxMistakes": null, "allowRotation": true },
+    "version": 1,
+    "authorId": null
+  },
+  {
+    "id": "hex-005",
+    "name": "Panal Mango",
+    "difficulty": "Hard",
+    "shape": "hex",
+    "boardSize": { "radius": 3 },
+    "arrows": [
+      {
+        "id": "h5a",
+        "startNode": { "q": 0, "r": 0 },
+        "trajectory": { "segments": [{ "direction": "n", "length": 3 }] },
+        "isSwitchable": false
+      },
+      {
+        "id": "h5b",
+        "startNode": { "q": 3, "r": 0 },
+        "trajectory": { "segments": [{ "direction": "nw", "length": 1 }] },
+        "isSwitchable": false
+      },
+      {
+        "id": "h5c",
+        "startNode": { "q": -3, "r": 3 },
+        "trajectory": { "segments": [{ "direction": "ne", "length": 1 }] },
+        "isSwitchable": false
+      },
+      {
+        "id": "h5d",
+        "startNode": { "q": 0, "r": 3 },
+        "trajectory": { "segments": [{ "direction": "n", "length": 2 }] },
+        "isSwitchable": true
+      },
+      {
+        "id": "h5e",
+        "startNode": { "q": 2, "r": -3 },
+        "trajectory": { "segments": [{ "direction": "se", "length": 1 }] },
+        "isSwitchable": false
+      }
+    ],
+    "rules": { "timeLimitSeconds": 90, "maxMistakes": null, "allowRotation": true },
+    "version": 1,
+    "authorId": null
+  }
+]

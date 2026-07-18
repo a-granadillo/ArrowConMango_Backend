@@ -225,6 +225,62 @@ describe('TypeOrmLevelRepository', () => {
     const result = await repo.getById(LevelId.create('nonexistent'));
     expect(result).toBeNull();
   });
+
+  it('should_round_trip_a_hexagonal_level_through_simple_json_columns', async () => {
+    // Arrange — hex boardSize {radius} and axial startNode {q,r} live in the
+    // same simple-json columns as the rectangular shape; `shape` is the only
+    // new column, so this proves the extension needs no schema migration.
+    const repo = makeLevelRepo();
+    const levelId = LevelId.create('test-hex-level-1');
+    const level = LevelDefinition.create(
+      'Hex Level',
+      'Easy',
+      { radius: 2 },
+      [
+        {
+          id: 'h1',
+          startNode: { q: 0, r: 0 },
+          trajectory: { segments: [{ direction: 'se', length: 2 }] },
+          isSwitchable: false,
+        },
+      ],
+      {},
+      levelId,
+      1,
+      null,
+      undefined,
+      undefined,
+      'hex',
+    );
+    // Act
+    await repo.upsert(level);
+    const found = await repo.getById(levelId);
+    // Assert
+    expect(found).not.toBeNull();
+    expect(found!.shape).toBe('hex');
+    expect(found!.boardSize).toEqual({ radius: 2 });
+    expect(found!.arrows[0].startNode).toEqual({ q: 0, r: 0 });
+    expect(found!.validate()).toBe(true);
+  });
+
+  it('should_default_shape_to_grid2d_for_pre_existing_rows', async () => {
+    // Simulates a level persisted before the `shape` column existed —
+    // sqlite's synchronize adds the column with a default, so old rows are
+    // backward-compatible without a data migration.
+    const repo = makeLevelRepo();
+    const levelId = LevelId.create('test-legacy-level');
+    const level = LevelDefinition.create(
+      'Legacy',
+      'Easy',
+      BOARD_SIZE,
+      VALID_ARROWS,
+      {},
+      levelId,
+    );
+    await repo.upsert(level);
+    const found = await repo.getById(levelId);
+    expect(found!.shape).toBe('grid2d');
+  });
 });
 
 // ─── LeaderboardRepository ─────────────────────────────────────────────────
@@ -374,6 +430,37 @@ describe('TypeOrmLeaderboardRepository', () => {
     ).toBe(true);
     expect(
       found.some((e) => e.userId.value === 'campaign-player-bysurvival'),
+    ).toBe(false);
+  });
+
+  it('should_only_return_hexagonal_entries_from_byHexagonal', async () => {
+    const repo = makeLeaderboardRepo();
+    const levelId = LevelId.create('byhexagonal-level');
+    await repo.add(
+      ScoreEntry.create(
+        UserId.create('campaign-player-byhexagonal'),
+        levelId,
+        Score.create(5, 10_000),
+        GameMode.campaign(),
+      ),
+    );
+    await repo.add(
+      ScoreEntry.create(
+        UserId.create('hexagonal-player-byhexagonal'),
+        levelId,
+        Score.create(2, 3_000),
+        GameMode.hexagonal(),
+      ),
+    );
+
+    const found = await repo.byHexagonal();
+
+    expect(found.every((e) => e.mode.value === 'hexagonal')).toBe(true);
+    expect(
+      found.some((e) => e.userId.value === 'hexagonal-player-byhexagonal'),
+    ).toBe(true);
+    expect(
+      found.some((e) => e.userId.value === 'campaign-player-byhexagonal'),
     ).toBe(false);
   });
 });

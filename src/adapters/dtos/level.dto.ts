@@ -9,36 +9,71 @@ import {
   IsOptional,
   IsString,
   Min,
+  ValidateIf,
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
-export class BoardSizeDto {
-  @ApiProperty()
-  @IsInt()
-  @Min(1)
-  rows!: number;
+const CARDINAL_DIRECTIONS = ['up', 'down', 'left', 'right'] as const;
+const HEX_DIRECTIONS = ['n', 'ne', 'se', 's', 'sw', 'nw'] as const;
+const BOARD_SHAPES = ['grid2d', 'hex'] as const;
 
-  @ApiProperty()
+/**
+ * Rectangular boards carry {rows, cols}; hexagonal boards carry {radius}
+ * instead — the two are mutually exclusive, discriminated by the level's
+ * `shape` field (see UpsertLevelDto.shape).
+ */
+export class BoardSizeDto {
+  @ApiPropertyOptional({ description: 'Required when shape is "grid2d"' })
+  @ValidateIf((o: BoardSizeDto) => o.radius === undefined)
   @IsInt()
   @Min(1)
-  cols!: number;
+  rows?: number;
+
+  @ApiPropertyOptional({ description: 'Required when shape is "grid2d"' })
+  @ValidateIf((o: BoardSizeDto) => o.radius === undefined)
+  @IsInt()
+  @Min(1)
+  cols?: number;
+
+  @ApiPropertyOptional({ description: 'Required when shape is "hex"' })
+  @ValidateIf((o: BoardSizeDto) => o.rows === undefined)
+  @IsInt()
+  @Min(0)
+  radius?: number;
 }
 
+/**
+ * Rectangular nodes carry {row, col}; hexagonal (axial) nodes carry {q, r}
+ * instead — mutually exclusive, per the level's `shape`.
+ */
 export class BoardNodeDto {
-  @ApiProperty()
+  @ApiPropertyOptional({ description: 'Required when shape is "grid2d"' })
+  @ValidateIf((o: BoardNodeDto) => o.q === undefined)
   @IsInt()
-  row!: number;
+  row?: number;
 
-  @ApiProperty()
+  @ApiPropertyOptional({ description: 'Required when shape is "grid2d"' })
+  @ValidateIf((o: BoardNodeDto) => o.r === undefined)
   @IsInt()
-  col!: number;
+  col?: number;
+
+  @ApiPropertyOptional({ description: 'Required when shape is "hex"' })
+  @ValidateIf((o: BoardNodeDto) => o.row === undefined)
+  @IsInt()
+  q?: number;
+
+  @ApiPropertyOptional({ description: 'Required when shape is "hex"' })
+  @ValidateIf((o: BoardNodeDto) => o.col === undefined)
+  @IsInt()
+  r?: number;
 }
 
 export class TrajectorySegmentDto {
-  @ApiProperty({ enum: ['up', 'down', 'left', 'right'] })
-  @IsIn(['up', 'down', 'left', 'right'])
-  direction!: 'up' | 'down' | 'left' | 'right';
+  @ApiProperty({ enum: [...CARDINAL_DIRECTIONS, ...HEX_DIRECTIONS] })
+  @IsIn([...CARDINAL_DIRECTIONS, ...HEX_DIRECTIONS])
+  direction!:
+    (typeof CARDINAL_DIRECTIONS)[number] | (typeof HEX_DIRECTIONS)[number];
 
   @ApiProperty()
   @IsInt()
@@ -107,6 +142,14 @@ export class UpsertLevelDto {
   @IsString()
   difficulty!: string;
 
+  @ApiPropertyOptional({
+    description: 'Board coordinate system (defaults to "grid2d")',
+    enum: BOARD_SHAPES,
+  })
+  @IsOptional()
+  @IsIn(BOARD_SHAPES)
+  shape?: (typeof BOARD_SHAPES)[number];
+
   @ApiProperty()
   @ValidateNested()
   @Type(() => BoardSizeDto)
@@ -140,8 +183,11 @@ export class LevelResponseDto {
   @ApiProperty()
   difficulty!: string;
 
+  @ApiProperty({ enum: BOARD_SHAPES })
+  shape!: (typeof BOARD_SHAPES)[number];
+
   @ApiProperty()
-  boardSize!: { rows: number; cols: number };
+  boardSize!: { rows?: number; cols?: number; radius?: number };
 
   @ApiProperty()
   arrows!: unknown[];

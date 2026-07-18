@@ -1,6 +1,10 @@
-import { InvalidEmailError } from '../../../src/domain/errors/domain-error';
+import {
+  InvalidEmailError,
+  InvalidGameModeError,
+} from '../../../src/domain/errors/domain-error';
 import { MixedScore } from '../../../src/domain/services/score-calculation.strategy';
 import { Email } from '../../../src/domain/value-objects/email.vo';
+import { GameMode } from '../../../src/domain/value-objects/game-mode.vo';
 import { LevelId } from '../../../src/domain/value-objects/level-id.vo';
 import { MangoRating } from '../../../src/domain/value-objects/mango-rating.vo';
 import { PasswordHash } from '../../../src/domain/value-objects/password-hash.vo';
@@ -62,6 +66,26 @@ describe('Value Objects', () => {
     it('should_preserve_provided_value', () => {
       const id = LevelId.create('level-001');
       expect(id.value).toBe('level-001');
+    });
+  });
+
+  // ─── GameMode ─────────────────────────────────────────────────────────────
+  describe('GameMode', () => {
+    it('should_create_hexagonal_mode_when_value_is_hexagonal', () => {
+      const mode = GameMode.create('hexagonal');
+      expect(mode.value).toBe('hexagonal');
+      expect(mode.isHexagonal()).toBe(true);
+      expect(mode.isSurvival()).toBe(false);
+    });
+
+    it('should_expose_hexagonal_via_static_factory', () => {
+      expect(GameMode.hexagonal().isHexagonal()).toBe(true);
+    });
+
+    it('should_throw_InvalidGameModeError_when_value_is_unknown', () => {
+      expect(() => GameMode.create('unknown-mode')).toThrow(
+        InvalidGameModeError,
+      );
     });
   });
 

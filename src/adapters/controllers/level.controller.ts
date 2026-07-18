@@ -21,6 +21,7 @@ import { GetLevelsUseCase } from '../../application/use-cases/get-levels.use-cas
 import { GetMyLevelsUseCase } from '../../application/use-cases/get-my-levels.use-case';
 import { PublishLevelUseCase } from '../../application/use-cases/publish-level.use-case';
 import { UpsertLevelUseCase } from '../../application/use-cases/upsert-level.use-case';
+import { UpsertLevelInput } from '../../application/dtos/level.dto';
 import { AuthGuard } from '../aop/auth.guard';
 import { CurrentUser } from '../decorators/current-user.decorator';
 import { LevelResponseDto, UpsertLevelDto } from '../dtos/level.dto';
@@ -38,9 +39,17 @@ export class LevelController {
 
   @Get()
   @ApiOperation({ summary: 'Get all available levels' })
+  @ApiQuery({
+    name: 'shape',
+    required: false,
+    enum: ['grid2d', 'hex'],
+    description: 'Filter by board shape (e.g. "hex")',
+  })
   @ApiResponse({ status: 200, type: [LevelResponseDto] })
-  async getAll(): Promise<LevelResponseDto[]> {
-    const result = await this.getLevels.execute();
+  async getAll(
+    @Query('shape') shape?: 'grid2d' | 'hex',
+  ): Promise<LevelResponseDto[]> {
+    const result = await this.getLevels.execute(shape ? { shape } : undefined);
     return result as unknown as LevelResponseDto[];
   }
 
@@ -81,12 +90,13 @@ export class LevelController {
       id: dto.id,
       name: dto.name,
       difficulty: dto.difficulty,
+      shape: dto.shape,
       boardSize: dto.boardSize,
       arrows: dto.arrows,
       rules: dto.rules ?? {},
       version: dto.version,
       authorId: userId,
-    });
+    } as unknown as UpsertLevelInput);
     return result as unknown as LevelResponseDto;
   }
 
@@ -122,12 +132,13 @@ export class LevelController {
       id,
       name: dto.name,
       difficulty: dto.difficulty,
+      shape: dto.shape,
       boardSize: dto.boardSize,
       arrows: dto.arrows,
       rules: dto.rules ?? {},
       version: dto.version,
       authorId: userId,
-    });
+    } as unknown as UpsertLevelInput);
     return result as unknown as LevelResponseDto;
   }
 }

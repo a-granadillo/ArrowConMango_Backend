@@ -19,11 +19,12 @@ const ds = new DataSource({
   synchronize: true,
 });
 
-interface CampaignLevelJson {
+interface LevelJson {
   id: string;
   name: string;
   difficulty: string;
-  boardSize: { rows: number; cols: number };
+  shape?: 'grid2d' | 'hex';
+  boardSize: { rows?: number; cols?: number; radius?: number };
   arrows: unknown[];
   rules: Record<string, unknown>;
   version: number;
@@ -33,21 +34,32 @@ interface CampaignLevelJson {
 // Frozen artifact exported by the frontend's tool/export_levels.dart —
 // byte-identical to assets/levels/campaign_levels.json. Re-copy that file
 // here (do not hand-edit) whenever the campaign levels change.
-const LEVELS: CampaignLevelJson[] = JSON.parse(
+const CAMPAIGN_LEVELS: LevelJson[] = JSON.parse(
   fs.readFileSync(
     path.join(__dirname, 'seed-data', 'campaign-levels.json'),
     'utf-8',
   ),
-) as CampaignLevelJson[];
+) as LevelJson[];
+
+// Hand-authored hexagonal-mode catalogue (pointy-top, axial coordinates).
+const HEXAGONAL_LEVELS: LevelJson[] = JSON.parse(
+  fs.readFileSync(
+    path.join(__dirname, 'seed-data', 'hexagonal-levels.json'),
+    'utf-8',
+  ),
+) as LevelJson[];
 
 async function seed(): Promise<void> {
   await ds.initialize();
   const repo = ds.getRepository(LevelDefinitionOrmEntity);
 
-  for (const level of LEVELS) {
+  for (const level of [...CAMPAIGN_LEVELS, ...HEXAGONAL_LEVELS]) {
     const existing = await repo.findOne({ where: { id: level.id } });
     if (!existing) {
-      await repo.save(level as unknown as LevelDefinitionOrmEntity);
+      await repo.save({
+        ...level,
+        shape: level.shape ?? 'grid2d',
+      } as unknown as LevelDefinitionOrmEntity);
       console.log(`Seeded level: ${level.id} (${level.name})`);
     } else {
       console.log(`Level ${level.id} already exists, skipping.`);

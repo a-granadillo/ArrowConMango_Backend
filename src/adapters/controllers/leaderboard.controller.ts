@@ -17,6 +17,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { GetGlobalLeaderboardUseCase } from '../../application/use-cases/get-global-leaderboard.use-case';
+import { GetHexagonalLeaderboardUseCase } from '../../application/use-cases/get-hexagonal-leaderboard.use-case';
 import { GetLeaderboardUseCase } from '../../application/use-cases/get-leaderboard.use-case';
 import { SubmitScoreUseCase } from '../../application/use-cases/submit-score.use-case';
 import { AuthGuard } from '../aop/auth.guard';
@@ -35,6 +36,7 @@ export class LeaderboardController {
     private readonly getLeaderboard: GetLeaderboardUseCase,
     private readonly submitScore: SubmitScoreUseCase,
     private readonly getGlobalLeaderboard: GetGlobalLeaderboardUseCase,
+    private readonly getHexagonalLeaderboard: GetHexagonalLeaderboardUseCase,
   ) {}
 
   // Not cached: CacheInterceptor keys by req.url only (no auth awareness),
@@ -58,6 +60,27 @@ export class LeaderboardController {
     return this.getGlobalLeaderboard.execute({
       top: top ? parseInt(top, 10) : undefined,
       currentUserId: userId,
+    });
+  }
+
+  // NOTE: this literal route must stay declared before any future dynamic
+  // route on this controller (e.g. `:nivel`/`:levelId`) — Nest matches routes
+  // in declaration order, so a dynamic segment declared first would swallow
+  // this path.
+  @Get('hexagonal')
+  @UseInterceptors(new CacheInterceptor(30))
+  @ApiOperation({ summary: 'Get the global hexagonal-mode leaderboard' })
+  @ApiQuery({
+    name: 'top',
+    required: false,
+    description: 'Number of entries (default 20)',
+  })
+  @ApiResponse({ status: 200, type: [ScoreEntryResponseDto] })
+  async getHexagonal(
+    @Query('top') top?: string,
+  ): Promise<ScoreEntryResponseDto[]> {
+    return this.getHexagonalLeaderboard.execute({
+      top: top ? parseInt(top, 10) : undefined,
     });
   }
 

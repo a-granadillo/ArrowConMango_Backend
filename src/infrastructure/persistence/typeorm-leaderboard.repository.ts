@@ -26,6 +26,11 @@ export class TypeOrmLeaderboardRepository implements ILeaderboardRepository {
     return orms.map(ScoreEntryMapper.toDomain);
   }
 
+  async byHexagonal(): Promise<ScoreEntry[]> {
+    const orms = await this.repo.find({ where: { mode: 'hexagonal' } });
+    return orms.map(ScoreEntryMapper.toDomain);
+  }
+
   async add(entry: ScoreEntry): Promise<void> {
     await this.repo.save(ScoreEntryMapper.toOrm(entry));
   }

@@ -29,6 +29,7 @@ let bearerToken: string;
 let ds: DataSource;
 
 const LEVEL_ID = 'e2e-level-001';
+const HEX_LEVEL_ID = 'e2e-hex-level-001';
 
 beforeAll(async () => {
   const moduleRef = await Test.createTestingModule({
@@ -45,17 +46,41 @@ beforeAll(async () => {
   // Seed a valid level
   ds = moduleRef.get<DataSource>(getDataSourceToken());
   await ds.query(
-    `INSERT OR IGNORE INTO level_definitions (id, name, difficulty, boardSize, arrows, rules, version, authorId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+    `INSERT OR IGNORE INTO level_definitions (id, name, difficulty, shape, boardSize, arrows, rules, version, authorId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       LEVEL_ID,
       'E2E Level',
       'Easy',
+      'grid2d',
       JSON.stringify({ rows: 2, cols: 2 }),
       JSON.stringify([
         {
           id: 'a1',
           startNode: { row: 0, col: 0 },
           trajectory: { segments: [{ direction: 'right', length: 2 }] },
+          isSwitchable: false,
+        },
+      ]),
+      JSON.stringify({}),
+      1,
+      null,
+    ],
+  );
+
+  // Seed a valid hexagonal level
+  await ds.query(
+    `INSERT OR IGNORE INTO level_definitions (id, name, difficulty, shape, boardSize, arrows, rules, version, authorId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [
+      HEX_LEVEL_ID,
+      'E2E Hex Level',
+      'Easy',
+      'hex',
+      JSON.stringify({ radius: 1 }),
+      JSON.stringify([
+        {
+          id: 'h1',
+          startNode: { q: 0, r: 0 },
+          trajectory: { segments: [{ direction: 'n', length: 1 }] },
           isSwitchable: false,
         },
       ]),
@@ -261,6 +286,21 @@ describe('GET /api/v1/levels', () => {
     );
     expect(found).toBeDefined();
   });
+
+  it('should_return_only_hexagonal_levels_when_shape_query_is_hex', async () => {
+    const res = await request(app.getHttpServer()).get(
+      '/api/v1/levels?shape=hex',
+    );
+    expect(res.status).toBe(200);
+    const ids = (res.body as Array<{ id: string; shape: string }>).map(
+      (l) => l.id,
+    );
+    expect(ids).toContain(HEX_LEVEL_ID);
+    expect(ids).not.toContain(LEVEL_ID);
+    expect(
+      (res.body as Array<{ shape: string }>).every((l) => l.shape === 'hex'),
+    ).toBe(true);
+  });
 });
 
 describe('POST /api/v1/levels', () => {
@@ -319,6 +359,52 @@ describe('POST /api/v1/levels', () => {
     expect(res.status).toBe(201);
     expect(res.body.id).toBeDefined();
     expect(res.body.name).toBe('New Draft Level');
+  });
+
+  it('should_return_201_when_valid_hexagonal_level_created', async () => {
+    const res = await request(app.getHttpServer())
+      .post('/api/v1/levels')
+      .set('Authorization', `Bearer ${bearerToken}`)
+      .send({
+        name: 'New Hex Draft Level',
+        difficulty: 'Easy',
+        shape: 'hex',
+        boardSize: { radius: 1 },
+        arrows: [
+          {
+            id: 'h1',
+            startNode: { q: 0, r: 0 },
+            trajectory: { segments: [{ direction: 'n', length: 1 }] },
+            isSwitchable: false,
+          },
+        ],
+        rules: {},
+      });
+    expect(res.status).toBe(201);
+    expect(res.body.shape).toBe('hex');
+    expect(res.body.boardSize).toEqual({ radius: 1 });
+  });
+
+  it('should_return_422_when_hexagonal_arrow_starts_outside_the_radius', async () => {
+    const res = await request(app.getHttpServer())
+      .post('/api/v1/levels')
+      .set('Authorization', `Bearer ${bearerToken}`)
+      .send({
+        name: 'Bad Hex Level',
+        difficulty: 'Easy',
+        shape: 'hex',
+        boardSize: { radius: 1 },
+        arrows: [
+          {
+            id: 'h1',
+            startNode: { q: 9, r: 9 },
+            trajectory: { segments: [{ direction: 'n', length: 1 }] },
+            isSwitchable: false,
+          },
+        ],
+        rules: {},
+      });
+    expect(res.status).toBe(422);
   });
 });
 
@@ -481,5 +567,34 @@ describe('GET /api/v1/leaderboard', () => {
     expect(res.status).toBe(200);
     expect(Array.isArray(res.body)).toBe(true);
     expect((res.body as unknown[]).length).toBeGreaterThan(0);
+  });
+});
+
+describe('POST /api/v1/leaderboard with mode=hexagonal, GET /api/v1/leaderboard/hexagonal', () => {
+  it('should_return_201_when_hexagonal_score_submitted', async () => {
+    const res = await request(app.getHttpServer())
+      .post('/api/v1/leaderboard')
+      .set('Authorization', `Bearer ${bearerToken}`)
+      .send({
+        levelId: HEX_LEVEL_ID,
+        moves: 2,
+        timeMs: 3000,
+        mode: 'hexagonal',
+      });
+    expect(res.status).toBe(201);
+    expect(res.body.levelId).toBe(HEX_LEVEL_ID);
+  });
+
+  it('should_return_the_submitted_entry_in_the_hexagonal_leaderboard', async () => {
+    const res = await request(app.getHttpServer()).get(
+      '/api/v1/leaderboard/hexagonal',
+    );
+    expect(res.status).toBe(200);
+    expect(Array.isArray(res.body)).toBe(true);
+    expect(
+      (res.body as Array<{ levelId: string }>).some(
+        (e) => e.levelId === HEX_LEVEL_ID,
+      ),
+    ).toBe(true);
   });
 });

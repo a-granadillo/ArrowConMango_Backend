@@ -15,6 +15,7 @@ const strategy = new MangoScore();
 const makeLbRepo = (entries: ScoreEntry[]): ILeaderboardRepository => ({
   byLevel: jest.fn().mockResolvedValue(entries),
   bySurvival: jest.fn().mockResolvedValue([]),
+  byHexagonal: jest.fn().mockResolvedValue([]),
   add: jest.fn().mockResolvedValue(undefined),
 });
 
