@@ -4,22 +4,192 @@
     "name": "Panal Verde",
     "difficulty": "Easy",
     "shape": "hex",
-    "boardSize": { "radius": 1 },
+    "boardSize": {
+      "radius": 3
+    },
     "arrows": [
       {
-        "id": "h1a",
-        "startNode": { "q": 0, "r": 0 },
-        "trajectory": { "segments": [{ "direction": "n", "length": 1 }] },
+        "id": "h1",
+        "startNode": {
+          "q": 1,
+          "r": 0
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "ne",
+              "length": 3
+            }
+          ]
+        },
         "isSwitchable": false
       },
       {
-        "id": "h1b",
-        "startNode": { "q": 1, "r": 0 },
-        "trajectory": { "segments": [{ "direction": "sw", "length": 1 }] },
+        "id": "h2",
+        "startNode": {
+          "q": 1,
+          "r": -1
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "nw",
+              "length": 3
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h3",
+        "startNode": {
+          "q": -1,
+          "r": 0
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "s",
+              "length": 3
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h4",
+        "startNode": {
+          "q": -3,
+          "r": 0
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "s",
+              "length": 3
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h5",
+        "startNode": {
+          "q": 0,
+          "r": 0
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "s",
+              "length": 3
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h6",
+        "startNode": {
+          "q": 3,
+          "r": -3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "nw",
+              "length": 3
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h7",
+        "startNode": {
+          "q": -2,
+          "r": 2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "n",
+              "length": 3
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h8",
+        "startNode": {
+          "q": -2,
+          "r": -1
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "ne",
+              "length": 3
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h9",
+        "startNode": {
+          "q": 1,
+          "r": 2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "ne",
+              "length": 3
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h10",
+        "startNode": {
+          "q": -2,
+          "r": 3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "se",
+              "length": 3
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h11",
+        "startNode": {
+          "q": 1,
+          "r": 1
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "ne",
+              "length": 3
+            }
+          ]
+        },
         "isSwitchable": false
       }
     ],
-    "rules": { "timeLimitSeconds": null, "maxMistakes": null, "allowRotation": true },
+    "rules": {
+      "timeLimitSeconds": null,
+      "maxMistakes": null,
+      "allowRotation": true
+    },
     "version": 1,
     "authorId": null
   },
@@ -28,28 +198,204 @@
     "name": "Panal Amarillo",
     "difficulty": "Easy",
     "shape": "hex",
-    "boardSize": { "radius": 1 },
+    "boardSize": {
+      "radius": 3
+    },
     "arrows": [
       {
-        "id": "h2a",
-        "startNode": { "q": 0, "r": 0 },
-        "trajectory": { "segments": [{ "direction": "n", "length": 1 }] },
+        "id": "h1",
+        "startNode": {
+          "q": 1,
+          "r": 2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "nw",
+              "length": 4
+            }
+          ]
+        },
         "isSwitchable": false
       },
       {
-        "id": "h2b",
-        "startNode": { "q": 1, "r": 0 },
-        "trajectory": { "segments": [{ "direction": "sw", "length": 1 }] },
+        "id": "h2",
+        "startNode": {
+          "q": 3,
+          "r": -1
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "sw",
+              "length": 1
+            },
+            {
+              "direction": "n",
+              "length": 2
+            }
+          ]
+        },
         "isSwitchable": false
       },
       {
-        "id": "h2c",
-        "startNode": { "q": -1, "r": 1 },
-        "trajectory": { "segments": [{ "direction": "ne", "length": 1 }] },
+        "id": "h3",
+        "startNode": {
+          "q": -2,
+          "r": 1
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "se",
+              "length": 3
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h4",
+        "startNode": {
+          "q": 1,
+          "r": 0
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "nw",
+              "length": 4
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h5",
+        "startNode": {
+          "q": 0,
+          "r": -1
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "n",
+              "length": 3
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h6",
+        "startNode": {
+          "q": 1,
+          "r": -2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "se",
+              "length": 3
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h7",
+        "startNode": {
+          "q": 1,
+          "r": -3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "se",
+              "length": 3
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h8",
+        "startNode": {
+          "q": -3,
+          "r": 0
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "s",
+              "length": 3
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h9",
+        "startNode": {
+          "q": 1,
+          "r": 1
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "se",
+              "length": 1
+            },
+            {
+              "direction": "ne",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h10",
+        "startNode": {
+          "q": -1,
+          "r": 3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "nw",
+              "length": 3
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h11",
+        "startNode": {
+          "q": -2,
+          "r": -1
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "se",
+              "length": 1
+            },
+            {
+              "direction": "n",
+              "length": 2
+            }
+          ]
+        },
         "isSwitchable": false
       }
     ],
-    "rules": { "timeLimitSeconds": null, "maxMistakes": null, "allowRotation": true },
+    "rules": {
+      "timeLimitSeconds": null,
+      "maxMistakes": null,
+      "allowRotation": true
+    },
     "version": 1,
     "authorId": null
   },
@@ -58,28 +404,304 @@
     "name": "Colmena Naranja",
     "difficulty": "Medium",
     "shape": "hex",
-    "boardSize": { "radius": 2 },
+    "boardSize": {
+      "radius": 4
+    },
     "arrows": [
       {
-        "id": "h3a",
-        "startNode": { "q": 0, "r": 0 },
-        "trajectory": { "segments": [{ "direction": "se", "length": 2 }] },
+        "id": "h1",
+        "startNode": {
+          "q": -2,
+          "r": 4
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "n",
+              "length": 3
+            }
+          ]
+        },
         "isSwitchable": false
       },
       {
-        "id": "h3b",
-        "startNode": { "q": -2, "r": 2 },
-        "trajectory": { "segments": [{ "direction": "ne", "length": 1 }] },
+        "id": "h2",
+        "startNode": {
+          "q": 1,
+          "r": 1
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "n",
+              "length": 4
+            }
+          ]
+        },
         "isSwitchable": false
       },
       {
-        "id": "h3c",
-        "startNode": { "q": 2, "r": -2 },
-        "trajectory": { "segments": [{ "direction": "nw", "length": 2 }] },
+        "id": "h3",
+        "startNode": {
+          "q": 4,
+          "r": -1
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "sw",
+              "length": 4
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h4",
+        "startNode": {
+          "q": 1,
+          "r": -3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "sw",
+              "length": 1
+            },
+            {
+              "direction": "nw",
+              "length": 3
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h5",
+        "startNode": {
+          "q": 3,
+          "r": -3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "nw",
+              "length": 1
+            },
+            {
+              "direction": "ne",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h6",
+        "startNode": {
+          "q": -4,
+          "r": 0
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "se",
+              "length": 1
+            },
+            {
+              "direction": "s",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h7",
+        "startNode": {
+          "q": -4,
+          "r": 1
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "s",
+              "length": 3
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h8",
+        "startNode": {
+          "q": 2,
+          "r": -2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "se",
+              "length": 1
+            },
+            {
+              "direction": "ne",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h9",
+        "startNode": {
+          "q": 0,
+          "r": -1
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "nw",
+              "length": 1
+            },
+            {
+              "direction": "s",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h10",
+        "startNode": {
+          "q": 0,
+          "r": 3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "se",
+              "length": 1
+            },
+            {
+              "direction": "sw",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h11",
+        "startNode": {
+          "q": -1,
+          "r": 1
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "s",
+              "length": 4
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h12",
+        "startNode": {
+          "q": -3,
+          "r": 2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "s",
+              "length": 3
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h13",
+        "startNode": {
+          "q": 2,
+          "r": 2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "ne",
+              "length": 3
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h14",
+        "startNode": {
+          "q": 2,
+          "r": 0
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "ne",
+              "length": 3
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h15",
+        "startNode": {
+          "q": -1,
+          "r": -3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "se",
+              "length": 1
+            },
+            {
+              "direction": "ne",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h16",
+        "startNode": {
+          "q": -2,
+          "r": 0
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "n",
+              "length": 1
+            },
+            {
+              "direction": "nw",
+              "length": 2
+            }
+          ]
+        },
         "isSwitchable": false
       }
     ],
-    "rules": { "timeLimitSeconds": null, "maxMistakes": null, "allowRotation": true },
+    "rules": {
+      "timeLimitSeconds": null,
+      "maxMistakes": null,
+      "allowRotation": true
+    },
     "version": 1,
     "authorId": null
   },
@@ -88,33 +710,296 @@
     "name": "Colmena Roja",
     "difficulty": "Medium",
     "shape": "hex",
-    "boardSize": { "radius": 2 },
+    "boardSize": {
+      "radius": 4
+    },
     "arrows": [
       {
-        "id": "h4a",
-        "startNode": { "q": 0, "r": 0 },
+        "id": "h1",
+        "startNode": {
+          "q": 2,
+          "r": 0
+        },
         "trajectory": {
           "segments": [
-            { "direction": "se", "length": 2 },
-            { "direction": "n", "length": 1 }
+            {
+              "direction": "sw",
+              "length": 1
+            },
+            {
+              "direction": "n",
+              "length": 1
+            },
+            {
+              "direction": "sw",
+              "length": 3
+            }
           ]
         },
         "isSwitchable": false
       },
       {
-        "id": "h4b",
-        "startNode": { "q": -1, "r": 1 },
-        "trajectory": { "segments": [{ "direction": "s", "length": 1 }] },
+        "id": "h2",
+        "startNode": {
+          "q": 4,
+          "r": -1
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "sw",
+              "length": 5
+            }
+          ]
+        },
         "isSwitchable": false
       },
       {
-        "id": "h4c",
-        "startNode": { "q": 0, "r": -2 },
-        "trajectory": { "segments": [{ "direction": "se", "length": 1 }] },
-        "isSwitchable": true
+        "id": "h3",
+        "startNode": {
+          "q": 0,
+          "r": -4
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "sw",
+              "length": 1
+            },
+            {
+              "direction": "se",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h4",
+        "startNode": {
+          "q": -4,
+          "r": 2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "ne",
+              "length": 5
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h5",
+        "startNode": {
+          "q": -1,
+          "r": 3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "nw",
+              "length": 1
+            },
+            {
+              "direction": "sw",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h6",
+        "startNode": {
+          "q": 4,
+          "r": -4
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "s",
+              "length": 1
+            },
+            {
+              "direction": "nw",
+              "length": 1
+            },
+            {
+              "direction": "n",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h7",
+        "startNode": {
+          "q": -1,
+          "r": -2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "sw",
+              "length": 4
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h8",
+        "startNode": {
+          "q": -1,
+          "r": 1
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "sw",
+              "length": 4
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h9",
+        "startNode": {
+          "q": 1,
+          "r": -1
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "ne",
+              "length": 1
+            },
+            {
+              "direction": "se",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h10",
+        "startNode": {
+          "q": 2,
+          "r": -4
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "sw",
+              "length": 1
+            },
+            {
+              "direction": "se",
+              "length": 1
+            },
+            {
+              "direction": "sw",
+              "length": 3
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h11",
+        "startNode": {
+          "q": 2,
+          "r": 2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "ne",
+              "length": 3
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h12",
+        "startNode": {
+          "q": -2,
+          "r": 1
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "sw",
+              "length": 3
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h13",
+        "startNode": {
+          "q": -2,
+          "r": 4
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "se",
+              "length": 3
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h14",
+        "startNode": {
+          "q": 2,
+          "r": -1
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "se",
+              "length": 1
+            },
+            {
+              "direction": "ne",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h15",
+        "startNode": {
+          "q": -2,
+          "r": -2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "sw",
+              "length": 3
+            }
+          ]
+        },
+        "isSwitchable": false
       }
     ],
-    "rules": { "timeLimitSeconds": null, "maxMistakes": null, "allowRotation": true },
+    "rules": {
+      "timeLimitSeconds": null,
+      "maxMistakes": null,
+      "allowRotation": true
+    },
     "version": 1,
     "authorId": null
   },
@@ -123,40 +1008,432 @@
     "name": "Panal Mango",
     "difficulty": "Hard",
     "shape": "hex",
-    "boardSize": { "radius": 3 },
+    "boardSize": {
+      "radius": 5
+    },
     "arrows": [
       {
-        "id": "h5a",
-        "startNode": { "q": 0, "r": 0 },
-        "trajectory": { "segments": [{ "direction": "n", "length": 3 }] },
+        "id": "h1",
+        "startNode": {
+          "q": 3,
+          "r": 2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "nw",
+              "length": 1
+            },
+            {
+              "direction": "ne",
+              "length": 2
+            }
+          ]
+        },
         "isSwitchable": false
       },
       {
-        "id": "h5b",
-        "startNode": { "q": 3, "r": 0 },
-        "trajectory": { "segments": [{ "direction": "nw", "length": 1 }] },
+        "id": "h2",
+        "startNode": {
+          "q": -2,
+          "r": 1
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "sw",
+              "length": 2
+            },
+            {
+              "direction": "s",
+              "length": 3
+            }
+          ]
+        },
         "isSwitchable": false
       },
       {
-        "id": "h5c",
-        "startNode": { "q": -3, "r": 3 },
-        "trajectory": { "segments": [{ "direction": "ne", "length": 1 }] },
+        "id": "h3",
+        "startNode": {
+          "q": -3,
+          "r": 0
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "se",
+              "length": 1
+            },
+            {
+              "direction": "ne",
+              "length": 2
+            }
+          ]
+        },
         "isSwitchable": false
       },
       {
-        "id": "h5d",
-        "startNode": { "q": 0, "r": 3 },
-        "trajectory": { "segments": [{ "direction": "n", "length": 2 }] },
-        "isSwitchable": true
+        "id": "h4",
+        "startNode": {
+          "q": -5,
+          "r": 1
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "ne",
+              "length": 1
+            },
+            {
+              "direction": "nw",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
       },
       {
-        "id": "h5e",
-        "startNode": { "q": 2, "r": -3 },
-        "trajectory": { "segments": [{ "direction": "se", "length": 1 }] },
+        "id": "h5",
+        "startNode": {
+          "q": 0,
+          "r": 0
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "sw",
+              "length": 2
+            },
+            {
+              "direction": "s",
+              "length": 3
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h6",
+        "startNode": {
+          "q": 4,
+          "r": -5
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "s",
+              "length": 3
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h7",
+        "startNode": {
+          "q": -1,
+          "r": 0
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "ne",
+              "length": 1
+            },
+            {
+              "direction": "se",
+              "length": 1
+            },
+            {
+              "direction": "n",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h8",
+        "startNode": {
+          "q": 3,
+          "r": -2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "se",
+              "length": 2
+            },
+            {
+              "direction": "s",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h9",
+        "startNode": {
+          "q": -4,
+          "r": 2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "n",
+              "length": 1
+            },
+            {
+              "direction": "sw",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h10",
+        "startNode": {
+          "q": 3,
+          "r": -5
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "nw",
+              "length": 4
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h11",
+        "startNode": {
+          "q": 2,
+          "r": 0
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "nw",
+              "length": 1
+            },
+            {
+              "direction": "s",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h12",
+        "startNode": {
+          "q": -2,
+          "r": -1
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "n",
+              "length": 1
+            },
+            {
+              "direction": "nw",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h13",
+        "startNode": {
+          "q": 2,
+          "r": -3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "ne",
+              "length": 1
+            },
+            {
+              "direction": "nw",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h14",
+        "startNode": {
+          "q": 3,
+          "r": 0
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "n",
+              "length": 1
+            },
+            {
+              "direction": "se",
+              "length": 1
+            },
+            {
+              "direction": "s",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h15",
+        "startNode": {
+          "q": 1,
+          "r": 2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "sw",
+              "length": 4
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h16",
+        "startNode": {
+          "q": 1,
+          "r": 3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "sw",
+              "length": 3
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h17",
+        "startNode": {
+          "q": -1,
+          "r": -2
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "ne",
+              "length": 1
+            },
+            {
+              "direction": "nw",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h18",
+        "startNode": {
+          "q": 1,
+          "r": -3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "n",
+              "length": 1
+            },
+            {
+              "direction": "nw",
+              "length": 2
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h19",
+        "startNode": {
+          "q": -3,
+          "r": 3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "s",
+              "length": 3
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h20",
+        "startNode": {
+          "q": -5,
+          "r": 3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "s",
+              "length": 3
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h21",
+        "startNode": {
+          "q": 2,
+          "r": 3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "sw",
+              "length": 3
+            }
+          ]
+        },
+        "isSwitchable": false
+      },
+      {
+        "id": "h22",
+        "startNode": {
+          "q": 5,
+          "r": -3
+        },
+        "trajectory": {
+          "segments": [
+            {
+              "direction": "n",
+              "length": 3
+            }
+          ]
+        },
         "isSwitchable": false
       }
     ],
-    "rules": { "timeLimitSeconds": 90, "maxMistakes": null, "allowRotation": true },
+    "rules": {
+      "timeLimitSeconds": null,
+      "maxMistakes": null,
+      "allowRotation": true
+    },
     "version": 1,
     "authorId": null
   }
