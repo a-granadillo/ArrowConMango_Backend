@@ -3,7 +3,7 @@ export interface SubmitScoreInput {
   moves: number;
   timeMs: number;
   /** Defaults to 'campaign' at the HTTP boundary when omitted. */
-  mode?: 'campaign' | 'survival';
+  mode?: 'campaign' | 'survival' | 'hexagonal';
 }
 
 export interface ScoreEntryOutput {

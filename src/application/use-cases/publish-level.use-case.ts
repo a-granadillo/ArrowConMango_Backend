@@ -50,6 +50,7 @@ export class PublishLevelUseCase implements UseCase<
       authorId: published.authorId?.value ?? null,
       isPublished: published.isPublished,
       publishedAt: published.publishedAt,
+      shape: published.shape,
     };
   }
 }

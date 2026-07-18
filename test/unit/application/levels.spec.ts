@@ -72,6 +72,46 @@ describe('GetLevelsUseCase', () => {
     const result = await useCase.execute();
     expect(result).toEqual([]);
   });
+
+  it('should_filter_by_shape_when_shape_is_provided', async () => {
+    // Arrange — a grid2d campaign level and a hex level share the catalogue
+    const grid = LevelDefinition.create(
+      'Grid',
+      'Easy',
+      boardSize,
+      validArrows,
+      {},
+      LevelId.create('l1'),
+    );
+    const hex = LevelDefinition.create(
+      'Hex',
+      'Easy',
+      { radius: 1 },
+      [
+        {
+          id: 'h1',
+          startNode: { q: 0, r: 0 },
+          trajectory: { segments: [{ direction: 'n', length: 1 }] },
+          isSwitchable: false,
+        },
+      ],
+      {},
+      LevelId.create('hex-1'),
+      1,
+      null,
+      undefined,
+      undefined,
+      'hex',
+    );
+    const repo = makeLevelRepo([grid, hex]);
+    const useCase = new GetLevelsUseCase(repo);
+    // Act
+    const result = await useCase.execute({ shape: 'hex' });
+    // Assert
+    expect(result).toHaveLength(1);
+    expect(result[0].id).toBe('hex-1');
+    expect(result[0].shape).toBe('hex');
+  });
 });
 
 describe('UpsertLevelUseCase', () => {
@@ -151,6 +191,64 @@ describe('UpsertLevelUseCase', () => {
       authorId: 'author-1',
     });
     expect(result.authorId).toBe('author-1');
+  });
+
+  it('should_default_shape_to_grid2d_when_omitted', async () => {
+    const repo = makeLevelRepo([]);
+    const useCase = new UpsertLevelUseCase(repo);
+    const result = await useCase.execute({
+      name: 'Level 1',
+      difficulty: 'Easy',
+      boardSize,
+      arrows: validArrows,
+      rules: {},
+    });
+    expect(result.shape).toBe('grid2d');
+  });
+
+  it('should_persist_a_hexagonal_level_when_shape_is_hex', async () => {
+    const repo = makeLevelRepo([]);
+    const useCase = new UpsertLevelUseCase(repo);
+    const result = await useCase.execute({
+      name: 'Hex Level',
+      difficulty: 'Easy',
+      shape: 'hex',
+      boardSize: { radius: 1 },
+      arrows: [
+        {
+          id: 'h1',
+          startNode: { q: 0, r: 0 },
+          trajectory: { segments: [{ direction: 'n', length: 1 }] },
+          isSwitchable: false,
+        },
+      ],
+      rules: {},
+    });
+    expect(result.shape).toBe('hex');
+    expect(result.boardSize).toEqual({ radius: 1 });
+    expect(repo.upsert).toHaveBeenCalledTimes(1);
+  });
+
+  it('should_reject_a_hex_level_when_an_arrow_starts_outside_the_radius', async () => {
+    const repo = makeLevelRepo([]);
+    const useCase = new UpsertLevelUseCase(repo);
+    await expect(
+      useCase.execute({
+        name: 'Bad hex',
+        difficulty: 'Easy',
+        shape: 'hex',
+        boardSize: { radius: 1 },
+        arrows: [
+          {
+            id: 'h1',
+            startNode: { q: 9, r: 9 },
+            trajectory: { segments: [{ direction: 'n', length: 1 }] },
+            isSwitchable: false,
+          },
+        ],
+        rules: {},
+      }),
+    ).rejects.toThrow(LevelValidationError);
   });
 });
 

@@ -25,6 +25,7 @@ export class GetMyLevelsUseCase implements UseCase<string, LevelOutput[]> {
       authorId: l.authorId?.value ?? null,
       isPublished: l.isPublished,
       publishedAt: l.publishedAt,
+      shape: l.shape,
     }));
   }
 }

@@ -1,6 +1,7 @@
 import {
+  AnyBoardSize,
   ArrowDefinition,
-  BoardSize,
+  BoardShape,
   LevelDefinition,
   LevelRules,
 } from '../../domain/entities/level-definition.entity';
@@ -14,13 +15,14 @@ export class LevelMapper {
       LevelId.create(orm.id),
       orm.name,
       orm.difficulty,
-      orm.boardSize as BoardSize,
+      orm.boardSize as AnyBoardSize,
       orm.arrows as ArrowDefinition[],
       orm.rules as LevelRules,
       orm.version,
       orm.authorId ? UserId.create(orm.authorId) : null,
       orm.isPublished,
       orm.publishedAt,
+      (orm.shape as BoardShape) ?? 'grid2d',
     );
   }
 
@@ -29,6 +31,7 @@ export class LevelMapper {
     orm.id = level.id.value;
     orm.name = level.name;
     orm.difficulty = level.difficulty;
+    orm.shape = level.shape;
     orm.boardSize = level.boardSize;
     orm.arrows = level.arrows;
     orm.rules = level.rules as Record<string, unknown>;

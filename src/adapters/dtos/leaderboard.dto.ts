@@ -19,11 +19,11 @@ export class SubmitScoreDto {
   @ApiProperty({
     description: 'Game mode (defaults to campaign for backwards compatibility)',
     required: false,
-    enum: ['campaign', 'survival'],
+    enum: ['campaign', 'survival', 'hexagonal'],
   })
   @IsOptional()
-  @IsIn(['campaign', 'survival'])
-  mode?: 'campaign' | 'survival';
+  @IsIn(['campaign', 'survival', 'hexagonal'])
+  mode?: 'campaign' | 'survival' | 'hexagonal';
 }
 
 export class ScoreEntryResponseDto {

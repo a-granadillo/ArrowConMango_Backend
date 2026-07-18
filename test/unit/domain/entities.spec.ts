@@ -257,6 +257,127 @@ describe('LevelDefinition', () => {
     );
     expect(level.validate()).toBe(true);
   });
+
+  // ─── Hexagonal boards (Strategy: HexBoardGeometry) ─────────────────────────
+  describe('hexagonal boards', () => {
+    const hexBoardSize = { radius: 2 };
+    const hexArrows: ArrowDefinition[] = [
+      {
+        id: 'h1',
+        startNode: { q: 0, r: 0 },
+        trajectory: { segments: [{ direction: 'se', length: 2 }] },
+        isSwitchable: false,
+      },
+    ];
+
+    it('should_validate_successfully_when_hex_board_is_correct', () => {
+      const level = LevelDefinition.create(
+        'Hex Test',
+        'Easy',
+        hexBoardSize,
+        hexArrows,
+        {},
+        undefined,
+        1,
+        null,
+        undefined,
+        undefined,
+        'hex',
+      );
+      expect(level.shape).toBe('hex');
+      expect(level.validate()).toBe(true);
+    });
+
+    it('should_default_shape_to_grid2d_when_omitted', () => {
+      const level = LevelDefinition.create(
+        'Default shape',
+        'Easy',
+        boardSize,
+        validArrows,
+        {},
+      );
+      expect(level.shape).toBe('grid2d');
+    });
+
+    it('should_throw_when_hex_startNode_is_outside_the_board_radius', () => {
+      const level = LevelDefinition.create(
+        'Hex out of bounds',
+        'Easy',
+        hexBoardSize,
+        [
+          {
+            id: 'h1',
+            startNode: { q: 5, r: 5 },
+            trajectory: { segments: [{ direction: 'n', length: 1 }] },
+            isSwitchable: false,
+          },
+        ],
+        {},
+        undefined,
+        1,
+        null,
+        undefined,
+        undefined,
+        'hex',
+      );
+      expect(() => level.validate()).toThrow(LevelValidationError);
+    });
+
+    it('should_allow_a_hex_arrow_body_to_span_multiple_cells', () => {
+      // The arrow's body occupies more than one hexagon before it would exit
+      // — mirrors "the arrow's body may span one or more hexagons".
+      const level = LevelDefinition.create(
+        'Multi-cell hex arrow',
+        'Medium',
+        { radius: 2 },
+        [
+          {
+            id: 'h1',
+            startNode: { q: 0, r: 0 },
+            trajectory: {
+              segments: [
+                { direction: 'se', length: 2 },
+                { direction: 'n', length: 1 },
+              ],
+            },
+            isSwitchable: false,
+          },
+        ],
+        {},
+        undefined,
+        1,
+        null,
+        undefined,
+        undefined,
+        'hex',
+      );
+      expect(level.validate()).toBe(true);
+    });
+
+    it('should_throw_when_a_cardinal_direction_is_used_on_a_hex_board', () => {
+      const level = LevelDefinition.create(
+        'Wrong direction set',
+        'Easy',
+        hexBoardSize,
+        [
+          {
+            id: 'h1',
+            startNode: { q: 0, r: 0 },
+            trajectory: { segments: [{ direction: 'up', length: 1 }] },
+            isSwitchable: false,
+          },
+        ],
+        {},
+        undefined,
+        1,
+        null,
+        undefined,
+        undefined,
+        'hex',
+      );
+      expect(() => level.validate()).toThrow(LevelValidationError);
+    });
+  });
 });
 
 // ─── Leaderboard ─────────────────────────────────────────────────────────────

@@ -1,27 +1,35 @@
 import { LevelValidationError } from '../errors/domain-error';
 import { LevelId } from '../value-objects/level-id.vo';
 import { UserId } from '../value-objects/user-id.vo';
+import {
+  AnyBoardNode,
+  AnyBoardSize,
+  AnyDirection,
+  BoardShape,
+  createBoardGeometry,
+} from './board-geometry.strategy';
 
-export type CardinalDirection = 'up' | 'down' | 'left' | 'right';
-
-export interface BoardSize {
-  rows: number;
-  cols: number;
-}
-
-export interface BoardNode {
-  row: number;
-  col: number;
-}
+export type {
+  AnyBoardNode,
+  AnyBoardSize,
+  AnyDirection,
+  BoardShape,
+  BoardNode,
+  BoardSize,
+  CardinalDirection,
+  HexBoardNode,
+  HexBoardSize,
+  HexDirection,
+} from './board-geometry.strategy';
 
 export interface TrajectorySegment {
-  direction: CardinalDirection;
+  direction: AnyDirection;
   length: number;
 }
 
 export interface ArrowDefinition {
   id: string;
-  startNode: BoardNode;
+  startNode: AnyBoardNode;
   trajectory: { segments: TrajectorySegment[] };
   isSwitchable: boolean;
 }
@@ -35,14 +43,20 @@ export interface LevelRules {
 /**
  * «Aggregate Root» LevelDefinition — immutable blueprint of a puzzle level.
  *
- * Models the real board domain: a rectangular grid of [boardSize], with
- * arrows placed as polylines ([ArrowDefinition.trajectory]) rather than an
- * abstract node/edge graph. Arrows exit through the board's edge — there is
- * no "exit node" concept, matching how the game actually plays.
+ * Models the real board domain: arrows placed as polylines
+ * ([ArrowDefinition.trajectory]) rather than an abstract node/edge graph.
+ * Arrows exit through the board's edge — there is no "exit node" concept,
+ * matching how the game actually plays.
+ *
+ * The board's coordinate system (rectangular grid or hexagon) is a
+ * «Strategy» ([IBoardGeometry], see board-geometry.strategy.ts) selected by
+ * [shape]. Adding a new board shape means adding a new strategy, not
+ * modifying this aggregate (OCP) — validate() always delegates bounds/step
+ * math to the strategy instead of hard-coding grid arithmetic.
  *
  * validate() checks:
  *  - Every arrow's startNode and every in-board trajectory cell lies within
- *    boardSize.
+ *    the board (per its geometry strategy).
  *  - There is at least one arrow.
  *  - Arrow ids are unique.
  *  - Every trajectory segment has length >= 1.
@@ -52,19 +66,20 @@ export class LevelDefinition {
     private readonly _id: LevelId,
     private readonly _name: string,
     private readonly _difficulty: string,
-    private readonly _boardSize: BoardSize,
+    private readonly _boardSize: AnyBoardSize,
     private readonly _arrows: ArrowDefinition[],
     private readonly _rules: LevelRules,
     private readonly _version: number,
     private readonly _authorId: UserId | null,
     private readonly _isPublished: boolean,
     private readonly _publishedAt: Date | null,
+    private readonly _shape: BoardShape,
   ) {}
 
   static create(
     name: string,
     difficulty: string,
-    boardSize: BoardSize,
+    boardSize: AnyBoardSize,
     arrows: ArrowDefinition[],
     rules: LevelRules,
     id?: LevelId,
@@ -72,6 +87,7 @@ export class LevelDefinition {
     authorId: UserId | null = null,
     isPublished = false,
     publishedAt: Date | null = null,
+    shape: BoardShape = 'grid2d',
   ): LevelDefinition {
     return new LevelDefinition(
       id ?? LevelId.create(),
@@ -84,6 +100,7 @@ export class LevelDefinition {
       authorId,
       isPublished,
       publishedAt,
+      shape,
     );
   }
 
@@ -91,13 +108,14 @@ export class LevelDefinition {
     id: LevelId,
     name: string,
     difficulty: string,
-    boardSize: BoardSize,
+    boardSize: AnyBoardSize,
     arrows: ArrowDefinition[],
     rules: LevelRules,
     version: number,
     authorId: UserId | null,
     isPublished: boolean,
     publishedAt: Date | null,
+    shape: BoardShape = 'grid2d',
   ): LevelDefinition {
     return new LevelDefinition(
       id,
@@ -110,6 +128,7 @@ export class LevelDefinition {
       authorId,
       isPublished,
       publishedAt,
+      shape,
     );
   }
 
@@ -126,6 +145,7 @@ export class LevelDefinition {
       this._authorId,
       true,
       new Date(),
+      this._shape,
     );
   }
 
@@ -134,6 +154,8 @@ export class LevelDefinition {
       throw new LevelValidationError('Level must have at least one arrow');
     }
 
+    const geometry = createBoardGeometry(this._shape, this._boardSize);
+
     const seenIds = new Set<string>();
     for (const arrow of this._arrows) {
       if (seenIds.has(arrow.id)) {
@@ -141,7 +163,7 @@ export class LevelDefinition {
       }
       seenIds.add(arrow.id);
 
-      if (!this._isInBounds(arrow.startNode)) {
+      if (!geometry.isInBounds(arrow.startNode)) {
         throw new LevelValidationError(
           `Arrow "${arrow.id}" starts outside the board`,
         );
@@ -155,8 +177,8 @@ export class LevelDefinition {
         }
       }
 
-      for (const node of this._trajectoryInBoardNodes(arrow)) {
-        if (!this._isInBounds(node)) {
+      for (const node of this._trajectoryInBoardNodes(arrow, geometry)) {
+        if (!geometry.isInBounds(node)) {
           throw new LevelValidationError(
             `Arrow "${arrow.id}" body leaves the board`,
           );
@@ -171,44 +193,21 @@ export class LevelDefinition {
    * Nodes the arrow's body occupies while still inside the board (its exit
    * trajectory is allowed to cross the boundary — that's how it exits).
    */
-  private _trajectoryInBoardNodes(arrow: ArrowDefinition): BoardNode[] {
-    const nodes: BoardNode[] = [];
-    let { row, col } = arrow.startNode;
+  private _trajectoryInBoardNodes(
+    arrow: ArrowDefinition,
+    geometry: ReturnType<typeof createBoardGeometry>,
+  ): AnyBoardNode[] {
+    const nodes: AnyBoardNode[] = [];
+    let node = arrow.startNode;
     for (const segment of arrow.trajectory.segments) {
       for (let step = 0; step < segment.length; step++) {
-        if (this._isInBounds({ row, col })) {
-          nodes.push({ row, col });
+        if (geometry.isInBounds(node)) {
+          nodes.push(node);
         }
-        [row, col] = this._advance(row, col, segment.direction);
+        node = geometry.advance(node, segment.direction);
       }
     }
     return nodes;
-  }
-
-  private _advance(
-    row: number,
-    col: number,
-    direction: CardinalDirection,
-  ): [number, number] {
-    switch (direction) {
-      case 'up':
-        return [row - 1, col];
-      case 'down':
-        return [row + 1, col];
-      case 'left':
-        return [row, col - 1];
-      case 'right':
-        return [row, col + 1];
-    }
-  }
-
-  private _isInBounds(node: BoardNode): boolean {
-    return (
-      node.row >= 0 &&
-      node.row < this._boardSize.rows &&
-      node.col >= 0 &&
-      node.col < this._boardSize.cols
-    );
   }
 
   get id(): LevelId {
@@ -223,7 +222,11 @@ export class LevelDefinition {
     return this._difficulty;
   }
 
-  get boardSize(): BoardSize {
+  get shape(): BoardShape {
+    return this._shape;
+  }
+
+  get boardSize(): AnyBoardSize {
     return { ...this._boardSize };
   }
 

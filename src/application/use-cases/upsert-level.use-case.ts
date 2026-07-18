@@ -31,6 +31,9 @@ export class UpsertLevelUseCase implements UseCase<
       levelId,
       input.version ?? 1,
       input.authorId ? UserId.create(input.authorId) : null,
+      undefined,
+      undefined,
+      input.shape ?? 'grid2d',
     );
 
     level.validate();
@@ -48,6 +51,7 @@ export class UpsertLevelUseCase implements UseCase<
       authorId: level.authorId?.value ?? null,
       isPublished: level.isPublished,
       publishedAt: level.publishedAt,
+      shape: level.shape,
     };
   }
 }
