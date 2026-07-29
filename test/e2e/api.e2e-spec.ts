@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
+import * as jwt from 'jsonwebtoken';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const request = require('supertest') as (
   app: unknown,
@@ -95,6 +96,17 @@ afterAll(async () => {
   await app.close();
 });
 
+// ─── Health ────────────────────────────────────────────────────────────────
+
+describe('GET /api/v1/health', () => {
+  it('should_return_200_and_ok_status_without_auth', async () => {
+    const res = await request(app.getHttpServer()).get('/api/v1/health');
+    expect(res.status).toBe(200);
+    expect(res.body.status).toBe('ok');
+    expect(typeof res.body.timestamp).toBe('string');
+  });
+});
+
 // ─── Auth ──────────────────────────────────────────────────────────────────
 
 describe('POST /api/v1/auth/register', () => {
@@ -139,6 +151,12 @@ describe('POST /api/v1/auth/login', () => {
     expect(res.status).toBe(200);
     expect(res.body.token).toBeDefined();
     bearerToken = res.body.token;
+
+    // Grants this test's primary user admin rights for the rest of the
+    // suite (PUT /levels/:id, reserved-id POST /levels — see AdminGuard).
+    // A separate guest token is used where a *non*-admin caller is needed.
+    const payload = jwt.decode(bearerToken) as { sub: string };
+    process.env['ADMIN_USER_IDS'] = payload.sub;
   });
 
   it('should_return_401_when_password_wrong', async () => {
@@ -429,6 +447,32 @@ describe('PUT /api/v1/levels/:id', () => {
     expect(res.status).toBe(401);
   });
 
+  it('should_return_403_when_authenticated_but_not_admin', async () => {
+    const guestRes = await request(app.getHttpServer())
+      .post('/api/v1/auth/guest')
+      .send({ uuid: 'a1b2c3d4-e5f6-4789-a123-b456c789d012' });
+    const guestToken = guestRes.body.token as string;
+
+    const res = await request(app.getHttpServer())
+      .put('/api/v1/levels/any-level')
+      .set('Authorization', `Bearer ${guestToken}`)
+      .send({
+        name: 'Any Level',
+        difficulty: 'Easy',
+        boardSize: { rows: 2, cols: 2 },
+        arrows: [
+          {
+            id: 'a1',
+            startNode: { row: 0, col: 0 },
+            trajectory: { segments: [{ direction: 'right', length: 2 }] },
+            isSwitchable: false,
+          },
+        ],
+        rules: {},
+      });
+    expect(res.status).toBe(403);
+  });
+
   it('should_return_422_when_level_has_no_arrows', async () => {
     const res = await request(app.getHttpServer())
       .put('/api/v1/levels/invalid-level')
@@ -596,5 +640,46 @@ describe('POST /api/v1/leaderboard with mode=hexagonal, GET /api/v1/leaderboard/
         (e) => e.levelId === HEX_LEVEL_ID,
       ),
     ).toBe(true);
+  });
+});
+
+describe('POST /api/v1/leaderboard with mode=cube3d, GET /api/v1/leaderboard/cube3d', () => {
+  const CUBE3D_LEVEL_ID = 'e2e-cube3d-generated-1';
+
+  it('should_return_201_when_cube3d_score_submitted', async () => {
+    const res = await request(app.getHttpServer())
+      .post('/api/v1/leaderboard')
+      .set('Authorization', `Bearer ${bearerToken}`)
+      .send({
+        levelId: CUBE3D_LEVEL_ID,
+        moves: 6,
+        timeMs: 9000,
+        mode: 'cube3d',
+      });
+    expect(res.status).toBe(201);
+    expect(res.body.levelId).toBe(CUBE3D_LEVEL_ID);
+  });
+
+  it('should_return_the_submitted_entry_in_the_cube3d_leaderboard', async () => {
+    const res = await request(app.getHttpServer()).get(
+      '/api/v1/leaderboard/cube3d',
+    );
+    expect(res.status).toBe(200);
+    expect(Array.isArray(res.body)).toBe(true);
+    expect(
+      (res.body as Array<{ levelId: string }>).some(
+        (e) => e.levelId === CUBE3D_LEVEL_ID,
+      ),
+    ).toBe(true);
+  });
+
+  it('should_not_affect_player_progress_for_cube3d_submissions', async () => {
+    const res = await request(app.getHttpServer())
+      .get('/api/v1/progress')
+      .set('Authorization', `Bearer ${bearerToken}`);
+    expect(res.status).toBe(200);
+    expect((res.body.completed as string[]).includes(CUBE3D_LEVEL_ID)).toBe(
+      false,
+    );
   });
 });

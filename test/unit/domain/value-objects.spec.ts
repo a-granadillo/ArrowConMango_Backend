@@ -82,10 +82,30 @@ describe('Value Objects', () => {
       expect(GameMode.hexagonal().isHexagonal()).toBe(true);
     });
 
+    it('should_create_cube3d_mode_when_value_is_cube3d', () => {
+      const mode = GameMode.create('cube3d');
+      expect(mode.value).toBe('cube3d');
+      expect(mode.isCube3d()).toBe(true);
+      expect(mode.isSurvival()).toBe(false);
+    });
+
+    it('should_expose_cube3d_via_static_factory', () => {
+      expect(GameMode.cube3d().isCube3d()).toBe(true);
+    });
+
     it('should_throw_InvalidGameModeError_when_value_is_unknown', () => {
       expect(() => GameMode.create('unknown-mode')).toThrow(
         InvalidGameModeError,
       );
+    });
+
+    it.each([
+      ['campaign', true],
+      ['hexagonal', true],
+      ['survival', false],
+      ['cube3d', false],
+    ])('should_report_affectsCampaignProgress_%s_as_%s', (raw, expected) => {
+      expect(GameMode.create(raw).affectsCampaignProgress()).toBe(expected);
     });
   });
 

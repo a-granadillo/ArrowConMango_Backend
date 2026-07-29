@@ -1,4 +1,5 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { DATETIME_COLUMN_TYPE } from './column-types';
 
 @Entity('level_definitions')
 export class LevelDefinitionOrmEntity {
@@ -37,6 +38,6 @@ export class LevelDefinitionOrmEntity {
   @Column({ default: false })
   isPublished!: boolean;
 
-  @Column({ type: 'datetime', nullable: true })
+  @Column({ type: DATETIME_COLUMN_TYPE, nullable: true })
   publishedAt!: Date | null;
 }

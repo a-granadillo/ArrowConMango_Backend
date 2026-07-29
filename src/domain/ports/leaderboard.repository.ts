@@ -15,5 +15,7 @@ export interface ILeaderboardRepository {
   bySurvival(): Promise<ScoreEntry[]>;
   /** All hexagonal-mode entries across every player, unordered. */
   byHexagonal(): Promise<ScoreEntry[]>;
+  /** All cube3d-mode entries across every player, unordered. */
+  byCube3d(): Promise<ScoreEntry[]>;
   add(entry: ScoreEntry): Promise<void>;
 }

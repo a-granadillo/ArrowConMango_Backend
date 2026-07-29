@@ -3,21 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { DataSource } from 'typeorm';
 import { LevelDefinitionOrmEntity } from './orm/level.orm-entity';
-import { UserOrmEntity } from './orm/user.orm-entity';
-import { PlayerProgressOrmEntity } from './orm/progress.orm-entity';
-import { ScoreEntryOrmEntity } from './orm/score-entry.orm-entity';
-
-const ds = new DataSource({
-  type: 'sqlite',
-  database: process.env['DB_PATH'] ?? 'arrow.sqlite',
-  entities: [
-    UserOrmEntity,
-    PlayerProgressOrmEntity,
-    LevelDefinitionOrmEntity,
-    ScoreEntryOrmEntity,
-  ],
-  synchronize: true,
-});
+import { buildDataSourceOptions } from './orm/data-source-options.factory';
 
 interface LevelJson {
   id: string;
@@ -49,9 +35,14 @@ const HEXAGONAL_LEVELS: LevelJson[] = JSON.parse(
   ),
 ) as LevelJson[];
 
-async function seed(): Promise<void> {
-  await ds.initialize();
-  const repo = ds.getRepository(LevelDefinitionOrmEntity);
+/**
+ * Idempotently inserts the bundled campaign + hexagonal catalogues into
+ * an already-initialized [dataSource]. Safe to call repeatedly (skips ids
+ * that already exist) and safe to call against the app's own connection
+ * (see `main.ts`'s `SEED_ON_BOOT`) — this function never closes it.
+ */
+export async function seedLevels(dataSource: DataSource): Promise<void> {
+  const repo = dataSource.getRepository(LevelDefinitionOrmEntity);
 
   for (const level of [...CAMPAIGN_LEVELS, ...HEXAGONAL_LEVELS]) {
     const existing = await repo.findOne({ where: { id: level.id } });
@@ -65,12 +56,33 @@ async function seed(): Promise<void> {
       console.log(`Level ${level.id} already exists, skipping.`);
     }
   }
+}
 
-  await ds.destroy();
+/** CLI entry point: `npm run seed` (dev, ts-node) / `npm run seed:prod` (compiled). */
+async function main(): Promise<void> {
+  const dataSource = new DataSource(
+    buildDataSourceOptions({
+      dbDriver: process.env['DB_DRIVER'] ?? 'sqlite',
+      dbPath: process.env['DB_PATH'] ?? 'arrow.sqlite',
+      databaseUrl: process.env['DATABASE_URL'],
+      dbHost: process.env['DB_HOST'] ?? 'localhost',
+      dbPort: parseInt(process.env['DB_PORT'] ?? '5432', 10),
+      dbUser: process.env['DB_USER'] ?? 'postgres',
+      dbPassword: process.env['DB_PASSWORD'] ?? '',
+      dbName: process.env['DB_NAME'] ?? 'arrow_con_mango',
+      dbSynchronize: (process.env['DB_SYNCHRONIZE'] ?? 'true') === 'true',
+    }),
+  );
+
+  await dataSource.initialize();
+  await seedLevels(dataSource);
+  await dataSource.destroy();
   console.log('Seed complete.');
 }
 
-seed().catch((err) => {
-  console.error('Seed failed:', err);
-  process.exit(1);
-});
+if (require.main === module) {
+  main().catch((err) => {
+    console.error('Seed failed:', err);
+    process.exit(1);
+  });
+}

@@ -16,6 +16,7 @@ const makeLbRepo = (entries: ScoreEntry[]): ILeaderboardRepository => ({
   byLevel: jest.fn().mockResolvedValue(entries),
   bySurvival: jest.fn().mockResolvedValue([]),
   byHexagonal: jest.fn().mockResolvedValue([]),
+  byCube3d: jest.fn().mockResolvedValue([]),
   add: jest.fn().mockResolvedValue(undefined),
 });
 
@@ -124,6 +125,21 @@ describe('SubmitScoreUseCase', () => {
     await useCase.execute({
       userId: 'user-5',
       data: { levelId: '-1', moves: 2, timeMs: 4_000, mode: 'survival' },
+    });
+    // Assert
+    expect(repo.add).toHaveBeenCalledTimes(1);
+    expect(progressRepo.save).not.toHaveBeenCalled();
+  });
+
+  it('should_not_touch_player_progress_for_cube3d_submissions', async () => {
+    // Arrange — cube3d boards are procedurally generated, same as survival
+    const repo = makeLbRepo([]);
+    const progressRepo = makeProgressRepo(null);
+    const useCase = new SubmitScoreUseCase(repo, progressRepo, strategy);
+    // Act
+    await useCase.execute({
+      userId: 'user-6',
+      data: { levelId: 'cube-gen-1', moves: 5, timeMs: 6_000, mode: 'cube3d' },
     });
     // Assert
     expect(repo.add).toHaveBeenCalledTimes(1);

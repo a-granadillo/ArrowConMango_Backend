@@ -1,0 +1,17 @@
+node_modules
+dist
+coverage
+*.sqlite
+.git
+.github
+.env
+.env.local
+.env.example
+docs
+test
+*.md
+diagrama backend.drawio.xml
+diagrama backend.jpg
+.claude
+.vscode
+.idea

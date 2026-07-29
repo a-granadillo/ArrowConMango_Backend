@@ -463,4 +463,35 @@ describe('TypeOrmLeaderboardRepository', () => {
       found.some((e) => e.userId.value === 'campaign-player-byhexagonal'),
     ).toBe(false);
   });
+
+  it('should_only_return_cube3d_entries_from_byCube3d', async () => {
+    const repo = makeLeaderboardRepo();
+    const levelId = LevelId.create('bycube3d-level');
+    await repo.add(
+      ScoreEntry.create(
+        UserId.create('campaign-player-bycube3d'),
+        levelId,
+        Score.create(5, 10_000),
+        GameMode.campaign(),
+      ),
+    );
+    await repo.add(
+      ScoreEntry.create(
+        UserId.create('cube3d-player-bycube3d'),
+        levelId,
+        Score.create(2, 3_000),
+        GameMode.cube3d(),
+      ),
+    );
+
+    const found = await repo.byCube3d();
+
+    expect(found.every((e) => e.mode.value === 'cube3d')).toBe(true);
+    expect(found.some((e) => e.userId.value === 'cube3d-player-bycube3d')).toBe(
+      true,
+    );
+    expect(
+      found.some((e) => e.userId.value === 'campaign-player-bycube3d'),
+    ).toBe(false);
+  });
 });
