@@ -14,6 +14,8 @@ export default registerAs('app', () => ({
   dbName: process.env['DB_NAME'] ?? 'arrow_con_mango',
   /** Whether TypeORM should auto-create/alter the schema from entities. Defaults on: no migrations exist yet. */
   dbSynchronize: (process.env['DB_SYNCHRONIZE'] ?? 'true') === 'true',
+  /** Neon/Render require SSL; local/docker-compose Postgres doesn't support it. Defaults on. */
+  dbSsl: (process.env['DB_SSL'] ?? 'true') === 'true',
   jwtSecret: process.env['JWT_SECRET'] ?? 'change-me-in-production',
   jwtExpiresIn: process.env['JWT_EXPIRES_IN'] ?? '7d',
   /** Comma-separated list of allowed CORS origins. Empty = reflect no origin (same as disabled). */

@@ -86,4 +86,46 @@ describe('GuestLoginUseCase', () => {
     // Assert — find-or-create: no save happens, so no rename either
     expect(repo.save).not.toHaveBeenCalled();
   });
+
+  it('should_recover_by_refetching_when_save_loses_a_concurrent_find_or_create_race', async () => {
+    // Arrange — two guest-logins for the same new uuid race: byEmail sees
+    // null for both, but by the time this one calls save(), the other
+    // request already committed the row, so save() rejects (unique
+    // constraint violation in real Postgres/SQLite).
+    const winner = makeGuestUser();
+    const repo: IUserRepository = {
+      byEmail: jest
+        .fn()
+        .mockResolvedValueOnce(null) // initial lookup: not found yet
+        .mockResolvedValueOnce(winner), // re-fetch after losing the race
+      byId: jest.fn().mockResolvedValue(null),
+      byIds: jest.fn().mockResolvedValue([]),
+      save: jest.fn().mockRejectedValue(new Error('duplicate key value')),
+    };
+    const useCase = new GuestLoginUseCase(repo, makeHasher(), makeTokenSvc());
+
+    // Act
+    const result = await useCase.execute({ uuid: GUEST_UUID });
+
+    // Assert — recovers using the winner's row instead of throwing.
+    expect(result.token).toBe('jwt.token.here');
+    expect(repo.byEmail).toHaveBeenCalledTimes(2);
+  });
+
+  it('should_rethrow_when_save_fails_and_the_row_still_cannot_be_found', async () => {
+    // Arrange — a genuine failure (not a lost race): save() fails and the
+    // row is nowhere to be found on re-fetch either.
+    const repo: IUserRepository = {
+      byEmail: jest.fn().mockResolvedValue(null),
+      byId: jest.fn().mockResolvedValue(null),
+      byIds: jest.fn().mockResolvedValue([]),
+      save: jest.fn().mockRejectedValue(new Error('connection lost')),
+    };
+    const useCase = new GuestLoginUseCase(repo, makeHasher(), makeTokenSvc());
+
+    // Act & Assert
+    await expect(useCase.execute({ uuid: GUEST_UUID })).rejects.toThrow(
+      'connection lost',
+    );
+  });
 });

@@ -37,6 +37,7 @@ services:
       PORT: 3000
       DATABASE_URL: postgresql://arrow:arrow@postgres:5432/arrow_con_mango
       DB_SYNCHRONIZE: 'true'
+      DB_SSL: 'false'
       JWT_SECRET: local-compose-secret-not-for-prod
       JWT_EXPIRES_IN: 7d
       CORS_ORIGINS: ''

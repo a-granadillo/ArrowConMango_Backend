@@ -27,6 +27,7 @@ import {
           dbSynchronize: cfg.get<boolean>('app.dbSynchronize', true, {
             infer: true,
           }),
+          dbSsl: cfg.get<boolean>('app.dbSsl', true, { infer: true }),
         }),
     }),
     TypeOrmModule.forFeature(ORM_ENTITIES),

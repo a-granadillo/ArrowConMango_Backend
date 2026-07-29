@@ -71,6 +71,7 @@ async function main(): Promise<void> {
       dbPassword: process.env['DB_PASSWORD'] ?? '',
       dbName: process.env['DB_NAME'] ?? 'arrow_con_mango',
       dbSynchronize: (process.env['DB_SYNCHRONIZE'] ?? 'true') === 'true',
+      dbSsl: (process.env['DB_SSL'] ?? 'true') === 'true',
     }),
   );
 

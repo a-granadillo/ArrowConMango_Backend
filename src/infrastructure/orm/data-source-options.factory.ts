@@ -21,6 +21,13 @@ export interface DatabaseEnv {
   dbPassword: string;
   dbName: string;
   dbSynchronize: boolean;
+  /**
+   * Neon/Render's hosted Postgres requires SSL; a local/docker-compose
+   * Postgres (no cert configured) rejects the SSL handshake outright and
+   * the driver hangs retrying forever. Defaults to true (the hosted case)
+   * — set DB_SSL=false for local/compose Postgres.
+   */
+  dbSsl: boolean;
 }
 
 /**
@@ -45,7 +52,7 @@ export function buildDataSourceOptions(env: DatabaseEnv): DataSourceOptions {
     return {
       type: 'postgres',
       url: env.databaseUrl,
-      ssl: { rejectUnauthorized: false },
+      ssl: env.dbSsl ? { rejectUnauthorized: false } : false,
       entities: ORM_ENTITIES,
       synchronize: env.dbSynchronize,
     };
@@ -58,6 +65,7 @@ export function buildDataSourceOptions(env: DatabaseEnv): DataSourceOptions {
     username: env.dbUser,
     password: env.dbPassword,
     database: env.dbName,
+    ssl: env.dbSsl ? { rejectUnauthorized: false } : false,
     entities: ORM_ENTITIES,
     synchronize: env.dbSynchronize,
   };
