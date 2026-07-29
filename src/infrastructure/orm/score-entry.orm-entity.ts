@@ -1,4 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { DATETIME_COLUMN_TYPE } from './column-types';
 
 @Entity('score_entries')
 export class ScoreEntryOrmEntity {
@@ -17,7 +18,7 @@ export class ScoreEntryOrmEntity {
   @Column('int')
   timeMs!: number;
 
-  @Column('datetime')
+  @Column(DATETIME_COLUMN_TYPE)
   at!: Date;
 
   @Column('varchar', { default: 'campaign' })

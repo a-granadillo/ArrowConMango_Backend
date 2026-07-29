@@ -195,6 +195,21 @@
 
 ---
 
+### Entrada #12 — Despliegue en producción: Postgres, seguridad y Docker
+
+- **Fecha / autor:** 2026-07-28 / Equipo backend (sesión autónoma nocturna)
+- **Herramienta:** Claude Opus 5
+- **Rol en el flujo:** Auditoría de brechas de despliegue + implementación end-to-end, sin supervisión interactiva
+- **Tarea/problema:** El backend nunca se había desplegado; correr contra Postgres real habría fallado de inmediato (`synchronize: false` sin migraciones, tipo de columna `datetime` inexistente en Postgres, sin soporte para `DATABASE_URL`). Además, `PUT /levels/:id` solo exigía autenticación (no admin), por lo que cualquier invitado podía sobrescribir la campaña; CORS estaba completamente abierto; `JWT_SECRET` tenía un valor por defecto inseguro; no había rate limiting ni health check.
+- **Prompt (paráfrasis fiel):**
+  > "Quiero desplegar este juego de forma definitiva, total y gratuita, con Docker. Analiza el proyecto completo, traza un plan por fases, complétalo, y despliega. Parte de una rama nueva desde master; al terminar dime qué falta."
+- **Resultado obtenido:** `buildDataSourceOptions` (factory compartida por `database.module.ts` y `seed.ts`) con soporte `DATABASE_URL`/SSL; `DATETIME_COLUMN_TYPE` (`timestamptz` en Postgres, `datetime` en SQLite) aplicado en `score-entry.orm-entity.ts` y `level.orm-entity.ts`; `AdminGuard` (allowlist `ADMIN_USER_IDS`) en `PUT /levels/:id` y en `POST /levels` para ids reservados; `JWT_SECRET` obligatorio en producción (falla el arranque si no está seteado); CORS restringido a `CORS_ORIGINS`; `@nestjs/throttler` global (60/min) con límites más estrictos en `/auth/*` (20/min) y `POST /leaderboard` (30/min); cotas de sanidad en `SubmitScoreDto`; `GET /health`; nuevo modo de ranking `cube3d` (`GameMode.affectsCampaignProgress()`, `GetCube3DLeaderboardUseCase`, `GET /leaderboard/cube3d`) coordinado con el frontend, que aún no enviaba puntuaciones de ese modo; `seed:prod` + `SEED_ON_BOOT`; `Dockerfile` multi-stage (Debian, no Alpine, por los addons nativos de `bcrypt`/`sqlite3`), `docker-compose.yml`, `render.yaml`, cron de keep-alive y publicación de imagen a GHCR.
+- **Modificaciones del equipo:** Ninguna — sesión autónoma sin punto de revisión intermedio (el usuario autorizó de antemano el enfoque completo y se ausentó). La verificación quedó a cargo del propio pipeline (lint/build/tests) en lugar de una revisión humana en el momento; se documentan explícitamente en el informe final los puntos que sí requieren revisión humana antes de fusionar (ver PR).
+- **Verificación:** `npm run format:check && npm run lint && npm run build && npm test` (185/185 tests, incluye 16 tests nuevos: health, admin guard, cube3d leaderboard × 3 capas). La imagen Docker **no se pudo construir localmente** (Docker Desktop no llegó a iniciar en este entorno) — pendiente de una build manual antes de confiar en el Dockerfile a ciegas.
+- **Lecciones / limitaciones:** Añadir un guard de autorización a una ruta ya cubierta por tests E2E rompe esos tests si no se ajustan a la vez — se resolvió promoviendo al usuario de prueba ya autenticado a admin (vía `ADMIN_USER_IDS`) y añadiendo un segundo usuario invitado para cubrir el caso 403. La compilación de Postgres solo se puede validar realmente corriendo `docker compose up` contra una base real; sin eso, el fix de `datetime → timestamptz` queda razonado pero no ejecutado contra Postgres de verdad.
+
+---
+
 ## Evaluación crítica
 
 ### Porcentaje aproximado de código asistido por IA

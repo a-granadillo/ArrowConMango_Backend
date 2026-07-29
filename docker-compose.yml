@@ -1,0 +1,49 @@
+# Local development stack that mirrors production: the same backend image
+# Render runs, talking to a real Postgres instead of SQLite. Useful to
+# validate the DATABASE_URL / column-type / synchronize path before deploying
+# (see README "Docker" section).
+#
+# Usage:
+#   docker compose up --build
+#   docker compose exec api node dist/infrastructure/seed.js
+#   curl http://localhost:3000/api/v1/health
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: arrow
+      POSTGRES_PASSWORD: arrow
+      POSTGRES_DB: arrow_con_mango
+    ports:
+      - '5432:5432'
+    volumes:
+      - arrow_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U arrow -d arrow_con_mango']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DATABASE_URL: postgresql://arrow:arrow@postgres:5432/arrow_con_mango
+      DB_SYNCHRONIZE: 'true'
+      DB_SSL: 'false'
+      JWT_SECRET: local-compose-secret-not-for-prod
+      JWT_EXPIRES_IN: 7d
+      CORS_ORIGINS: ''
+      SEED_ON_BOOT: 'true'
+    ports:
+      - '3000:3000'
+
+volumes:
+  arrow_postgres_data:

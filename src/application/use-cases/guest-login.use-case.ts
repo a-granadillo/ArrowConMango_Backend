@@ -29,8 +29,22 @@ export class GuestLoginUseCase implements UseCase<
     let user = await this.userRepo.byEmail(email);
     if (!user) {
       const passwordHash = await this.hasher.hash(input.uuid);
-      user = User.create(email, passwordHash, input.displayName ?? 'Guest');
-      await this.userRepo.save(user);
+      const candidate = User.create(
+        email,
+        passwordHash,
+        input.displayName ?? 'Guest',
+      );
+      try {
+        await this.userRepo.save(candidate);
+        user = candidate;
+      } catch (err) {
+        // Lost a find-or-create race to a concurrent guest-login for the
+        // same uuid — e.g. the frontend's AuthInterceptor fires more than
+        // one request before either has stored a token yet. The winner
+        // already created the row; use it instead of failing the request.
+        user = await this.userRepo.byEmail(email);
+        if (!user) throw err;
+      }
     }
 
     const token = this.tokenService.sign(user.id);

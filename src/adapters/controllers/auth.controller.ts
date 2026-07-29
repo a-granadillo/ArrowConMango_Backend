@@ -1,5 +1,6 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
 import { GuestLoginUseCase } from '../../application/use-cases/guest-login.use-case';
 import { LoginUseCase } from '../../application/use-cases/login.use-case';
 import { RegisterUserUseCase } from '../../application/use-cases/register-user.use-case';
@@ -11,6 +12,9 @@ import {
   RegisterResponseDto,
 } from '../dtos/auth.dto';
 
+// Stricter than the app-wide default (60/min) — credential stuffing and
+// guest-token farming both look like a burst of POST /auth/* requests.
+@Throttle({ default: { limit: 20, ttl: 60_000 } })
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {

@@ -58,3 +58,9 @@ export class LevelForbiddenError extends DomainError {
     super(`You are not the author of level "${id}"`);
   }
 }
+
+export class AdminRequiredError extends DomainError {
+  constructor(action: string) {
+    super(`This action requires an administrator account: ${action}`);
+  }
+}

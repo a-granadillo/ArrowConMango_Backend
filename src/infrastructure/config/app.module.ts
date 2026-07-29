@@ -1,9 +1,12 @@
 import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
 import envConfig from './env.config';
 
 import { AuthController } from '../../adapters/controllers/auth.controller';
+import { HealthController } from '../../adapters/controllers/health.controller';
 import { LeaderboardController } from '../../adapters/controllers/leaderboard.controller';
 import { LevelController } from '../../adapters/controllers/level.controller';
 import { PlayerController } from '../../adapters/controllers/player.controller';
@@ -16,6 +19,7 @@ import { TypeOrmUserRepository } from '../persistence/typeorm-user.repository';
 import { MangoScore } from '../../domain/services/score-calculation.strategy';
 
 import { GetCommunityLevelsUseCase } from '../../application/use-cases/get-community-levels.use-case';
+import { GetCube3DLeaderboardUseCase } from '../../application/use-cases/get-cube3d-leaderboard.use-case';
 import { GetGlobalLeaderboardUseCase } from '../../application/use-cases/get-global-leaderboard.use-case';
 import { GetHexagonalLeaderboardUseCase } from '../../application/use-cases/get-hexagonal-leaderboard.use-case';
 import { GetLeaderboardUseCase } from '../../application/use-cases/get-leaderboard.use-case';
@@ -53,6 +57,13 @@ import { AuthGuard } from '../../adapters/aop/auth.guard';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, load: [envConfig] }),
+    // Skipped in tests: the e2e suite fires far more than 60 req/min against
+    // a single in-process "IP" by design, and NODE_ENV=test is guaranteed
+    // here — Jest sets it itself when nothing else does, CI sets it explicitly.
+    ThrottlerModule.forRoot({
+      skipIf: () => process.env['NODE_ENV'] === 'test',
+      throttlers: [{ name: 'default', ttl: 60_000, limit: 60 }],
+    }),
     DatabaseModule,
     AuthModule,
   ],
@@ -62,8 +73,12 @@ import { AuthGuard } from '../../adapters/aop/auth.guard';
     LevelController,
     LeaderboardController,
     PlayerController,
+    HealthController,
   ],
   providers: [
+    // ── Cross-cutting: global rate limiting (see AOP aspects further below) ─
+    { provide: APP_GUARD, useClass: ThrottlerGuard },
+
     // ── Port → Implementation bindings (Adapter pattern, DIP) ──────────────
     {
       provide: USER_REPOSITORY,
@@ -172,6 +187,12 @@ import { AuthGuard } from '../../adapters/aop/auth.guard';
       provide: GetHexagonalLeaderboardUseCase,
       useFactory: (repo: any, scoring: any) =>
         new GetHexagonalLeaderboardUseCase(repo, scoring),
+      inject: [LEADERBOARD_REPOSITORY, SCORE_STRATEGY],
+    },
+    {
+      provide: GetCube3DLeaderboardUseCase,
+      useFactory: (repo: any, scoring: any) =>
+        new GetCube3DLeaderboardUseCase(repo, scoring),
       inject: [LEADERBOARD_REPOSITORY, SCORE_STRATEGY],
     },
   ],

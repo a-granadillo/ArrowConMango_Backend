@@ -31,6 +31,11 @@ export class TypeOrmLeaderboardRepository implements ILeaderboardRepository {
     return orms.map(ScoreEntryMapper.toDomain);
   }
 
+  async byCube3d(): Promise<ScoreEntry[]> {
+    const orms = await this.repo.find({ where: { mode: 'cube3d' } });
+    return orms.map(ScoreEntryMapper.toDomain);
+  }
+
   async add(entry: ScoreEntry): Promise<void> {
     await this.repo.save(ScoreEntryMapper.toOrm(entry));
   }

@@ -22,9 +22,18 @@ import { GetMyLevelsUseCase } from '../../application/use-cases/get-my-levels.us
 import { PublishLevelUseCase } from '../../application/use-cases/publish-level.use-case';
 import { UpsertLevelUseCase } from '../../application/use-cases/upsert-level.use-case';
 import { UpsertLevelInput } from '../../application/dtos/level.dto';
+import { AdminRequiredError } from '../../domain/errors/domain-error';
+import { AdminGuard, isAdminUserId } from '../aop/admin.guard';
 import { AuthGuard } from '../aop/auth.guard';
 import { CurrentUser } from '../decorators/current-user.decorator';
 import { LevelResponseDto, UpsertLevelDto } from '../dtos/level.dto';
+
+/** Id prefixes reserved for the hand-authored campaign/hex catalogues. */
+const RESERVED_ID_PREFIXES = ['level-', 'hex-'];
+
+function usesReservedId(id: string | undefined): boolean {
+  return !!id && RESERVED_ID_PREFIXES.some((prefix) => id.startsWith(prefix));
+}
 
 @ApiTags('Levels')
 @Controller('levels')
@@ -86,6 +95,11 @@ export class LevelController {
     @Body() dto: UpsertLevelDto,
     @CurrentUser() userId: string,
   ): Promise<LevelResponseDto> {
+    if (usesReservedId(dto.id) && !isAdminUserId(userId)) {
+      throw new AdminRequiredError(
+        `create a level with reserved id "${dto.id}"`,
+      );
+    }
     const result = await this.upsertLevel.execute({
       id: dto.id,
       name: dto.name,
@@ -117,11 +131,12 @@ export class LevelController {
   }
 
   @Put(':id')
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, AdminGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Create or update a level definition (admin)' })
   @ApiParam({ name: 'id', description: 'Level id' })
   @ApiResponse({ status: 200, type: LevelResponseDto })
+  @ApiResponse({ status: 403, description: 'Not an administrator' })
   @ApiResponse({ status: 422, description: 'Level validation failed' })
   async upsert(
     @Param('id') id: string,

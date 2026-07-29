@@ -151,9 +151,13 @@ Prefijo global: `/api/v1`
 | `GET` | `/progress` | Bearer | RF-B-02 | Obtener progreso del usuario |
 | `PUT` | `/progress` | Bearer | RF-B-02 | Sincronizar progreso (merge idempotente) |
 | `GET` | `/levels` | — | RF-B-04 | Listar todas las definiciones de niveles |
-| `PUT` | `/levels/:id` | Bearer | RF-B-04, RF-B-07 | Crear o actualizar nivel (admin) |
+| `PUT` | `/levels/:id` | Bearer + Admin | RF-B-04, RF-B-07 | Crear o actualizar nivel (`ADMIN_USER_IDS`) |
 | `GET` | `/leaderboard?level=&top=` | — | RF-B-03 | Top N scores por nivel (cacheado 30 s) |
+| `GET` | `/leaderboard/global?top=` | Bearer | RF-B-03 | Ranking global por mangos totales |
+| `GET` | `/leaderboard/hexagonal?top=` | — | RF-B-03 | Ranking del modo hexagonal (cacheado 30 s) |
+| `GET` | `/leaderboard/cube3d?top=` | — | RF-B-03 | Ranking del modo cubo 3D (cacheado 30 s) |
 | `POST` | `/leaderboard` | Bearer | RF-B-03 | Enviar score al leaderboard (201) |
+| `GET` | `/health` | — | — | Liveness probe (Render health check / keep-alive) |
 
 Documentación interactiva completa: `http://localhost:3000/api/docs`
 
@@ -192,6 +196,39 @@ El flujo de colaboración (ramas `feat/…`, `fix/…`, Pull Requests, `master` 
 Conventional Commits) está documentado en [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ---
+
+## Despliegue
+
+**Producción (gratuito):** Render (Docker) + Neon Postgres. Ver el resumen de arquitectura y
+los pasos de despliegue completos en el plan de despliegue del repo hermano, o seguir:
+
+1. Crear una base en [Neon](https://neon.com) (plan gratuito, sin tarjeta) y copiar la cadena de
+   conexión *pooled* como `DATABASE_URL`.
+2. En [Render](https://render.com), *New Web Service* → conectar este repo → runtime **Docker**
+   (usa el `Dockerfile` de la raíz; también se puede desplegar como *Blueprint* con `render.yaml`,
+   que ya incluye el health check y las variables no-secretas).
+3. Configurar variables de entorno (ver `.env.example`): `DATABASE_URL`, `JWT_SECRET` (Render lo
+   genera automáticamente si se usa `render.yaml`), `CORS_ORIGINS` (origen del frontend desplegado),
+   `ADMIN_USER_IDS` (tu propio user id, una vez registrado), `SEED_ON_BOOT=true` para el primer
+   despliegue.
+4. El servicio gratuito de Render se duerme tras 15 min sin tráfico; `.github/workflows/keepalive.yml`
+   lo mantiene despierto con un ping cada 10 min a `/api/v1/health`.
+
+### Docker
+
+```bash
+# Build de la imagen de producción
+docker build -t arrow-con-mango-backend .
+
+# Stack local completo (Postgres + API), reproduce producción
+docker compose up --build
+docker compose exec api node dist/infrastructure/seed.js   # primer arranque
+curl http://localhost:3000/api/v1/health
+```
+
+Cada push a `master` publica la imagen en GHCR (`ghcr.io/a-granadillo/arrowconmango_backend:latest`)
+vía `.github/workflows/docker-publish.yml` — el frontend la consume en su
+`docker-compose.fullstack.yml` para levantar el stack completo con un solo comando.
 
 ## Documentación adicional
 

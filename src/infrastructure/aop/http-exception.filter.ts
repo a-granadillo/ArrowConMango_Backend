@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import {
+  AdminRequiredError,
   DomainError,
   EmailAlreadyInUseError,
   InvalidCredentialsError,
@@ -69,7 +70,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
     ) {
       return this.build(HttpStatus.NOT_FOUND, exception);
     }
-    if (exception instanceof LevelForbiddenError) {
+    if (
+      exception instanceof LevelForbiddenError ||
+      exception instanceof AdminRequiredError
+    ) {
       return this.build(HttpStatus.FORBIDDEN, exception);
     }
     if (exception instanceof DomainError) {

@@ -1,0 +1,22 @@
+name: Keep-alive
+
+# Render's free plan spins the service down after 15 minutes without
+# inbound traffic (cold start takes ~30-60s on the next request). Pinging
+# /api/v1/health every 10 minutes keeps it warm — a month has ~730 hours,
+# comfortably inside the free plan's 750 instance-hours/month.
+#
+# NOTE: GitHub disables scheduled workflows after 60 days without any commit
+# activity on the repo. If the pings silently stop, re-enable this workflow
+# from the Actions tab (or push any commit) to resume it.
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping health endpoint
+        run: |
+          curl -fsS --max-time 60 "${{ vars.API_HEALTH_URL || 'https://arrow-con-mango-api.onrender.com/api/v1/health' }}"

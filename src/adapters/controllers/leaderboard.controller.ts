@@ -16,6 +16,8 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
+import { GetCube3DLeaderboardUseCase } from '../../application/use-cases/get-cube3d-leaderboard.use-case';
 import { GetGlobalLeaderboardUseCase } from '../../application/use-cases/get-global-leaderboard.use-case';
 import { GetHexagonalLeaderboardUseCase } from '../../application/use-cases/get-hexagonal-leaderboard.use-case';
 import { GetLeaderboardUseCase } from '../../application/use-cases/get-leaderboard.use-case';
@@ -37,6 +39,7 @@ export class LeaderboardController {
     private readonly submitScore: SubmitScoreUseCase,
     private readonly getGlobalLeaderboard: GetGlobalLeaderboardUseCase,
     private readonly getHexagonalLeaderboard: GetHexagonalLeaderboardUseCase,
+    private readonly getCube3DLeaderboard: GetCube3DLeaderboardUseCase,
   ) {}
 
   // Not cached: CacheInterceptor keys by req.url only (no auth awareness),
@@ -84,6 +87,24 @@ export class LeaderboardController {
     });
   }
 
+  // Same route-ordering note as `hexagonal` above.
+  @Get('cube3d')
+  @UseInterceptors(new CacheInterceptor(30))
+  @ApiOperation({ summary: 'Get the global cube3d-mode leaderboard' })
+  @ApiQuery({
+    name: 'top',
+    required: false,
+    description: 'Number of entries (default 20)',
+  })
+  @ApiResponse({ status: 200, type: [ScoreEntryResponseDto] })
+  async getCube3D(
+    @Query('top') top?: string,
+  ): Promise<ScoreEntryResponseDto[]> {
+    return this.getCube3DLeaderboard.execute({
+      top: top ? parseInt(top, 10) : undefined,
+    });
+  }
+
   @Get()
   @UseInterceptors(new CacheInterceptor(30))
   @ApiOperation({ summary: 'Get top scores for a level' })
@@ -107,6 +128,7 @@ export class LeaderboardController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(AuthGuard)
+  @Throttle({ default: { limit: 30, ttl: 60_000 } })
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Submit a score to the leaderboard' })
   @ApiResponse({ status: 201, type: ScoreEntryResponseDto })
